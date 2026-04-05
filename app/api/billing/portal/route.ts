@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { getStripe, siteOrigin } from "@/lib/stripe";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST() {
   const session = await auth();
   if (!session?.user?.id) {

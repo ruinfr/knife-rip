@@ -52,14 +52,18 @@ export const serverinfoCommand: KnifeCommand = {
       `**Verification:** ${guild.verificationLevel}`,
     ];
 
-    const iconUrl = guild.iconURL({ size: 256, extension: "png" });
+    const iconUrl = guild.iconURL({
+      size: 512,
+      extension: "png",
+      forceStatic: false,
+    });
 
     await message.reply({
       embeds: [
         minimalEmbed({
           title: `Server — ${guild.name}`,
           description: lines.join("\n"),
-          ...(iconUrl ? { thumbnailUrl: iconUrl } : {}),
+          ...(iconUrl ? { imageUrl: iconUrl } : {}),
         }),
       ],
     });
