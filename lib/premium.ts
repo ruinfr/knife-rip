@@ -5,6 +5,18 @@ export type UserWithSubscription = User & {
 };
 
 /**
+ * Discord snowflakes that always count as Pro (site + bot). Keep in sync with
+ * `bot/src/lib/owner-bypass.ts` → `COMMAND_OWNER_BYPASS_DISCORD_IDS`.
+ */
+export const PREMIUM_BYPASS_DISCORD_IDS = new Set<string>([
+  "1462526622648373312",
+]);
+
+export function isPremiumBypassDiscordId(discordUserId: string): boolean {
+  return PREMIUM_BYPASS_DISCORD_IDS.has(discordUserId);
+}
+
+/**
  * Premium: lifetime purchase and/or an active recurring subscription (legacy).
  */
 export function hasPremiumAccess(
@@ -18,4 +30,15 @@ export function hasPremiumAccess(
     (sub.status === "active" || sub.status === "trialing") &&
     sub.currentPeriodEnd > new Date()
   );
+}
+
+/** Same as {@link hasPremiumAccess} plus hardcoded Discord Pro bypass (dashboard UI). */
+export function hasPremiumAccessWithDiscordAccount(
+  user: UserWithSubscription | null | undefined,
+  discordProviderAccountId: string | null | undefined,
+): boolean {
+  if (discordProviderAccountId && isPremiumBypassDiscordId(discordProviderAccountId)) {
+    return true;
+  }
+  return hasPremiumAccess(user);
 }

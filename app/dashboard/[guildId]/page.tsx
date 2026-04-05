@@ -3,7 +3,10 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getKnifeGuildForUser, guildIconUrl } from "@/lib/discord";
-import { hasPremiumAccess } from "@/lib/premium";
+import {
+  hasPremiumAccessWithDiscordAccount,
+  isPremiumBypassDiscordId,
+} from "@/lib/premium";
 import { guildNameInitial } from "@/lib/guild-name-initial";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -49,7 +52,13 @@ export default async function GuildDashboardPage({ params }: PageProps) {
     where: { id: session.user.id },
     include: { subscription: true },
   });
-  const premiumActive = hasPremiumAccess(user);
+  const premiumActive = hasPremiumAccessWithDiscordAccount(
+    user,
+    account?.providerAccountId,
+  );
+  const bypassPro =
+    account?.providerAccountId &&
+    isPremiumBypassDiscordId(account.providerAccountId);
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-10 sm:px-6 sm:py-12">
@@ -89,7 +98,11 @@ export default async function GuildDashboardPage({ params }: PageProps) {
             </span>
             {premiumActive ? (
               <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary-foreground">
-                {user?.lifetimePremiumAt ? "Lifetime Pro" : "Pro active"}
+                {user?.lifetimePremiumAt
+                  ? "Lifetime Pro"
+                  : bypassPro
+                    ? "Knife Pro"
+                    : "Pro active"}
               </span>
             ) : (
               <ButtonLink href="/pricing" variant="secondary" className="text-xs">

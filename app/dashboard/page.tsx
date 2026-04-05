@@ -4,7 +4,10 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getDashboardGuildSummary, guildIconUrl } from "@/lib/discord";
-import { hasPremiumAccess } from "@/lib/premium";
+import {
+  hasPremiumAccessWithDiscordAccount,
+  isPremiumBypassDiscordId,
+} from "@/lib/premium";
 import { guildNameInitial } from "@/lib/guild-name-initial";
 import Link from "next/link";
 
@@ -57,12 +60,20 @@ export default async function DashboardPage({
     guildError = "No Discord token on file. Sign out and sign in again.";
   }
 
-  const premiumActive = hasPremiumAccess(user);
+  const premiumActive = hasPremiumAccessWithDiscordAccount(
+    user,
+    account?.providerAccountId,
+  );
+  const bypassPro =
+    account?.providerAccountId &&
+    isPremiumBypassDiscordId(account.providerAccountId);
   const premiumLabel = !premiumActive
     ? "Not purchased"
     : user?.lifetimePremiumAt
       ? "Lifetime Pro"
-      : "Active";
+      : bypassPro
+        ? "Knife Pro"
+        : "Active";
 
   const knifeGuilds = summary?.knifeGuilds ?? [];
   const inviteCandidates = summary?.inviteCandidates ?? [];

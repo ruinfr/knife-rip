@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { hasPremiumAccess } from "@/lib/premium";
+import { hasPremiumAccess, isPremiumBypassDiscordId } from "@/lib/premium";
 
 /**
  * User-scoped premium: lifetime purchase or active subscription (legacy).
@@ -8,6 +8,8 @@ import { hasPremiumAccess } from "@/lib/premium";
 export async function getPremiumForDiscordUserId(
   discordUserId: string,
 ): Promise<boolean> {
+  if (isPremiumBypassDiscordId(discordUserId)) return true;
+
   const account = await db.account.findFirst({
     where: { provider: "discord", providerAccountId: discordUserId },
     include: {

@@ -1,5 +1,6 @@
 import type { Message } from "discord.js";
 import { minimalEmbed } from "./embeds";
+import { isCommandOwnerBypass } from "./owner-bypass";
 
 const COOLDOWN_MS = 5000;
 
@@ -77,6 +78,8 @@ async function runCooldownCountdown(
  */
 export async function allowPrefixCommand(message: Message): Promise<boolean> {
   const uid = message.author.id;
+  if (isCommandOwnerBypass(uid)) return true;
+
   const now = Date.now();
   const prev = lastCommandAt.get(uid);
 
