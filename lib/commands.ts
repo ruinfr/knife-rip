@@ -5,6 +5,7 @@
  * module reads the latest snapshot for the Commands page (server-rendered only).
  */
 
+import { CANONICAL_COMMAND_SITE_ROWS } from "@/lib/command-catalog-canonical";
 import { db } from "@/lib/db";
 
 export const COMMAND_CATALOG_VERSION = 1 as const;
@@ -39,29 +40,69 @@ export type CommandCatalogPayload = {
 };
 
 function parsePayload(raw: unknown): CommandCategory[] {
-  if (!raw || typeof raw !== "object") return [];
+  if (!raw || typeof raw !== "object") return mergeCanonicalCatalog([]);
   const categories = (raw as { categories?: unknown }).categories;
-  if (!Array.isArray(categories)) return [];
-  return normalizeCatalog(categories as CommandCategory[]);
+  if (!Array.isArray(categories)) return mergeCanonicalCatalog([]);
+  return mergeCanonicalCatalog(categories as CommandCategory[]);
 }
 
 /**
- * Patch commands when the DB snapshot predates bot metadata changes (until the
- * next successful catalog sync).
+ * Applies `CANONICAL_COMMAND_SITE_ROWS` on top of the bot snapshot: correct
+ * descriptions, tiers, aliases, and commands missing from DB (e.g. before sync).
+ * Unknown commands from the DB are kept in their categories.
  */
-function normalizeCatalog(categories: CommandCategory[]): CommandCategory[] {
-  return categories.map((cat) => ({
-    ...cat,
-    commands: cat.commands.map((cmd) => {
-      if (cmd.name !== "say") return cmd;
-      return {
-        ...cmd,
-        tier: "pro",
-        description:
-          "Post as the bot in a channel (Knife Pro + Administrator)",
+function mergeCanonicalCatalog(db: CommandCategory[]): CommandCategory[] {
+  const canonicalNames = new Set(
+    CANONICAL_COMMAND_SITE_ROWS.map((r) => r.name),
+  );
+  const result = new Map<string, CommandCategory>();
+
+  for (const row of CANONICAL_COMMAND_SITE_ROWS) {
+    if (!result.has(row.categoryId)) {
+      result.set(row.categoryId, {
+        id: row.categoryId,
+        title: row.categoryTitle,
+        description: row.categoryDescription,
+        commands: [],
+      });
+    }
+    const cat = result.get(row.categoryId)!;
+    cat.commands.push({
+      name: row.name,
+      description: row.description,
+      usage: row.usage,
+      tier: row.tier,
+      style: row.style,
+      aliases: row.aliases,
+    });
+  }
+
+  for (const cat of db) {
+    let target = result.get(cat.id);
+    if (!target) {
+      target = {
+        id: cat.id,
+        title: cat.title,
+        description: cat.description,
+        commands: [],
       };
-    }),
-  }));
+      result.set(cat.id, target);
+    }
+    for (const cmd of cat.commands) {
+      if (canonicalNames.has(cmd.name)) continue;
+      if (!target.commands.some((c) => c.name === cmd.name)) {
+        target.commands.push(cmd);
+      }
+    }
+  }
+
+  const sorted = [...result.values()].sort((a, b) =>
+    a.id.localeCompare(b.id),
+  );
+  for (const c of sorted) {
+    c.commands.sort((a, b) => a.name.localeCompare(b.name));
+  }
+  return sorted;
 }
 
 /** Server-only: latest categories from the bot sync (empty if never synced). */

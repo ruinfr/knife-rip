@@ -11,7 +11,7 @@ export const afkCommand: KnifeCommand = {
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",
-    categoryDescription: "Utility and info commands.",
+    categoryDescription: "Quick tools and light fun.",
     usage: ".afk [note] · .afk clear",
     tier: "free",
     style: "prefix",

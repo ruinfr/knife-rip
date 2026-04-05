@@ -34,7 +34,8 @@ export default async function CommandsPage() {
           Knife uses the <strong className="text-foreground">.</strong> prefix
           (for example{" "}
           <code className="text-accent-strong">.help</code>). This list updates
-          when the bot connects to our servers.
+          when the bot connects; the list is merged with the latest catalog so
+          new commands still show if sync is delayed.
           {updatedAt ? (
             <>
               {" "}
