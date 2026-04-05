@@ -6,6 +6,10 @@ import {
 } from "discord.js";
 import { buildCommandMap, syncRegistryToSite } from "./commands";
 import { PREFIX, getDiscordToken } from "./config";
+import {
+  clearAfkOnAuthorMessage,
+  notifyAfkMentions,
+} from "./lib/afk";
 import { allowPrefixCommand } from "./lib/command-cooldown";
 import { errorEmbed } from "./lib/embeds";
 import { acquireSingleInstanceLock } from "./lib/single-instance";
@@ -36,6 +40,9 @@ client.once(Events.ClientReady, async (c) => {
 
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
+
+  clearAfkOnAuthorMessage(message);
+  await notifyAfkMentions(message);
 
   const content = message.content;
   if (!content.startsWith(PREFIX)) return;

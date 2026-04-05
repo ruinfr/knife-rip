@@ -1,5 +1,6 @@
 import { COMMAND_CATALOG_VERSION } from "../config";
 import { postCommandRegistry } from "../lib/site-client";
+import { afkCommand } from "./general/afk";
 import { avatarCommand } from "./general/avatar";
 import { bannerCommand } from "./general/banner";
 import { coinflipCommand } from "./general/coinflip";
@@ -21,6 +22,7 @@ import type { KnifeCommand } from "./types";
  * Add new modules under ./general, ./moderation, etc., then import here.
  */
 export const commandDefinitions: KnifeCommand[] = [
+  afkCommand,
   avatarCommand,
   bannerCommand,
   coinflipCommand,
