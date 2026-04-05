@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Outfit, Syne } from "next/font/google";
 import { Analytics } from "@/components/analytics";
+import { IconifyRegister } from "@/components/iconify-register";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Providers } from "@/components/providers";
+import { siteMetadataBase } from "@/lib/site-url";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -25,8 +27,10 @@ const syne = Syne({
   display: "swap",
 });
 
+const metadataBase = siteMetadataBase();
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://knife.rip"),
+  metadataBase,
   title: {
     default: "Knife",
     template: "%s · Knife",
@@ -37,7 +41,7 @@ export const metadata: Metadata = {
     title: "Knife",
     description:
       "Discord bot for moderation, utilities, and community tools — knife.rip",
-    url: "https://knife.rip",
+    url: metadataBase,
     siteName: "Knife",
     locale: "en_US",
     type: "website",
@@ -75,6 +79,7 @@ export default function RootLayout({
         </a>
         <Analytics />
         <Providers>
+          <IconifyRegister />
           <SiteHeader />
           <div
             id="site-main"

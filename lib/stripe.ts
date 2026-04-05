@@ -14,9 +14,11 @@ export function getStripe(): Stripe {
 }
 
 export function siteOrigin(): string {
-  return (
-    process.env.AUTH_URL?.replace(/\/$/, "") ??
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
-    "https://knife.rip"
-  );
+  const explicit =
+    process.env.AUTH_URL?.replace(/\/$/, "") ||
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (explicit) return explicit;
+  const v = process.env.VERCEL_URL?.trim();
+  if (v) return `https://${v.replace(/\/$/, "")}`;
+  return "https://knife.rip";
 }
