@@ -1,9 +1,11 @@
 import type { Message, User } from "discord.js";
+import { isDeveloperDiscordId } from "../../../../lib/bot-developers";
 import { getBotInternalSecret } from "../../config";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
 import {
+  fetchEntitlementFromSite,
   invalidateEntitlementCache,
   postHandoutToSite,
 } from "../../lib/site-client";
@@ -60,13 +62,18 @@ async function resolveHandoutTarget(
 }
 
 /**
- * Not listed on the public /commands page (`site` omitted) — owner-only tool.
+ * Not listed on the public /commands page (`site` omitted) — owner/Developer tool.
  */
 export const handoutCommand: KnifeCommand = {
   name: "handout",
   description:
-    "Add/remove complimentary Pro or bot owner in the database (bot owners only)",
+    "Handouts in DB — Developers control owner; owners handle premium for non-owners",
   async run({ message, args }) {
+    const ch = message.channel;
+    if (ch.isTextBased() && "sendTyping" in ch) {
+      await ch.sendTyping().catch(() => {});
+    }
+
     if (!(await isCommandOwnerBypass(message.author.id))) {
       await message.reply({
         embeds: [errorEmbed("Only **bot owners** can use **.handout**.")],
@@ -91,8 +98,9 @@ export const handoutCommand: KnifeCommand = {
         embeds: [
           errorEmbed(
             "Use **add** or **remove** once.\n\n" +
-              "**Examples:** `.handout` `@user` **add** `owner` · `.handout` `@user` **remove** `premium`\n" +
-              "Roles: **owner** / **bot** · **premium** / **pro** / **site**",
+              "**Owners:** `.handout` `@user` **add** `premium` · **remove** `premium` (or **pro** / **site**).\n" +
+              "**Developers** also: **add** / **remove** **owner** (or **bot**) for anyone.\n" +
+              "Owners can’t change handouts for **other owners** (or yourself is OK) — ask a **Developer**.",
           ),
         ],
       });
@@ -141,6 +149,45 @@ export const handoutCommand: KnifeCommand = {
 
     const actorId = message.author.id;
     const targetId = target.id;
+    const actorIsDev = isDeveloperDiscordId(actorId);
+
+    if (kind === "OWNER" && !actorIsDev) {
+      await message.reply({
+        embeds: [
+          errorEmbed(
+            "Only **Developers** can **add** or **remove** the **owner** role. You can still use **premium** / **pro** / **site** for non-owners (or yourself).",
+          ),
+        ],
+      });
+      return;
+    }
+
+    if (!actorIsDev && targetId !== actorId) {
+      try {
+        const ent = await fetchEntitlementFromSite(targetId, {
+          bypassCache: true,
+        });
+        if (ent.owner) {
+          await message.reply({
+            embeds: [
+              errorEmbed(
+                "**Owners** cannot change handouts for **other owners**. Ask a **Developer**.",
+              ),
+            ],
+          });
+          return;
+        }
+      } catch {
+        await message.reply({
+          embeds: [
+            errorEmbed(
+              "Could not verify the target user against the site — try again in a moment.",
+            ),
+          ],
+        });
+        return;
+      }
+    }
 
     let result;
     try {

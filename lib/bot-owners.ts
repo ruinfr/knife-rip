@@ -1,9 +1,9 @@
 /**
  * Bootstrap bot owner Discord IDs (always loaded; no DB required).
  *
- * Additional owners can be granted at runtime with **`.handout owner @user`** (stored in
- * `DiscordPrivilege` — no deploy). You still want at least one ID here so someone can run the
- * first handout if the DB is empty.
+ * Additional owners are granted by a **Developer** (`lib/bot-developers.ts`) with
+ * **`.handout @user add owner`** (stored in `DiscordPrivilege`). Owners cannot add/remove **owner**
+ * for each other or change each other’s handouts.
  *
  * Owners get:
  * - **Bot:** No prefix cooldown; on admin-gated commands (e.g. `.say`) skip **Discord Administrator**

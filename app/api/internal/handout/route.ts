@@ -1,3 +1,4 @@
+import { isDeveloperDiscordId } from "@/lib/bot-developers";
 import {
   deleteDiscordPrivilege,
   isBotOwnerDiscordIdResolved,
@@ -80,6 +81,29 @@ export async function POST(req: NextRequest) {
   if (!allowed) {
     return NextResponse.json(
       { error: "Actor is not a bot owner" },
+      { status: 403 },
+    );
+  }
+
+  const actorIsDev = isDeveloperDiscordId(actor);
+  const targetIsOwnerPeer = await isBotOwnerDiscordIdResolved(target);
+
+  if (!actorIsDev && targetIsOwnerPeer && target !== actor) {
+    return NextResponse.json(
+      {
+        error:
+          "Owners cannot change handouts for other owners — ask a Developer.",
+      },
+      { status: 403 },
+    );
+  }
+
+  if (kindRaw === "OWNER" && !actorIsDev) {
+    return NextResponse.json(
+      {
+        error:
+          "Only a Developer can add or remove the owner role. Owners may still use premium handouts for non-owners (or themselves).",
+      },
       { status: 403 },
     );
   }

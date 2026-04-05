@@ -4,9 +4,10 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getDashboardGuildSummary, guildIconUrl } from "@/lib/discord";
+import { isDeveloperDiscordId } from "@/lib/bot-developers";
 import {
-  isBotOwnerDiscordIdResolved,
   isPremiumBypassDiscordIdResolved,
+  isRegularOwnerResolved,
 } from "@/lib/discord-privilege";
 import { hasPremiumAccessWithDiscordAccount } from "@/lib/premium";
 import { guildNameInitial } from "@/lib/guild-name-initial";
@@ -70,8 +71,10 @@ export default async function DashboardPage({
     discordId != null &&
     !user?.lifetimePremiumAt &&
     (await isPremiumBypassDiscordIdResolved(discordId));
-  const isOwner =
-    discordId != null && (await isBotOwnerDiscordIdResolved(discordId));
+  const isDeveloper =
+    discordId != null && isDeveloperDiscordId(discordId);
+  const isRegularOwner =
+    discordId != null && (await isRegularOwnerResolved(discordId));
   const premiumLabel = !premiumActive
     ? "Not purchased"
     : user?.lifetimePremiumAt
@@ -158,7 +161,11 @@ export default async function DashboardPage({
               <h1 className="font-display text-xl font-bold text-accent-strong">
                 {session.user.name ?? "Discord user"}
               </h1>
-              {isOwner ? (
+              {isDeveloper ? (
+                <span className="inline-flex items-center rounded-full border border-violet-500/45 bg-violet-500/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-violet-200">
+                  Developer
+                </span>
+              ) : isRegularOwner ? (
                 <span className="inline-flex items-center rounded-full border border-edge/40 bg-edge-muted/35 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-edge">
                   Owner
                 </span>

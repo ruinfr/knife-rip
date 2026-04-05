@@ -12,6 +12,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "../lib/bot-developers.ts",
     "../lib/bot-owners.ts",
     "../lib/knife-premium.ts"
   ]

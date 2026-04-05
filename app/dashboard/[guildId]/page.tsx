@@ -3,9 +3,10 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getKnifeGuildForUser, guildIconUrl } from "@/lib/discord";
+import { isDeveloperDiscordId } from "@/lib/bot-developers";
 import {
-  isBotOwnerDiscordIdResolved,
   isPremiumBypassDiscordIdResolved,
+  isRegularOwnerResolved,
 } from "@/lib/discord-privilege";
 import { hasPremiumAccessWithDiscordAccount } from "@/lib/premium";
 import { guildNameInitial } from "@/lib/guild-name-initial";
@@ -62,8 +63,10 @@ export default async function GuildDashboardPage({ params }: PageProps) {
     discordId != null &&
     !user?.lifetimePremiumAt &&
     (await isPremiumBypassDiscordIdResolved(discordId));
-  const isOwner =
-    discordId != null && (await isBotOwnerDiscordIdResolved(discordId));
+  const isDeveloper =
+    discordId != null && isDeveloperDiscordId(discordId);
+  const isRegularOwner =
+    discordId != null && (await isRegularOwnerResolved(discordId));
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-10 sm:px-6 sm:py-12">
@@ -101,7 +104,11 @@ export default async function GuildDashboardPage({ params }: PageProps) {
             <span className="inline-flex items-center rounded-full border border-white/[0.08] bg-surface/60 px-3 py-1 text-xs font-medium text-edge/90">
               Knife connected
             </span>
-            {isOwner ? (
+            {isDeveloper ? (
+              <span className="inline-flex items-center rounded-full border border-violet-500/45 bg-violet-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-violet-200">
+                Developer
+              </span>
+            ) : isRegularOwner ? (
               <span className="inline-flex items-center rounded-full border border-edge/40 bg-edge-muted/35 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-edge">
                 Owner
               </span>

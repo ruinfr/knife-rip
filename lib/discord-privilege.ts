@@ -1,4 +1,5 @@
 import { DiscordPrivilegeKind } from "@prisma/client";
+import { isDeveloperDiscordId } from "@/lib/bot-developers";
 import { isBotOwnerDiscordId as isStaticBotOwner } from "@/lib/bot-owners";
 import { db } from "@/lib/db";
 import { isKnifePremium as isStaticKnifePremium } from "@/lib/knife-premium";
@@ -15,10 +16,24 @@ async function hasDbPrivilege(
   return row != null;
 }
 
-/** Bot owner: static list in `lib/bot-owners.ts` and/or DB row (`.handout owner`). */
+/**
+ * Bot owner tier (Developer ∪ static owners ∪ DB `.handout owner`) — cooldown bypass, Pro, `.say`, etc.
+ */
 export async function isBotOwnerDiscordIdResolved(
   discordUserId: string,
 ): Promise<boolean> {
+  if (isDeveloperDiscordId(discordUserId)) return true;
+  if (isStaticBotOwner(discordUserId)) return true;
+  return hasDbPrivilege(discordUserId, DiscordPrivilegeKind.OWNER);
+}
+
+/**
+ * **Owner** badge / peer checks — excludes Developer-only (they show **Developer** instead).
+ */
+export async function isRegularOwnerResolved(
+  discordUserId: string,
+): Promise<boolean> {
+  if (isDeveloperDiscordId(discordUserId)) return false;
   if (isStaticBotOwner(discordUserId)) return true;
   return hasDbPrivilege(discordUserId, DiscordPrivilegeKind.OWNER);
 }

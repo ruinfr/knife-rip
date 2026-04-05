@@ -1,4 +1,8 @@
 import type { Subscription, User } from "@prisma/client";
+import {
+  DEVELOPER_DISCORD_IDS,
+  isDeveloperDiscordId,
+} from "@/lib/bot-developers";
 import { BOT_OWNER_DISCORD_IDS, isBotOwnerDiscordId } from "@/lib/bot-owners";
 import { isPremiumBypassDiscordIdResolved } from "@/lib/discord-privilege";
 import {
@@ -14,16 +18,21 @@ export type UserWithSubscription = User & {
  * Static IDs only (no DB handouts). For full checks use {@link isPremiumBypassDiscordIdResolved}.
  */
 export const PREMIUM_BYPASS_DISCORD_IDS = new Set<string>([
+  ...DEVELOPER_DISCORD_IDS,
   ...BOT_OWNER_DISCORD_IDS,
   ...KNIFE_PREMIUM_DISCORD_IDS,
 ]);
 
 /**
- * Static hardcoded Pro bypass only (`lib/bot-owners.ts`, `lib/knife-premium.ts`).
- * Handout rows in the DB are included in {@link isPremiumBypassDiscordIdResolved}.
+ * Static hardcoded Pro bypass (Developers, owners file, premium file — not DB handouts).
+ * Full checks: {@link isPremiumBypassDiscordIdResolved} (includes env Developers + DB).
  */
 export function isPremiumBypassDiscordId(discordUserId: string): boolean {
-  return isBotOwnerDiscordId(discordUserId) || isKnifePremium(discordUserId);
+  return (
+    isDeveloperDiscordId(discordUserId) ||
+    isBotOwnerDiscordId(discordUserId) ||
+    isKnifePremium(discordUserId)
+  );
 }
 
 /**
