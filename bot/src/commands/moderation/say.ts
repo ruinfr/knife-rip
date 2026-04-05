@@ -37,7 +37,7 @@ export const sayCommand: KnifeCommand = {
       return;
     }
 
-    const ownerBypass = isCommandOwnerBypass(message.author.id);
+    const ownerBypass = await isCommandOwnerBypass(message.author.id);
 
     const member =
       message.member ??

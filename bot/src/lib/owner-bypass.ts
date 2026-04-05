@@ -1,9 +1,23 @@
 import { isBotOwnerDiscordId } from "../../../lib/bot-owners";
+import { getBotInternalSecret } from "../config";
+import { fetchEntitlementFromSite } from "./site-client";
 
 /**
- * Bot owners (`BOT_OWNER_DISCORD_IDS`): no prefix cooldown; skip Discord Administrator + Pro gates
- * on commands that check both (e.g. `.say`). Edit IDs in `lib/bot-owners.ts`.
+ * Bot owners: static IDs in `lib/bot-owners.ts` plus DB `.handout owner` rows
+ * (resolved via the site entitlement API with a short cache).
  */
-export function isCommandOwnerBypass(userId: string): boolean {
-  return isBotOwnerDiscordId(userId);
+export async function isCommandOwnerBypass(
+  userId: string,
+): Promise<boolean> {
+  if (isBotOwnerDiscordId(userId)) return true;
+
+  const secret = getBotInternalSecret();
+  if (!secret) return false;
+
+  try {
+    const ent = await fetchEntitlementFromSite(userId);
+    return ent.owner;
+  } catch {
+    return false;
+  }
 }

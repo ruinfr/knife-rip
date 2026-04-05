@@ -1,4 +1,4 @@
-import { getPremiumForDiscordUserId } from "@/lib/entitlement";
+import { getEntitlementForDiscordUserId } from "@/lib/entitlement";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const premium = await getPremiumForDiscordUserId(discordUserId);
-  return NextResponse.json({ premium, discordUserId });
+  const { premium, owner } =
+    await getEntitlementForDiscordUserId(discordUserId);
+  return NextResponse.json({ premium, owner, discordUserId });
 }

@@ -4,11 +4,11 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getDashboardGuildSummary, guildIconUrl } from "@/lib/discord";
-import { isBotOwnerDiscordId } from "@/lib/bot-owners";
 import {
-  hasPremiumAccessWithDiscordAccount,
-  isPremiumBypassDiscordId,
-} from "@/lib/premium";
+  isBotOwnerDiscordIdResolved,
+  isPremiumBypassDiscordIdResolved,
+} from "@/lib/discord-privilege";
+import { hasPremiumAccessWithDiscordAccount } from "@/lib/premium";
 import { guildNameInitial } from "@/lib/guild-name-initial";
 import Link from "next/link";
 
@@ -61,16 +61,17 @@ export default async function DashboardPage({
     guildError = "No Discord token on file. Sign out and sign in again.";
   }
 
-  const premiumActive = hasPremiumAccessWithDiscordAccount(
+  const discordId = account?.providerAccountId;
+  const premiumActive = await hasPremiumAccessWithDiscordAccount(
     user,
-    account?.providerAccountId,
+    discordId,
   );
   const bypassPro =
-    account?.providerAccountId &&
-    isPremiumBypassDiscordId(account.providerAccountId);
+    discordId != null &&
+    !user?.lifetimePremiumAt &&
+    (await isPremiumBypassDiscordIdResolved(discordId));
   const isOwner =
-    Boolean(account?.providerAccountId) &&
-    isBotOwnerDiscordId(account.providerAccountId);
+    discordId != null && (await isBotOwnerDiscordIdResolved(discordId));
   const premiumLabel = !premiumActive
     ? "Not purchased"
     : user?.lifetimePremiumAt

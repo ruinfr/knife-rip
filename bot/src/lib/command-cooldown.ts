@@ -78,7 +78,7 @@ async function runCooldownCountdown(
  */
 export async function allowPrefixCommand(message: Message): Promise<boolean> {
   const uid = message.author.id;
-  if (isCommandOwnerBypass(uid)) return true;
+  if (await isCommandOwnerBypass(uid)) return true;
 
   const now = Date.now();
   const prev = lastCommandAt.get(uid);

@@ -86,3 +86,20 @@ model BotCommandSnapshot {
   payload   Json
   updatedAt DateTime @updatedAt
 }
+
+/// Runtime handouts (`.handout`) — merged with static IDs in `lib/bot-owners.ts` / `lib/knife-premium.ts`.
+enum DiscordPrivilegeKind {
+  OWNER
+  PREMIUM
+}
+
+model DiscordPrivilege {
+  id                 String               @id @default(cuid())
+  discordUserId      String
+  kind               DiscordPrivilegeKind
+  grantedByDiscordId String?
+  createdAt          DateTime             @default(now())
+
+  @@unique([discordUserId, kind])
+  @@index([discordUserId])
+}

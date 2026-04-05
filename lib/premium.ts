@@ -1,5 +1,6 @@
 import type { Subscription, User } from "@prisma/client";
 import { BOT_OWNER_DISCORD_IDS, isBotOwnerDiscordId } from "@/lib/bot-owners";
+import { isPremiumBypassDiscordIdResolved } from "@/lib/discord-privilege";
 import {
   KNIFE_PREMIUM_DISCORD_IDS,
   isKnifePremium,
@@ -10,8 +11,7 @@ export type UserWithSubscription = User & {
 };
 
 /**
- * All Discord IDs that count as Knife Pro without a DB purchase
- * (bot owners + {@link KNIFE_PREMIUM_DISCORD_IDS}).
+ * Static IDs only (no DB handouts). For full checks use {@link isPremiumBypassDiscordIdResolved}.
  */
 export const PREMIUM_BYPASS_DISCORD_IDS = new Set<string>([
   ...BOT_OWNER_DISCORD_IDS,
@@ -19,9 +19,8 @@ export const PREMIUM_BYPASS_DISCORD_IDS = new Set<string>([
 ]);
 
 /**
- * Site + bot entitlement: Pro for bot owners, complimentary premium list, or Stripe/DB.
- * @see lib/bot-owners.ts
- * @see lib/knife-premium.ts — {@link isKnifePremium}
+ * Static hardcoded Pro bypass only (`lib/bot-owners.ts`, `lib/knife-premium.ts`).
+ * Handout rows in the DB are included in {@link isPremiumBypassDiscordIdResolved}.
  */
 export function isPremiumBypassDiscordId(discordUserId: string): boolean {
   return isBotOwnerDiscordId(discordUserId) || isKnifePremium(discordUserId);
@@ -43,12 +42,17 @@ export function hasPremiumAccess(
   );
 }
 
-/** Same as {@link hasPremiumAccess} plus hardcoded Discord Pro bypass (dashboard UI). */
-export function hasPremiumAccessWithDiscordAccount(
+/**
+ * Same as {@link hasPremiumAccess} plus Discord Pro bypass (static lists + DB `.handout`).
+ */
+export async function hasPremiumAccessWithDiscordAccount(
   user: UserWithSubscription | null | undefined,
   discordProviderAccountId: string | null | undefined,
-): boolean {
-  if (discordProviderAccountId && isPremiumBypassDiscordId(discordProviderAccountId)) {
+): Promise<boolean> {
+  if (
+    discordProviderAccountId &&
+    (await isPremiumBypassDiscordIdResolved(discordProviderAccountId))
+  ) {
     return true;
   }
   return hasPremiumAccess(user);

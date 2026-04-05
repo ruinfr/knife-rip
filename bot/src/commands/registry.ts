@@ -16,6 +16,7 @@ import { tiktokCommand } from "./general/tiktok";
 import { ttsCommand } from "./general/tts";
 import { uptimeCommand } from "./general/uptime";
 import { userinfoCommand } from "./general/userinfo";
+import { handoutCommand } from "./moderation/handout";
 import { sayCommand } from "./moderation/say";
 import type { CommandCategoryShape } from "./site-payload";
 import type { KnifeCommand } from "./types";
@@ -30,6 +31,7 @@ export const commandDefinitions: KnifeCommand[] = [
   bannerCommand,
   coinflipCommand,
   emojiCommand,
+  handoutCommand,
   helpCommand,
   knifeCommand,
   pingCommand,

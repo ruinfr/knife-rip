@@ -21,7 +21,7 @@ export const premiumCommand: KnifeCommand = {
   },
   async run({ message }) {
     let status = "";
-    if (isCommandOwnerBypass(message.author.id)) {
+    if (await isCommandOwnerBypass(message.author.id)) {
       status =
         "\n\n**Your status:** You are a **bot owner** (full Knife Pro + command bypass).";
     } else if (isKnifePremium(message.author.id)) {

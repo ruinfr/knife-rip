@@ -3,11 +3,11 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getKnifeGuildForUser, guildIconUrl } from "@/lib/discord";
-import { isBotOwnerDiscordId } from "@/lib/bot-owners";
 import {
-  hasPremiumAccessWithDiscordAccount,
-  isPremiumBypassDiscordId,
-} from "@/lib/premium";
+  isBotOwnerDiscordIdResolved,
+  isPremiumBypassDiscordIdResolved,
+} from "@/lib/discord-privilege";
+import { hasPremiumAccessWithDiscordAccount } from "@/lib/premium";
 import { guildNameInitial } from "@/lib/guild-name-initial";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -53,16 +53,17 @@ export default async function GuildDashboardPage({ params }: PageProps) {
     where: { id: session.user.id },
     include: { subscription: true },
   });
-  const premiumActive = hasPremiumAccessWithDiscordAccount(
+  const discordId = account?.providerAccountId;
+  const premiumActive = await hasPremiumAccessWithDiscordAccount(
     user,
-    account?.providerAccountId,
+    discordId,
   );
   const bypassPro =
-    account?.providerAccountId &&
-    isPremiumBypassDiscordId(account.providerAccountId);
+    discordId != null &&
+    !user?.lifetimePremiumAt &&
+    (await isPremiumBypassDiscordIdResolved(discordId));
   const isOwner =
-    Boolean(account?.providerAccountId) &&
-    isBotOwnerDiscordId(account.providerAccountId);
+    discordId != null && (await isBotOwnerDiscordIdResolved(discordId));
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-10 sm:px-6 sm:py-12">
