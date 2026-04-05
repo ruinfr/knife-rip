@@ -1,5 +1,7 @@
+import { isKnifePremium } from "../../../../lib/knife-premium";
 import { getBotInternalSecret } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
+import { isCommandOwnerBypass } from "../../lib/owner-bypass";
 import { fetchPremiumFromSite } from "../../lib/site-client";
 import type { KnifeCommand } from "../types";
 
@@ -19,7 +21,13 @@ export const premiumCommand: KnifeCommand = {
   },
   async run({ message }) {
     let status = "";
-    if (getBotInternalSecret()) {
+    if (isCommandOwnerBypass(message.author.id)) {
+      status =
+        "\n\n**Your status:** You are a **bot owner** (full Knife Pro + command bypass).";
+    } else if (isKnifePremium(message.author.id)) {
+      status =
+        "\n\n**Your status:** You have **Knife Pro** on this Discord account (complimentary).";
+    } else if (getBotInternalSecret()) {
       try {
         const hasPro = await fetchPremiumFromSite(message.author.id);
         status = hasPro

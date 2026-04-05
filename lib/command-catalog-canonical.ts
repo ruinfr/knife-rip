@@ -2,6 +2,8 @@
  * Canonical public catalog — merged on top of the DB snapshot from the bot.
  * Keeps /commands accurate when sync is stale or missing rows. Update when
  * you add or change `site` metadata in `bot/src/commands/`.
+ *
+ * Include every `aliases` entry here so Shortcuts match Discord (canonical wins over DB for these names).
  */
 export type CanonicalCommandSiteRow = {
   name: string;
@@ -19,7 +21,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "afk",
     description:
-      "Set AFK with optional reason (default AFK); welcome back + ping replies",
+      "Set AFK with an optional reason (default “AFK”); auto-reply + welcome back when you return",
     usage: ".afk [reason] · .afk clear",
     tier: "free",
     style: "prefix",
@@ -33,6 +35,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     usage: ".avatar [@user | user ID]",
     tier: "free",
     style: "prefix",
+    aliases: ["av"],
     categoryId: "core",
     categoryTitle: "Core",
     categoryDescription: "Essential prefix commands.",
@@ -50,10 +53,11 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "coinflip",
-    description: "Flip a coin — Heads or Tails",
-    usage: ".coinflip",
+    description: "Flip a coin — Heads or Tails, or challenge someone",
+    usage: ".coinflip · .coinflip @user · .cf · .flip",
     tier: "free",
     style: "prefix",
+    aliases: ["flip", "cf"],
     categoryId: "utility",
     categoryTitle: "Utility",
     categoryDescription: "Quick tools and light fun.",
@@ -80,6 +84,17 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "core",
     categoryTitle: "Core",
     categoryDescription: "Essential prefix commands.",
+  },
+  {
+    name: "instagram",
+    description: "Instagram profile — username (RapidAPI)",
+    usage: ".instagram username · .ig @username",
+    tier: "free",
+    style: "prefix",
+    aliases: ["ig"],
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Quick tools and light fun.",
   },
   {
     name: "knife",
@@ -124,8 +139,20 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Quick tools and light fun.",
   },
   {
+    name: "roblox",
+    description: "Roblox profile — lookup by username",
+    usage: ".roblox username · .rblx",
+    tier: "free",
+    style: "prefix",
+    aliases: ["rblx"],
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Quick tools and light fun.",
+  },
+  {
     name: "say",
-    description: "Post as the bot in a channel (Knife Pro + Administrator)",
+    description:
+      "Post as the bot in a channel (Knife Pro + Administrator; bot owners skip both)",
     usage: ".say #channel your message",
     tier: "pro",
     style: "prefix",
@@ -140,6 +167,17 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     tier: "free",
     style: "prefix",
     aliases: ["si"],
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Quick tools and light fun.",
+  },
+  {
+    name: "tiktok",
+    description: "TikTok profile — stats and bio for a @username",
+    usage: ".tiktok username · .tt @username",
+    tier: "free",
+    style: "prefix",
+    aliases: ["tt"],
     categoryId: "utility",
     categoryTitle: "Utility",
     categoryDescription: "Quick tools and light fun.",

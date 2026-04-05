@@ -1,4 +1,5 @@
 import { PermissionFlagsBits } from "discord.js";
+import { isKnifePremium } from "../../../../lib/knife-premium";
 import { getBotInternalSecret } from "../../config";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
@@ -19,7 +20,7 @@ function parseChannelSnowflake(raw: string | undefined): string | null {
 export const sayCommand: KnifeCommand = {
   name: "say",
   description:
-    "Post as the bot in a channel (Knife Pro + Administrator)",
+    "Post as the bot in a channel (Knife Pro + Administrator; bot owners skip both)",
   site: {
     categoryId: "moderation",
     categoryTitle: "Moderation",
@@ -29,7 +30,7 @@ export const sayCommand: KnifeCommand = {
     style: "prefix",
   },
   async run({ message, args }) {
-    if (!message.guild || !message.member) {
+    if (!message.guild) {
       await message.reply({
         embeds: [errorEmbed("**.say** only works in a server.")],
       });
@@ -38,9 +39,13 @@ export const sayCommand: KnifeCommand = {
 
     const ownerBypass = isCommandOwnerBypass(message.author.id);
 
+    const member =
+      message.member ??
+      (await message.guild.members.fetch(message.author.id).catch(() => null));
+
     if (
       !ownerBypass &&
-      !message.member.permissions.has(PermissionFlagsBits.Administrator)
+      (!member || !member.permissions.has(PermissionFlagsBits.Administrator))
     ) {
       await message.reply({
         embeds: [
@@ -53,7 +58,9 @@ export const sayCommand: KnifeCommand = {
     }
 
     if (!ownerBypass) {
-      if (!getBotInternalSecret()) {
+      const listedPremium = isKnifePremium(message.author.id);
+
+      if (!listedPremium && !getBotInternalSecret()) {
         await message.reply({
           embeds: [
             errorEmbed(
@@ -64,18 +71,20 @@ export const sayCommand: KnifeCommand = {
         return;
       }
 
-      let hasPro = false;
-      try {
-        hasPro = await fetchPremiumFromSite(message.author.id);
-      } catch {
-        await message.reply({
-          embeds: [
-            errorEmbed(
-              "Could not verify Knife Pro right now. Try again in a moment.",
-            ),
-          ],
-        });
-        return;
+      let hasPro = listedPremium;
+      if (!hasPro) {
+        try {
+          hasPro = await fetchPremiumFromSite(message.author.id);
+        } catch {
+          await message.reply({
+            embeds: [
+              errorEmbed(
+                "Could not verify Knife Pro right now. Try again in a moment.",
+              ),
+            ],
+          });
+          return;
+        }
       }
 
       if (!hasPro) {

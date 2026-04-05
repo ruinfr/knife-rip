@@ -1,19 +1,30 @@
 import type { Subscription, User } from "@prisma/client";
+import { BOT_OWNER_DISCORD_IDS, isBotOwnerDiscordId } from "@/lib/bot-owners";
+import {
+  KNIFE_PREMIUM_DISCORD_IDS,
+  isKnifePremium,
+} from "@/lib/knife-premium";
 
 export type UserWithSubscription = User & {
   subscription?: Subscription | null;
 };
 
 /**
- * Discord snowflakes that always count as Pro (site + bot). Keep in sync with
- * `bot/src/lib/owner-bypass.ts` → `COMMAND_OWNER_BYPASS_DISCORD_IDS`.
+ * All Discord IDs that count as Knife Pro without a DB purchase
+ * (bot owners + {@link KNIFE_PREMIUM_DISCORD_IDS}).
  */
 export const PREMIUM_BYPASS_DISCORD_IDS = new Set<string>([
-  "1462526622648373312",
+  ...BOT_OWNER_DISCORD_IDS,
+  ...KNIFE_PREMIUM_DISCORD_IDS,
 ]);
 
+/**
+ * Site + bot entitlement: Pro for bot owners, complimentary premium list, or Stripe/DB.
+ * @see lib/bot-owners.ts
+ * @see lib/knife-premium.ts — {@link isKnifePremium}
+ */
 export function isPremiumBypassDiscordId(discordUserId: string): boolean {
-  return PREMIUM_BYPASS_DISCORD_IDS.has(discordUserId);
+  return isBotOwnerDiscordId(discordUserId) || isKnifePremium(discordUserId);
 }
 
 /**

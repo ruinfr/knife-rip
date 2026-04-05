@@ -1,11 +1,9 @@
-/**
- * Full bot bypass: no command cooldown, permission checks like `.say` admin/Pro.
- * Keep in sync with site `lib/premium.ts` → `PREMIUM_BYPASS_DISCORD_IDS`.
- */
-const COMMAND_OWNER_BYPASS_DISCORD_IDS = new Set<string>([
-  "1462526622648373312",
-]);
+import { isBotOwnerDiscordId } from "../../../lib/bot-owners";
 
+/**
+ * Bot owners (`BOT_OWNER_DISCORD_IDS`): no prefix cooldown; skip Discord Administrator + Pro gates
+ * on commands that check both (e.g. `.say`). Edit IDs in `lib/bot-owners.ts`.
+ */
 export function isCommandOwnerBypass(userId: string): boolean {
-  return COMMAND_OWNER_BYPASS_DISCORD_IDS.has(userId);
+  return isBotOwnerDiscordId(userId);
 }

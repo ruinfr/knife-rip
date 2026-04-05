@@ -121,12 +121,12 @@ export default async function CommandsPage() {
                         <p className="mt-3 text-sm leading-relaxed text-muted">
                           {cmd.description}
                         </p>
-                        <CommandAliasesDisclosure cmd={cmd} invoke={p} />
                         {cmd.usage ? (
                           <pre className="mt-3 overflow-x-auto rounded-lg border border-white/[0.06] bg-background/80 p-3 font-mono text-xs leading-relaxed text-accent">
                             {cmd.usage}
                           </pre>
                         ) : null}
+                        <CommandAliasesDisclosure cmd={cmd} invoke={p} />
                       </Card>
                     </li>
                   );

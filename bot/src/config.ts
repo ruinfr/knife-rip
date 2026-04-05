@@ -1,14 +1,17 @@
 import { config as dotenv } from "dotenv";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
 
 /**
- * Load repo-root `.env` first, then optional `bot/.env` overrides.
- * Run bot scripts with cwd = `bot/` (e.g. `npm run dev` inside `bot/`).
+ * Load env from fixed paths (this file lives in `bot/src/`), not `process.cwd()`.
+ * Uses `override: true` so values from `.env` replace any empty preset vars (e.g. shells,
+ * dotenvx, or hosting dashboards) — otherwise `RAPIDAPI_KEY=` in the environment can block
+ * a real key defined in the file.
  */
 function loadEnvFiles() {
-  const cwd = process.cwd();
-  dotenv({ path: resolve(cwd, "..", ".env") });
-  dotenv({ path: resolve(cwd, ".env") });
+  const botDir = dirname(dirname(__filename)); // bot/
+  const repoRoot = dirname(botDir);
+  dotenv({ path: resolve(repoRoot, ".env"), override: true });
+  dotenv({ path: resolve(botDir, ".env"), override: true });
 }
 
 loadEnvFiles();
@@ -41,4 +44,28 @@ export function getSiteApiBase(): string {
 export function getBotInternalSecret(): string | undefined {
   const s = process.env.BOT_INTERNAL_SECRET?.trim();
   return s || undefined;
+}
+
+/** RapidAPI key for TikTok / Instagram profile commands. Optional until those commands are used. */
+export function getRapidApiKey(): string | undefined {
+  const k =
+    process.env.RAPIDAPI_KEY?.trim() || process.env.RAPIDAPI_API_KEY?.trim();
+  return k || undefined;
+}
+
+/**
+ * RapidAPI host for `.instagram` — must match the Instagram API you subscribe to.
+ * Default: [instagram130](https://rapidapi.com/neotank/api/instagram130).
+ */
+export function getInstagramRapidApiHost(): string {
+  return (
+    process.env.RAPIDAPI_INSTAGRAM_HOST?.trim() ||
+    "instagram130.p.rapidapi.com"
+  );
+}
+
+/** Path for account profile request (default matches instagram130). */
+export function getInstagramRapidApiPath(): string {
+  const raw = process.env.RAPIDAPI_INSTAGRAM_PATH?.trim() || "/account-info";
+  return raw.startsWith("/") ? raw : `/${raw}`;
 }
