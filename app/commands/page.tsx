@@ -109,7 +109,7 @@ export default async function CommandsPage() {
                           </code>
                           {cmd.tier === "pro" ? (
                             <span className="rounded-full bg-edge-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-strong">
-                              Pro
+                              Premium
                             </span>
                           ) : (
                             <span className="rounded-full border border-white/[0.08] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">

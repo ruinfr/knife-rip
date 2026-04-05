@@ -42,7 +42,26 @@ function parsePayload(raw: unknown): CommandCategory[] {
   if (!raw || typeof raw !== "object") return [];
   const categories = (raw as { categories?: unknown }).categories;
   if (!Array.isArray(categories)) return [];
-  return categories as CommandCategory[];
+  return normalizeCatalog(categories as CommandCategory[]);
+}
+
+/**
+ * Patch commands when the DB snapshot predates bot metadata changes (until the
+ * next successful catalog sync).
+ */
+function normalizeCatalog(categories: CommandCategory[]): CommandCategory[] {
+  return categories.map((cat) => ({
+    ...cat,
+    commands: cat.commands.map((cmd) => {
+      if (cmd.name !== "say") return cmd;
+      return {
+        ...cmd,
+        tier: "pro",
+        description:
+          "Post as the bot in a channel (Knife Pro + Administrator)",
+      };
+    }),
+  }));
 }
 
 /** Server-only: latest categories from the bot sync (empty if never synced). */
