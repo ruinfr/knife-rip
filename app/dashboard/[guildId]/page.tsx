@@ -3,6 +3,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getKnifeGuildForUser, guildIconUrl } from "@/lib/discord";
+import { isBotOwnerDiscordId } from "@/lib/bot-owners";
 import {
   hasPremiumAccessWithDiscordAccount,
   isPremiumBypassDiscordId,
@@ -59,6 +60,9 @@ export default async function GuildDashboardPage({ params }: PageProps) {
   const bypassPro =
     account?.providerAccountId &&
     isPremiumBypassDiscordId(account.providerAccountId);
+  const isOwner =
+    Boolean(account?.providerAccountId) &&
+    isBotOwnerDiscordId(account.providerAccountId);
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-10 sm:px-6 sm:py-12">
@@ -96,6 +100,11 @@ export default async function GuildDashboardPage({ params }: PageProps) {
             <span className="inline-flex items-center rounded-full border border-white/[0.08] bg-surface/60 px-3 py-1 text-xs font-medium text-edge/90">
               Knife connected
             </span>
+            {isOwner ? (
+              <span className="inline-flex items-center rounded-full border border-edge/40 bg-edge-muted/35 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-edge">
+                Owner
+              </span>
+            ) : null}
             {premiumActive ? (
               <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary-foreground">
                 {user?.lifetimePremiumAt

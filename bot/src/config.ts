@@ -46,26 +46,9 @@ export function getBotInternalSecret(): string | undefined {
   return s || undefined;
 }
 
-/** RapidAPI key for TikTok / Instagram profile commands. Optional until those commands are used. */
+/** RapidAPI key for `.tiktok`. Optional until that command is used. */
 export function getRapidApiKey(): string | undefined {
   const k =
     process.env.RAPIDAPI_KEY?.trim() || process.env.RAPIDAPI_API_KEY?.trim();
   return k || undefined;
-}
-
-/**
- * RapidAPI host for `.instagram` — must match the Instagram API you subscribe to.
- * Default: [instagram130](https://rapidapi.com/neotank/api/instagram130).
- */
-export function getInstagramRapidApiHost(): string {
-  return (
-    process.env.RAPIDAPI_INSTAGRAM_HOST?.trim() ||
-    "instagram130.p.rapidapi.com"
-  );
-}
-
-/** Path for account profile request (default matches instagram130). */
-export function getInstagramRapidApiPath(): string {
-  const raw = process.env.RAPIDAPI_INSTAGRAM_PATH?.trim() || "/account-info";
-  return raw.startsWith("/") ? raw : `/${raw}`;
 }

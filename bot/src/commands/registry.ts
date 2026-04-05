@@ -6,7 +6,6 @@ import { bannerCommand } from "./general/banner";
 import { coinflipCommand } from "./general/coinflip";
 import { emojiCommand } from "./general/emoji";
 import { helpCommand } from "./general/help";
-import { instagramCommand } from "./general/instagram";
 import { knifeCommand } from "./general/knife";
 import { pingCommand } from "./general/ping";
 import { premiumCommand } from "./general/premium";
@@ -14,6 +13,7 @@ import { robloxCommand } from "./general/roblox";
 import { roleinfoCommand } from "./general/roleinfo";
 import { serverinfoCommand } from "./general/serverinfo";
 import { tiktokCommand } from "./general/tiktok";
+import { ttsCommand } from "./general/tts";
 import { uptimeCommand } from "./general/uptime";
 import { userinfoCommand } from "./general/userinfo";
 import { sayCommand } from "./moderation/say";
@@ -31,7 +31,6 @@ export const commandDefinitions: KnifeCommand[] = [
   coinflipCommand,
   emojiCommand,
   helpCommand,
-  instagramCommand,
   knifeCommand,
   pingCommand,
   premiumCommand,
@@ -40,6 +39,7 @@ export const commandDefinitions: KnifeCommand[] = [
   sayCommand,
   serverinfoCommand,
   tiktokCommand,
+  ttsCommand,
   uptimeCommand,
   userinfoCommand,
 ].sort((a, b) => a.name.localeCompare(b.name));

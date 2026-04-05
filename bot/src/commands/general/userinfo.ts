@@ -28,7 +28,7 @@ function truncateRoleMentions(
 export const userinfoCommand: KnifeCommand = {
   name: "userinfo",
   aliases: ["ui"],
-  description: "Detailed user profile (Bleed-style layout)",
+  description: "Detailed user profile (sectioned layout)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",

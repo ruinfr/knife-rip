@@ -86,18 +86,6 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Essential prefix commands.",
   },
   {
-    name: "instagram",
-    description:
-      "Instagram profile by username (direct when possible, RapidAPI fallback)",
-    usage: ".instagram username · .ig @username",
-    tier: "free",
-    style: "prefix",
-    aliases: ["ig"],
-    categoryId: "utility",
-    categoryTitle: "Utility",
-    categoryDescription: "Quick tools and light fun.",
-  },
-  {
     name: "knife",
     description: "About Knife — site links, prefix, and gateway latency",
     usage: ".knife",
@@ -163,7 +151,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "serverinfo",
-    description: "Detailed server stats (Bleed-style layout)",
+    description: "Detailed server stats (sectioned layout)",
     usage: ".serverinfo · .si",
     tier: "free",
     style: "prefix",
@@ -184,6 +172,17 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Quick tools and light fun.",
   },
   {
+    name: "tts",
+    description: "Text-to-speech — replies with your line as an MP3",
+    usage: ".tts your message · .texttospeech · .text2speech",
+    tier: "free",
+    style: "prefix",
+    aliases: ["texttospeech", "text2speech"],
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Quick tools and light fun.",
+  },
+  {
     name: "uptime",
     description: "How long the bot process has been running",
     usage: ".uptime",
@@ -195,7 +194,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "userinfo",
-    description: "Detailed user profile (Bleed-style layout)",
+    description: "Detailed user profile (sectioned layout)",
     usage: ".userinfo [@user | ID] · .ui",
     tier: "free",
     style: "prefix",

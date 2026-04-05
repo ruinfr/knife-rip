@@ -15,7 +15,7 @@ const EMBED_COLOR = 0x2b2d31;
 export const serverinfoCommand: KnifeCommand = {
   name: "serverinfo",
   aliases: ["si"],
-  description: "Detailed server stats (Bleed-style layout)",
+  description: "Detailed server stats (sectioned layout)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",

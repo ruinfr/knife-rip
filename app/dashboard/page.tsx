@@ -4,6 +4,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getDashboardGuildSummary, guildIconUrl } from "@/lib/discord";
+import { isBotOwnerDiscordId } from "@/lib/bot-owners";
 import {
   hasPremiumAccessWithDiscordAccount,
   isPremiumBypassDiscordId,
@@ -67,6 +68,9 @@ export default async function DashboardPage({
   const bypassPro =
     account?.providerAccountId &&
     isPremiumBypassDiscordId(account.providerAccountId);
+  const isOwner =
+    Boolean(account?.providerAccountId) &&
+    isBotOwnerDiscordId(account.providerAccountId);
   const premiumLabel = !premiumActive
     ? "Not purchased"
     : user?.lifetimePremiumAt
@@ -149,10 +153,17 @@ export default async function DashboardPage({
             </div>
           )}
           <div>
-            <h1 className="font-display text-xl font-bold text-accent-strong">
-              {session.user.name ?? "Discord user"}
-            </h1>
-            <p className="text-sm text-muted">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="font-display text-xl font-bold text-accent-strong">
+                {session.user.name ?? "Discord user"}
+              </h1>
+              {isOwner ? (
+                <span className="inline-flex items-center rounded-full border border-edge/40 bg-edge-muted/35 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-edge">
+                  Owner
+                </span>
+              ) : null}
+            </div>
+            <p className="mt-1.5 text-sm text-muted">
               Pro:{" "}
               <span className="text-foreground">{premiumLabel}</span>
             </p>
