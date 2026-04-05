@@ -1,11 +1,12 @@
 /**
- * Instagram public-ish profile via RapidAPI (scraped data; not Meta’s official Graph API).
+ * Instagram profile: tries Instagram’s public **web_profile_info** first (no extra RapidAPI
+ * subscription). Falls back to RapidAPI if direct fails and **RAPIDAPI_KEY** is set.
  *
- * Default: **instagram130** on RapidAPI (`/account-info?username=`).
- * Same **RAPIDAPI_KEY** as `.tiktok` — subscribe to that Instagram API on RapidAPI.
+ * RapidAPI: TikTok and Instagram are **separate subscriptions**. “API doesn’t exists” means
+ * the key isn’t subscribed to the app matching **RAPIDAPI_INSTAGRAM_HOST**, or the host/path is wrong.
  *
- * Override host/path if you use another RapidAPI Instagram product:
- * `RAPIDAPI_INSTAGRAM_HOST`, `RAPIDAPI_INSTAGRAM_PATH`.
+ * Override: `RAPIDAPI_INSTAGRAM_HOST`, `RAPIDAPI_INSTAGRAM_PATH` (see that API’s code snippets).
+ * Set `INSTAGRAM_RAPIDAPI_ONLY=1` to skip direct requests.
  */
 
 export type InstagramProfileResult =
@@ -89,13 +90,13 @@ function extractFromUser(u: Record<string, unknown>): InstagramProfile | null {
     (typeof u.bio === "string" && u.bio) ||
     "";
 
-  let followers: number | null =
+  const followers: number | null =
     edgeCount(u.edge_followed_by) ??
     num(u.follower_count) ??
     num(u.followers) ??
     num(u.edge_followed_by_count);
 
-  let following: number | null =
+  const following: number | null =
     edgeCount(u.edge_follow) ??
     num(u.following_count) ??
     num(u.following) ??
@@ -141,7 +142,132 @@ export function isPlausibleInstagramUsername(s: string): boolean {
   return /^[a-zA-Z0-9._]+$/.test(s);
 }
 
-export async function fetchInstagramProfile(
+const IG_WEB_UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
+
+/** Instagram web anonymous app id (used by instagram.com). */
+const X_IG_APP_ID = "936619743392459";
+
+function rapidApiSubscriptionHint(): string {
+  return (
+    "On [RapidAPI](https://rapidapi.com), open **Subscriptions** and add an **Instagram** API (TikTok alone is not enough). Copy that app’s **X-RapidAPI-Host** into **RAPIDAPI_INSTAGRAM_HOST** and use its profile endpoint path in **RAPIDAPI_INSTAGRAM_PATH** if it differs from `/account-info`."
+  );
+}
+
+function humanizeRapidApiBodyMessage(
+  res: Response,
+  json: unknown,
+  statusLine: string,
+): string {
+  const rec = asRecord(json);
+  const raw =
+    rec && typeof rec.message === "string"
+      ? rec.message
+      : rec && typeof rec.error === "string"
+        ? rec.error
+        : "";
+  const msg = raw.trim();
+  const lower = msg.toLowerCase();
+
+  if (
+    lower.includes("doesn't exist") ||
+    lower.includes("does not exist") ||
+    lower.includes("api doesn't") ||
+    lower.includes("not subscribed")
+  ) {
+    return (
+      "**RapidAPI:** " +
+      (msg || statusLine) +
+      "\n\n" +
+      rapidApiSubscriptionHint()
+    );
+  }
+
+  if (res.status === 401 || res.status === 403) {
+    return (
+      "**RapidAPI** rejected the request — check **RAPIDAPI_KEY** and that you’re subscribed to the Instagram app matching **RAPIDAPI_INSTAGRAM_HOST**.\n\n" +
+      rapidApiSubscriptionHint()
+    );
+  }
+
+  return msg || statusLine;
+}
+
+/**
+ * @returns Result, or `null` to try RapidAPI (rate limit / blocked / unexpected body).
+ */
+async function fetchInstagramDirect(
+  username: string,
+): Promise<InstagramProfileResult | null> {
+  if (process.env.INSTAGRAM_RAPIDAPI_ONLY?.trim() === "1") {
+    return null;
+  }
+
+  const url = new URL(
+    "https://www.instagram.com/api/v1/users/web_profile_info/",
+  );
+  url.searchParams.set("username", username);
+
+  let res: Response;
+  try {
+    res = await fetch(url.toString(), {
+      headers: {
+        "User-Agent": IG_WEB_UA,
+        Accept: "*/*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "X-IG-App-ID": X_IG_APP_ID,
+        "X-Requested-With": "XMLHttpRequest",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+      },
+    });
+  } catch {
+    return null;
+  }
+
+  const text = await res.text();
+  let json: unknown;
+  try {
+    json = JSON.parse(text) as unknown;
+  } catch {
+    if (res.status === 404) {
+      return { ok: false, error: "User not found." };
+    }
+    return null;
+  }
+
+  if (res.status === 429 || res.status === 403) {
+    return null;
+  }
+
+  if (!res.ok) {
+    return null;
+  }
+
+  const rec = asRecord(json);
+  if (rec && rec.status === "fail") {
+    const m = typeof rec.message === "string" ? rec.message : "";
+    if (m.toLowerCase().includes("not found")) {
+      return { ok: false, error: "User not found." };
+    }
+    return null;
+  }
+
+  const user = unwrapUserPayload(json);
+  if (!user) {
+    return { ok: false, error: "User not found." };
+  }
+
+  const profile = extractFromUser(user);
+  if (!profile) {
+    return { ok: false, error: "User not found." };
+  }
+
+  return { ok: true, data: profile };
+}
+
+async function fetchInstagramRapidApi(
   username: string,
   rapidApiKey: string,
   host: string,
@@ -160,7 +286,7 @@ export async function fetchInstagramProfile(
       },
     });
   } catch {
-    return { ok: false, error: "Network error while contacting Instagram API." };
+    return { ok: false, error: "Network error while contacting RapidAPI." };
   }
 
   const text = await res.text();
@@ -171,32 +297,39 @@ export async function fetchInstagramProfile(
     return {
       ok: false,
       error: res.ok
-        ? "Unexpected response from Instagram API."
-        : `Instagram API error (${res.status}).`,
+        ? "Unexpected response from RapidAPI."
+        : `RapidAPI error (${res.status}).`,
     };
   }
 
   if (!res.ok) {
-    if (res.status === 401 || res.status === 403) {
-      return {
-        ok: false,
-        error:
-          "RapidAPI rejected the request — check **RAPIDAPI_KEY** and subscribe to the Instagram API matching **RAPIDAPI_INSTAGRAM_HOST** (default: instagram130 on RapidAPI).",
-      };
-    }
-    const rec = asRecord(json);
-    const msg =
-      rec && typeof rec.message === "string"
-        ? rec.message
-        : `Request failed (${res.status}).`;
-    return { ok: false, error: msg };
+    return {
+      ok: false,
+      error: humanizeRapidApiBodyMessage(
+        res,
+        json,
+        `Request failed (${res.status}).`,
+      ),
+    };
+  }
+
+  const rec = asRecord(json);
+  const topMsg = typeof rec?.message === "string" ? rec.message.trim() : "";
+  if (
+    topMsg &&
+    (topMsg.toLowerCase().includes("doesn't exist") ||
+      topMsg.toLowerCase().includes("does not exist"))
+  ) {
+    return {
+      ok: false,
+      error: humanizeRapidApiBodyMessage(res, json, topMsg),
+    };
   }
 
   const user = unwrapUserPayload(json);
   if (!user) {
-    const rec = asRecord(json);
     const msg =
-      rec && typeof rec.message === "string" ? rec.message : "User not found.";
+      topMsg || (typeof rec?.error === "string" ? rec.error : "User not found.");
     return { ok: false, error: msg };
   }
 
@@ -206,4 +339,35 @@ export async function fetchInstagramProfile(
   }
 
   return { ok: true, data: profile };
+}
+
+export async function fetchInstagramProfile(
+  username: string,
+  options: {
+    rapidApiKey?: string;
+    rapidApiHost: string;
+    rapidApiPath: string;
+  },
+): Promise<InstagramProfileResult> {
+  const direct = await fetchInstagramDirect(username);
+  if (direct !== null) {
+    return direct;
+  }
+
+  const key = options.rapidApiKey?.trim();
+  if (!key) {
+    return {
+      ok: false,
+      error:
+        "Couldn’t load this profile from Instagram directly (often **rate limits** on cloud IPs). Set **RAPIDAPI_KEY** and subscribe to an **Instagram** API on RapidAPI (separate from TikTok).\n\n" +
+        rapidApiSubscriptionHint(),
+    };
+  }
+
+  return fetchInstagramRapidApi(
+    username,
+    key,
+    options.rapidApiHost,
+    options.rapidApiPath,
+  );
 }

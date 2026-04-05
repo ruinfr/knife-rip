@@ -87,7 +87,8 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "instagram",
-    description: "Instagram profile — username (RapidAPI)",
+    description:
+      "Instagram profile by username (direct when possible, RapidAPI fallback)",
     usage: ".instagram username · .ig @username",
     tier: "free",
     style: "prefix",

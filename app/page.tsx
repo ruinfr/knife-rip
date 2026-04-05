@@ -253,38 +253,38 @@ export default async function Home() {
         className="reveal reveal-delay-1 border-t border-red-950/30 pt-14 sm:pt-16"
         aria-labelledby="proof-heading"
       >
-        <p
-          id="proof-heading"
-          className="text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-muted"
-        >
-          Servers that keep their edge
-        </p>
-        <p className="mx-auto mt-3 max-w-md text-center text-sm font-normal leading-relaxed text-muted">
-          {showcaseFromBot
-            ? "Biggest Knife guilds by member count—step in or put the bot on yours."
-            : "Communities running Knife—join them or add the blade to your server."}
-        </p>
-        <div className="mt-10 flex w-full flex-col items-center justify-center gap-10 sm:gap-12">
-          {useLiveCarousel ? (
-            <div className="grid w-full max-w-full grid-cols-1 justify-items-center gap-y-10 sm:grid-cols-[1fr_auto_1fr] sm:items-start sm:justify-items-stretch sm:gap-x-6 sm:gap-y-0 md:gap-x-10">
-              <div className="flex w-full justify-center sm:col-start-2 sm:w-auto">
+        <div className="mx-auto w-full max-w-6xl px-4">
+          <p
+            id="proof-heading"
+            className="text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-muted"
+          >
+            Servers that keep their edge
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm font-normal leading-relaxed text-muted">
+            {showcaseFromBot
+              ? "Biggest Knife guilds by member count—step in or put the bot on yours."
+              : "Communities running Knife—join them or add the blade to your server."}
+          </p>
+          <div className="mt-10 flex w-full flex-col items-center justify-center gap-10 sm:gap-12">
+            {useLiveCarousel ? (
+              <div className="flex w-full flex-col items-center justify-center gap-10 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-12 sm:gap-y-10">
                 <ShowcaseCarousel communities={featuredCommunities} />
+                <ul className="m-0 flex shrink-0 list-none justify-center p-0">
+                  <li className="w-[7.5rem]">
+                    <ShowcaseTile s={yoursItem} />
+                  </li>
+                </ul>
               </div>
-              <ul className="m-0 flex w-full list-none justify-center p-0 sm:col-start-3 sm:w-auto sm:justify-self-start">
-                <li className="w-[7.5rem]">
-                  <ShowcaseTile s={yoursItem} />
-                </li>
+            ) : (
+              <ul className="m-0 flex list-none flex-wrap items-start justify-center gap-[1.125rem] p-0 sm:gap-5">
+                {fallbackShowcase.map((s) => (
+                  <li key={s.key} className="w-[7.5rem]">
+                    <ShowcaseTile s={s} />
+                  </li>
+                ))}
               </ul>
-            </div>
-          ) : (
-            <ul className="m-0 flex list-none flex-wrap items-start justify-center gap-[1.125rem] p-0 sm:gap-5">
-              {fallbackShowcase.map((s) => (
-                <li key={s.key} className="w-[7.5rem]">
-                  <ShowcaseTile s={s} />
-                </li>
-              ))}
-            </ul>
-          )}
+            )}
+          </div>
         </div>
       </section>
 

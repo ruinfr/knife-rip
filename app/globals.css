@@ -504,6 +504,18 @@ body {
   .tile-hover:hover {
     transform: none !important;
   }
+
+  .cmd-aliases-details::details-content {
+    transition: none !important;
+  }
+
+  .cmd-aliases-chevron {
+    transition: none !important;
+  }
+
+  .mobile-nav-panel {
+    transition: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -579,4 +591,66 @@ body {
   border-radius: var(--radius-sm);
   background: var(--surface-elevated);
   color: var(--accent-strong);
+}
+
+/* ── Site-wide custom scrollbars (Firefox + WebKit) ─────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(248, 113, 113, 0.38) var(--surface-elevated);
+}
+
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--surface-elevated);
+  border-radius: var(--radius-md);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(248, 113, 113, 0.42),
+    rgba(220, 38, 38, 0.22)
+  );
+  border-radius: var(--radius-md);
+  border: 2px solid var(--surface-elevated);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(248, 113, 113, 0.5);
+}
+
+*::-webkit-scrollbar-corner {
+  background: var(--background);
+}
+
+/* Command shortcuts <details> — chevron + smooth disclosure where supported */
+.cmd-aliases-details[open] .cmd-aliases-chevron {
+  transform: rotate(180deg);
+}
+
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  .cmd-aliases-details::details-content {
+    overflow: clip;
+    transition:
+      height 0.32s var(--ease-out),
+      opacity 0.26s ease;
+  }
+
+  .cmd-aliases-details:not([open])::details-content {
+    height: 0;
+    opacity: 0;
+  }
+
+  .cmd-aliases-details[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
 }

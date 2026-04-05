@@ -17,7 +17,7 @@ function fmtCount(n: number | null): string {
 export const instagramCommand: KnifeCommand = {
   name: "instagram",
   aliases: ["ig"],
-  description: "Instagram profile — username (RapidAPI)",
+  description: "Instagram profile by username (direct when possible, RapidAPI fallback)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",
@@ -27,18 +27,6 @@ export const instagramCommand: KnifeCommand = {
     style: "prefix",
   },
   async run({ message, args }) {
-    const key = getRapidApiKey();
-    if (!key) {
-      await message.reply({
-        embeds: [
-          errorEmbed(
-            "**.instagram** needs **RAPIDAPI_KEY** in `.env` (same key as `.tiktok`). Subscribe to an Instagram profile API on RapidAPI — default host **instagram130** (`/account-info`).",
-          ),
-        ],
-      });
-      return;
-    }
-
     if (args.length > 1) {
       await message.reply({
         embeds: [
@@ -71,14 +59,11 @@ export const instagramCommand: KnifeCommand = {
       return;
     }
 
-    const host = getInstagramRapidApiHost();
-    const path = getInstagramRapidApiPath();
-    const result = await fetchInstagramProfile(
-      raw.toLowerCase(),
-      key,
-      host,
-      path,
-    );
+    const result = await fetchInstagramProfile(raw.toLowerCase(), {
+      rapidApiKey: getRapidApiKey(),
+      rapidApiHost: getInstagramRapidApiHost(),
+      rapidApiPath: getInstagramRapidApiPath(),
+    });
 
     if (!result.ok) {
       await message.reply({ embeds: [errorEmbed(result.error)] });

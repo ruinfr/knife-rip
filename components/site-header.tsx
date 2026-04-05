@@ -116,12 +116,19 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {menuOpen ? (
-        <div
-          id="mobile-nav"
-          className="border-t border-red-950/40 bg-background/95 px-4 py-4 md:hidden"
-        >
-          <nav className="flex flex-col gap-1" aria-label="Mobile">
+      <div
+        id="mobile-nav"
+        className={cn(
+          "mobile-nav-panel overflow-hidden border-t bg-background/95 md:hidden",
+          "transition-[max-height,opacity] duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+          menuOpen
+            ? "max-h-[min(80vh,32rem)] border-red-950/40 opacity-100"
+            : "pointer-events-none max-h-0 border-transparent opacity-0",
+        )}
+        aria-hidden={!menuOpen}
+        inert={menuOpen ? undefined : true}
+      >
+        <nav className="flex flex-col gap-1 px-4 py-4" aria-label="Mobile">
             {nav.map((item) => (
               <Link
                 key={item.href}
@@ -179,9 +186,8 @@ export function SiteHeader() {
                 Sign in with Discord
               </button>
             )}
-          </nav>
-        </div>
-      ) : null}
+        </nav>
+      </div>
     </header>
   );
 }
