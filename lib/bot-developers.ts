@@ -1,15 +1,19 @@
 import { BOT_OWNER_DISCORD_IDS } from "./bot-owners";
 
 /**
- * **Developer** — top tier: can **.handout** **add/remove owner** for anyone, and change any
- * handout including other owners. Regular **owners** cannot change handouts for each other.
+ * **Developers** — main controllers: **.handout** owner for anyone, full bypass (same as owners:
+ * no command cooldown, **Administrator** + **Knife Pro** checks skipped on `.say`, etc.).
  *
- * Set snowflakes here and/or `DEVELOPER_DISCORD_IDS` in `.env` (comma‑separated).
- * If both are empty, the **first** ID in `BOT_OWNER_DISCORD_IDS` is treated as Developer
- * so the bot stays usable until you configure this explicitly.
+ * Add more snowflakes to the array when you promote additional developers.
+ * Also merged: **`DEVELOPER_DISCORD_IDS`** in `.env` (comma‑separated).
+ *
+ * If the array **and** env are empty, the **first** ID in `BOT_OWNER_DISCORD_IDS` is treated as
+ * Developer so owner handouts still work until you configure this list.
  */
 export const DEVELOPER_DISCORD_IDS: readonly string[] = [
-  "1462526622648373312",
+  "1490466051987865800",
+  // Add more developer snowflakes below when needed, e.g.:
+  // "1234567890123456789",
 ];
 
 function envDeveloperIds(): string[] {

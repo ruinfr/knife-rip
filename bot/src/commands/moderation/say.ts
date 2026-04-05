@@ -20,7 +20,7 @@ function parseChannelSnowflake(raw: string | undefined): string | null {
 export const sayCommand: KnifeCommand = {
   name: "say",
   description:
-    "Post as the bot in a channel (Knife Pro + Administrator; bot owners skip both)",
+    "Post as the bot in a channel (Knife Pro + Administrator; Developers & owners skip both)",
   site: {
     categoryId: "moderation",
     categoryTitle: "Moderation",

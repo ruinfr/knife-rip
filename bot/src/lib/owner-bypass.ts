@@ -1,14 +1,18 @@
+import { isDeveloperDiscordId } from "../../../lib/bot-developers";
 import { isBotOwnerDiscordId } from "../../../lib/bot-owners";
 import { getBotInternalSecret } from "../config";
 import { fetchEntitlementFromSite } from "./site-client";
 
 /**
- * Bot owners: static IDs in `lib/bot-owners.ts` plus DB `.handout owner` rows
- * (resolved via the site entitlement API with a short cache).
+ * **Developers** and **owners**: skip Discord **Administrator** + **Knife Pro** gates (e.g. `.say`),
+ * and prefix cooldown — same effective bypass. Developers are checked first (no site call).
+ *
+ * Owners: static `lib/bot-owners.ts` plus DB `.handout owner`, resolved via entitlement API when needed.
  */
 export async function isCommandOwnerBypass(
   userId: string,
 ): Promise<boolean> {
+  if (isDeveloperDiscordId(userId)) return true;
   if (isBotOwnerDiscordId(userId)) return true;
 
   const secret = getBotInternalSecret();
