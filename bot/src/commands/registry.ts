@@ -1,10 +1,14 @@
 import { COMMAND_CATALOG_VERSION } from "../config";
 import { postCommandRegistry } from "../lib/site-client";
 import { avatarCommand } from "./general/avatar";
+import { bannerCommand } from "./general/banner";
 import { coinflipCommand } from "./general/coinflip";
+import { emojiCommand } from "./general/emoji";
 import { helpCommand } from "./general/help";
+import { knifeCommand } from "./general/knife";
 import { pingCommand } from "./general/ping";
 import { premiumCommand } from "./general/premium";
+import { roleinfoCommand } from "./general/roleinfo";
 import { serverinfoCommand } from "./general/serverinfo";
 import { uptimeCommand } from "./general/uptime";
 import { userinfoCommand } from "./general/userinfo";
@@ -18,10 +22,14 @@ import type { KnifeCommand } from "./types";
  */
 export const commandDefinitions: KnifeCommand[] = [
   avatarCommand,
+  bannerCommand,
   coinflipCommand,
+  emojiCommand,
   helpCommand,
+  knifeCommand,
   pingCommand,
   premiumCommand,
+  roleinfoCommand,
   sayCommand,
   serverinfoCommand,
   uptimeCommand,
