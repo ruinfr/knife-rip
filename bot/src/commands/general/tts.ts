@@ -60,7 +60,8 @@ export const ttsCommand: KnifeCommand = {
     let buffer: Buffer;
     try {
       buffer = await synthesizeSpeechMp3(text);
-    } catch {
+    } catch (err) {
+      console.error("[tts] synthesis failed:", err);
       await message.reply({
         embeds: [
           errorEmbed(
