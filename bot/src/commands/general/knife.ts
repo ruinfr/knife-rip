@@ -1,9 +1,12 @@
+import { resolveCommunityDiscordInviteUrl } from "../../../../lib/community-discord";
 import { minimalEmbed } from "../../lib/embeds";
 import type { KnifeCommand } from "../types";
 
 const SITE = "https://knife.rip";
 const COMMANDS = `${SITE}/commands`;
 const PRICING = `${SITE}/pricing`;
+
+const hubInvite = resolveCommunityDiscordInviteUrl();
 
 export const knifeCommand: KnifeCommand = {
   name: "knife",
@@ -22,6 +25,7 @@ export const knifeCommand: KnifeCommand = {
       `**Site:** [knife.rip](${SITE})`,
       `**Commands:** [knife.rip/commands](${COMMANDS})`,
       `**Pro:** [knife.rip/pricing](${PRICING})`,
+      `**Hub:** [knife.rip Discord](${hubInvite}) — join for **Pro/owner role sync** and support`,
       `**Prefix:** \`.\` (dot)`,
       `**Gateway ping:** **${ws}** ms`,
     ];
@@ -31,6 +35,7 @@ export const knifeCommand: KnifeCommand = {
         minimalEmbed({
           title: "Knife",
           description: lines.join("\n"),
+          footerText: `${hubInvite}`,
         }),
       ],
     });

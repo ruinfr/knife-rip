@@ -8,6 +8,8 @@ export function minimalEmbed(params: {
   imageUrl?: string;
   /** Small image in the top-right (e.g. avatar / server icon) */
   thumbnailUrl?: string;
+  /** Footer (e.g. join hub when role sync skipped — keep short; Discord max 2048). */
+  footerText?: string;
 }): EmbedBuilder {
   const b = new EmbedBuilder()
     .setTitle(params.title)
@@ -18,6 +20,11 @@ export function minimalEmbed(params: {
   }
   if (params.imageUrl) {
     b.setImage(params.imageUrl);
+  }
+  if (params.footerText) {
+    b.setFooter({
+      text: params.footerText.slice(0, 2048),
+    });
   }
   return b;
 }

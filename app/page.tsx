@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
 import { ShowcaseCarousel } from "@/components/showcase-carousel";
 import { ShowcaseTile, type ShowcaseTileItem } from "@/components/showcase-tile";
+import { resolveCommunityDiscordInviteUrl } from "@/lib/community-discord";
 import {
   fetchTopShowcaseCommunities,
   formatApproxMemberLabel,
@@ -12,6 +13,7 @@ import {
 import Link from "next/link";
 
 const discordInvite = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL;
+const communityHubInvite = resolveCommunityDiscordInviteUrl();
 
 /** Live communities pool (by member count); carousel shows 3 at a time. */
 const SHOWCASE_TOP_N = 10;
@@ -20,18 +22,11 @@ type ShowcaseItem = ShowcaseTileItem;
 
 const SHOWCASE_FALLBACK: ShowcaseItem[] = [
   {
-    key: "fallback-ak",
-    name: "AK",
-    detail: "Community server",
-    href: "https://discord.gg/ak",
+    key: "fallback-knife-hub",
+    name: "knife.rip",
+    detail: "Official hub · roles & support",
+    href: communityHubInvite,
     image: "/showcase/ak.png",
-  },
-  {
-    key: "fallback-peer",
-    name: "Peer",
-    detail: "Community server",
-    href: "https://discord.gg/peer",
-    image: "/showcase/peer.png",
   },
 ];
 
@@ -190,6 +185,20 @@ export default async function Home() {
                 Get started
               </ButtonLink>
             )}
+            <ButtonLink
+              href={communityHubInvite}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="secondary"
+              className="gap-2 px-5 py-3"
+            >
+              <Icon
+                icon="mdi:discord"
+                aria-hidden
+                className="size-[1.125rem] text-edge"
+              />
+              Community hub
+            </ButtonLink>
             <ButtonLink
               href="/pricing"
               variant="ghost"

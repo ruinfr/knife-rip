@@ -3,9 +3,12 @@ import { ProCardFlourish } from "@/components/decorative/pro-card-flourish";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
+import { resolveCommunityDiscordInviteUrl } from "@/lib/community-discord";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
+
+const communityHubInvite = resolveCommunityDiscordInviteUrl();
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -61,6 +64,16 @@ export default function PricingPage() {
           <ButtonLink href="/commands" variant="secondary" className="gap-2">
             <Icon icon="mdi:format-list-bulleted" className="size-4" />
             Command list
+          </ButtonLink>
+          <ButtonLink
+            href={communityHubInvite}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="secondary"
+            className="gap-2"
+          >
+            <Icon icon="mdi:discord" className="size-4" />
+            Discord hub
           </ButtonLink>
           <ButtonLink href="/docs/billing" variant="ghost" className="text-muted">
             Billing FAQ

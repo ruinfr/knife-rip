@@ -1,4 +1,5 @@
 import type { Message, User } from "discord.js";
+import { resolveCommunityDiscordInviteUrl } from "../../../../lib/community-discord";
 import { isDeveloperDiscordId } from "../../../../lib/bot-developers";
 import { getBotInternalSecret } from "../../config";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
@@ -52,14 +53,21 @@ function roleSyncFootnote(rs: HandoutRoleSync | undefined): string {
     case "no_change":
       return "\n\n**Discord:** Roles already matched entitlement.";
     case "not_member":
-      return "\n\n**Discord:** User is not in the configured server — roles skipped.";
+      return "\n\n**Discord:** Not in the hub server yet — handout saved; roles apply after they join (see footer).";
     case "disabled":
       return `\n\n**Discord:** Role sync disabled (${rs.detail ?? "set KNIFE_RIP_GUILD_ID + DISCORD_BOT_TOKEN on the site"}).`;
-    case "error":
-      return `\n\n**Discord:** Role sync failed — ${rs.detail}`;
+    case "error": {
+      const detail = (rs.detail ?? "unknown").slice(0, 400);
+      return `\n\n**Discord:** Role sync failed — ${detail}`;
+    }
     default:
       return "";
   }
+}
+
+function handoutHubFooter(rs: HandoutRoleSync | undefined): string | undefined {
+  if (rs?.state !== "not_member") return undefined;
+  return `Join ${resolveCommunityDiscordInviteUrl()} for Pro/owner/dev roles`;
 }
 
 function firstArgLooksLikeUserRef(raw: string | undefined): boolean {
@@ -250,6 +258,7 @@ export const handoutCommand: KnifeCommand = {
             title: "Handout added",
             description:
               `${who} now has **${label}** in the database (plus any static lists in code). Refresh the dashboard if needed.${syncNote}`,
+            footerText: handoutHubFooter(result.roleSync),
           }),
         ],
       });
@@ -289,6 +298,7 @@ export const handoutCommand: KnifeCommand = {
         minimalEmbed({
           title: removeTitle,
           description: removeBody,
+          footerText: handoutHubFooter(result.roleSync),
         }),
       ],
     });

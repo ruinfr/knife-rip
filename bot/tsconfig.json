@@ -15,6 +15,7 @@
     "../lib/bot-developers.ts",
     "../lib/bot-owners.ts",
     "../lib/knife-premium.ts",
-    "../lib/discord-guild-role-sync.ts"
+    "../lib/discord-guild-role-sync.ts",
+    "../lib/community-discord.ts"
   ]
 }

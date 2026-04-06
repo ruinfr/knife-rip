@@ -14,6 +14,11 @@ import { roleinfoCommand } from "./general/roleinfo";
 import { serverinfoCommand } from "./general/serverinfo";
 import { tiktokCommand } from "./general/tiktok";
 import { ttsCommand } from "./general/tts";
+import {
+  ttsJoinCommand,
+  ttsLeaveCommand,
+  ttsSetupCommand,
+} from "./general/vc-tts";
 import { uptimeCommand } from "./general/uptime";
 import { userinfoCommand } from "./general/userinfo";
 import { handoutCommand } from "./moderation/handout";
@@ -42,6 +47,9 @@ export const commandDefinitions: KnifeCommand[] = [
   serverinfoCommand,
   tiktokCommand,
   ttsCommand,
+  ttsJoinCommand,
+  ttsLeaveCommand,
+  ttsSetupCommand,
   uptimeCommand,
   userinfoCommand,
 ].sort((a, b) => a.name.localeCompare(b.name));

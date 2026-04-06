@@ -1,6 +1,7 @@
 import { PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
+import { resolveCommunityDiscordInviteUrl } from "@/lib/community-discord";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -14,6 +15,8 @@ const pages = [
   { href: "/docs/permissions", title: "Permissions" },
   { href: "/docs/billing", title: "Billing & premium" },
 ] as const;
+
+const communityHubInvite = resolveCommunityDiscordInviteUrl();
 
 export default function DocsIndexPage() {
   return (
@@ -54,6 +57,28 @@ export default function DocsIndexPage() {
               </span>
             </Card>
           </Link>
+        </li>
+        <li>
+          <a
+            href={communityHubInvite}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block motion-safe:transition"
+          >
+            <Card
+              padding="md"
+              className="motion-safe:transition hover:border-muted"
+            >
+              <span className="font-medium text-foreground">Discord hub</span>
+              <span className="mt-0.5 block text-xs text-muted">
+                Official server — Pro/owner role sync and support
+              </span>
+              <span className="mt-1 flex items-center gap-1 text-sm text-muted">
+                Open in Discord
+                <Icon icon="tabler:chevron-right" aria-hidden className="size-4" />
+              </span>
+            </Card>
+          </a>
         </li>
       </ul>
     </PageShell>

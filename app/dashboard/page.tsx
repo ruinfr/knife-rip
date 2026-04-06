@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
+import { resolveCommunityDiscordInviteUrl } from "@/lib/community-discord";
 import { db } from "@/lib/db";
 import { getDashboardGuildSummary, guildIconUrl } from "@/lib/discord";
 import { isDeveloperDiscordId } from "@/lib/bot-developers";
@@ -14,6 +15,7 @@ import { guildNameInitial } from "@/lib/guild-name-initial";
 import Link from "next/link";
 
 const discordInvite = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL;
+const communityHubInvite = resolveCommunityDiscordInviteUrl();
 
 function firstQuery(
   v: string | string[] | undefined,
@@ -174,6 +176,17 @@ export default async function DashboardPage({
             <p className="mt-1.5 text-sm text-muted">
               Pro:{" "}
               <span className="text-foreground">{premiumLabel}</span>
+            </p>
+            <p className="mt-2 max-w-md text-xs leading-relaxed text-muted">
+              <a
+                href={communityHubInvite}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-edge underline decoration-edge/40 underline-offset-2 hover:decoration-edge"
+              >
+                Join the knife.rip Discord hub
+              </a>{" "}
+              so Pro, owner, and developer roles can sync to your account.
             </p>
           </div>
         </div>

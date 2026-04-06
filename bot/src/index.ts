@@ -18,6 +18,7 @@ import {
   syncKnifeRipRolesForDiscordUser,
 } from "./lib/privilege-role-sync";
 import { acquireSingleInstanceLock } from "./lib/single-instance";
+import { handleBoundChannelTtsMessage } from "./lib/vc-tts/message-handler";
 
 acquireSingleInstanceLock();
 
@@ -28,6 +29,7 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.DirectMessages,
   ],
@@ -77,6 +79,10 @@ client.on(Events.MessageCreate, async (message) => {
 
   await handleAfkAuthorReturn(message);
   await handleAfkMentionReplies(message);
+
+  if (handleBoundChannelTtsMessage(message)) {
+    return;
+  }
 
   const content = message.content;
   if (!content.startsWith(PREFIX)) return;
