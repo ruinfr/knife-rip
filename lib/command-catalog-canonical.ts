@@ -172,6 +172,17 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Quick tools and light fun.",
   },
   {
+    name: "tts",
+    description: "Text-to-speech — replies with your line as an MP3",
+    usage: ".tts your message · .texttospeech · .text2speech",
+    tier: "free",
+    style: "prefix",
+    aliases: ["texttospeech", "text2speech"],
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Quick tools and light fun.",
+  },
+  {
     name: "uptime",
     description: "How long the bot process has been running",
     usage: ".uptime",
