@@ -14,6 +14,8 @@ export type KnifeCommandSite = {
   tier?: "free" | "pro";
   /** Default: prefix (`.`). */
   style?: "prefix" | "slash";
+  /** Listed on /commands with a Developer tag (bot owner–only commands). */
+  developerOnly?: boolean;
 };
 
 export type KnifeCommand = {

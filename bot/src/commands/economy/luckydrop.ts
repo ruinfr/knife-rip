@@ -22,6 +22,7 @@ export const luckydropCommand: KnifeCommand = {
     usage: ".luckydrop <amount>",
     tier: "free",
     style: "prefix",
+    developerOnly: true,
   },
   async run({ message, args }) {
     if (!(await isCommandOwnerBypass(message.author.id))) {

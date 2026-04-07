@@ -55,8 +55,7 @@ export default async function StatusPage() {
           Community insights
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Anonymized **successful** command runs across Knife (UTC calendar
-          month:{" "}
+          Anonymized successful command runs across Knife (UTC calendar month:{" "}
           <span className="text-foreground/90">{monthLabel}</span>). Server
           names are never shown — command names and counts only.
         </p>
@@ -81,15 +80,6 @@ export default async function StatusPage() {
               : "No usage logged for this month yet — check back after the bot has been active."}
           </p>
         )}
-        <p className="mt-4 text-xs text-muted">
-          Same data as JSON:{" "}
-          <Link
-            href="/api/public/command-insights"
-            className="font-medium text-edge hover:underline"
-          >
-            /api/public/command-insights
-          </Link>
-        </p>
       </Card>
 
       <p className="text-sm text-muted">

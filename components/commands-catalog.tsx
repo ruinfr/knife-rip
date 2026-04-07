@@ -86,6 +86,7 @@ function commandMatches(
     category.id,
     category.title,
     category.description,
+    cmd.developerOnly ? "developer" : "",
   ]
     .join(" ")
     .toLowerCase();
@@ -217,6 +218,11 @@ export function CommandsCatalog({ categories }: Props) {
                           {p}
                           {cmd.name}
                         </code>
+                        {cmd.developerOnly ? (
+                          <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-200/95">
+                            Developer
+                          </span>
+                        ) : null}
                         {cmd.tier === "pro" ? (
                           <span className="rounded-full bg-edge-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-strong">
                             Premium

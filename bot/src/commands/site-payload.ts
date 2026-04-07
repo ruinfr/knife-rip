@@ -8,6 +8,7 @@ export type SiteBotCommand = {
   style?: "prefix" | "slash";
   /** Without leading dot; same handler as `name`. */
   aliases?: string[];
+  developerOnly?: boolean;
 };
 
 export type CommandCategoryShape = {

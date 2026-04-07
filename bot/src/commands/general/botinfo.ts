@@ -41,9 +41,9 @@ export const botinfoCommand: KnifeCommand = {
       `**Bot version:** \`${pkgVer}\` · command sync **v${COMMAND_CATALOG_VERSION}**`,
       `**Support (hub):** [Discord](${hub})`,
       `**Website:** [${host}](${origin})`,
-      `**Commands:** [${origin}/commands](${origin}/commands)`,
-      `**Privacy:** [${origin}/privacy](${origin}/privacy)`,
-      `**Terms:** [${origin}/terms](${origin}/terms)`,
+      `**Commands:** [Command list](${origin}/commands)`,
+      `**Privacy:** [Privacy policy](${origin}/privacy)`,
+      `**Terms:** [Terms of service](${origin}/terms)`,
       `**Prefix:** \`.\` · **Gateway:** **${ws}** ms`,
     ];
 

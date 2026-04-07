@@ -99,13 +99,19 @@ async function resolveHandoutTarget(
   return null;
 }
 
-/**
- * Not listed on the public /commands page (`site` omitted) — owner/Developer tool.
- */
 export const handoutCommand: KnifeCommand = {
   name: "handout",
   description:
     "Handouts in DB — Developers control owner; owners handle premium for non-owners",
+  site: {
+    categoryId: "moderation",
+    categoryTitle: "Moderation",
+    categoryDescription: "Server staff tools.",
+    usage: ".handout add @user premium · remove @user owner",
+    tier: "free",
+    style: "prefix",
+    developerOnly: true,
+  },
   async run({ message, args }) {
     const ch = message.channel;
     if (ch.isTextBased() && "sendTyping" in ch) {

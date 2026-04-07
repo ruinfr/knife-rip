@@ -1,11 +1,11 @@
-import { buildGambleHubPayload } from "../../lib/economy/hub-ui";
+import { buildGambleDisclaimerPayload } from "../../lib/economy/hub-ui";
 import type { KnifeCommand } from "../types";
 
 export const gambleCommand: KnifeCommand = {
   name: "gamble",
   aliases: ["economy", "eco"],
   description:
-    "Open the Knife Cash hub — shop, games, stats, and transfers (buttons)",
+    "Knife Cash — disclaimer + confirm, then hub (shop, games, stats, pay)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
@@ -16,10 +16,8 @@ export const gambleCommand: KnifeCommand = {
     style: "prefix",
   },
   async run({ message }) {
-    const payload = await buildGambleHubPayload({
-      client: message.client,
+    const payload = buildGambleDisclaimerPayload({
       userId: message.author.id,
-      page: 0,
       guild: message.guild,
     });
     await message.reply({

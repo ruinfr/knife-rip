@@ -12,6 +12,8 @@ export type CanonicalCommandSiteRow = {
   tier: "free" | "pro";
   style: "prefix" | "slash";
   aliases?: string[];
+  /** Bot owner only — Developer tag on /commands. */
+  developerOnly?: boolean;
   categoryId: string;
   categoryTitle: string;
   categoryDescription: string;
@@ -25,6 +27,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     usage: ".access yes <guildId> · .access no <guildId>",
     tier: "free",
     style: "prefix",
+    developerOnly: true,
     categoryId: "core",
     categoryTitle: "Core",
     categoryDescription: "Essential prefix commands.",
@@ -136,7 +139,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "gamble",
     description:
-      "Open the interactive hub: shop, games (coinflip, dice, slots), stats, pay — button menus",
+      "Knife Cash — short disclaimer + confirm, then hub: shop, games (coinflip, dice, slots, blackjack, mines), stats, pay",
     usage: ".gamble · .economy · .eco",
     tier: "free",
     style: "prefix",
@@ -153,6 +156,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     usage: ".gcash add @user <amount> · remove · set",
     tier: "free",
     style: "prefix",
+    developerOnly: true,
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
@@ -165,10 +169,23 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     usage: ".luckydrop <amount>",
     tier: "free",
     style: "prefix",
+    developerOnly: true,
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
+  },
+  {
+    name: "handout",
+    description:
+      "Bot owner / developers — grant or revoke site entitlements (premium, owner) for a user",
+    usage: ".handout add @user premium · remove @user owner",
+    tier: "free",
+    style: "prefix",
+    developerOnly: true,
+    categoryId: "moderation",
+    categoryTitle: "Moderation",
+    categoryDescription: "Server staff tools.",
   },
   {
     name: "command",

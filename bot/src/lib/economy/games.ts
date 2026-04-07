@@ -1,6 +1,7 @@
 import type { GuildMember } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
 import { economyPayoutMultiplier } from "./boost";
+import { applyGambleOutcomeInTx } from "./gamble-outcome";
 import { ecoM } from "./custom-emojis";
 import { formatCash } from "./money";
 
@@ -16,7 +17,7 @@ function rollSlots(): [string, string, string] {
   ];
 }
 
-function multCents(mult: number): bigint {
+export function multCents(mult: number): bigint {
   return BigInt(Math.round(mult * 100));
 }
 
@@ -82,51 +83,14 @@ export async function runHouseGame(params: {
       }
     }
 
-    const net = payout - bet;
-    const newCash = row.cash - bet + payout;
-
-    const winInc = payout > bet ? 1 : 0;
-    const lossInc = payout === 0n ? 1 : 0;
-    const newStreak =
-      payout > bet
-        ? row.gambleWinStreak + 1
-        : payout === bet
-          ? row.gambleWinStreak
-          : 0;
-    const best = Math.max(row.gambleBestStreak, newStreak);
-
-    await tx.economyUser.update({
-      where: { discordUserId: userId },
-      data: {
-        cash: newCash,
-        gambleWins: { increment: winInc },
-        gambleLosses: { increment: lossInc },
-        gambleNetProfit: { increment: net },
-        gambleWinStreak: newStreak,
-        gambleBestStreak: best,
-      },
+    const { net } = await applyGambleOutcomeInTx(tx, row, {
+      userId,
+      bet,
+      payout,
+      game,
     });
 
-    await tx.economyLedger.create({
-      data: {
-        discordUserId: userId,
-        delta: net,
-        balanceAfter: newCash,
-        reason: "gamble",
-        meta: { game, bet: bet.toString(), payout: payout.toString() },
-      },
-    });
-
-    await tx.economyGambleLog.create({
-      data: {
-        discordUserId: userId,
-        game,
-        bet,
-        payout,
-        won: winInc > 0,
-      },
-    });
-
-    return { summary, net, won: payout > bet };
+    const won = payout > bet;
+    return { summary, net, won };
   });
 }

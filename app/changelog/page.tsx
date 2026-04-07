@@ -21,7 +21,7 @@ export default function ChangelogPage() {
   return (
     <PageShell
       title="What's new"
-      description={`Release notes for Knife (command catalog **v${COMMAND_CATALOG_VERSION}**). Newest first.`}
+      description={`Release notes for Knife (command catalog v${COMMAND_CATALOG_VERSION}). Newest first.`}
       maxWidth="wide"
     >
       <ul className="!mt-0 list-none space-y-6 p-0">

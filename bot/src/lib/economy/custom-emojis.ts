@@ -35,6 +35,29 @@ const M = {
   toplb: "<:toplb:1491209450508259458>",
   pay: "<:pay:1491209367242936572>",
   stats: "<:stats:1491209262846836756>",
+  /** Playing cards (blackjack) — ranks 1–9 are tablerplaycard1…9 */
+  tablerplaycard1: "<:tablerplaycard1:1491215609445355590>",
+  tablerplaycard2: "<:tablerplaycard2:1491215608656826499>",
+  tablerplaycard3: "<:tablerplaycard3:1491215607897526282>",
+  tablerplaycard4: "<:tablerplaycard4:1491215605846511707>",
+  tablerplaycard5: "<:tablerplaycard5:1491215604240224341>",
+  tablerplaycard6: "<:tablerplaycard6:1491215602008723557>",
+  tablerplaycard7: "<:tablerplaycard7:1491215599614038016>",
+  tablerplaycard8: "<:tablerplaycard8:1491215596178641127>",
+  tablerplaycard9: "<:tablerplaycard9:1491215595348164851>",
+  tablerplaycarda: "<:tablerplaycarda:1491215593712386058>",
+  tablerplaycardj: "<:tablerplaycardj:1491215592341110844>",
+  tablerplaycardq: "<:tablerplaycardq:1491215582186701051>",
+  tablerplaycardk: "<:tablerplaycardk:1491215583323361300>",
+  emojionev1bomb: "<:emojionev1bomb:1491215389214904373>",
+  emojionev1gemstone: "<:emojionev1gemstone:1491215388350873740>",
+  topgambler: "<:topgambler:1491217374333108375>",
+  tax: "<:tax:1491217082023415948>",
+  games: "<:games:1491216919972548608>",
+  winLossInStatsMenu: "<:WinLossInStatsMenu:1491218198807187526>",
+  netInStatsMenu: "<:NetInStatsMenu:1491218198169911316>",
+  rankInStatsMenu: "<:RankInStatsMenu:1491218197225934878>",
+  streakInStatsMenu: "<:streakInStatsMenu:1491218195820974262>",
 } as const;
 
 export const ecoM = M;
@@ -68,11 +91,22 @@ export const ecoBtn = {
   knifepremium: b("1491210052814770288", "knifepremium"),
   booster: b("1491210053724672070", "booster"),
   tablerinfosquarefilled: b("1491168085414252696", "tablerinfosquarefilled"),
+  emojionev1bomb: b("1491215389214904373", "emojionev1bomb"),
+  emojionev1gemstone: b("1491215388350873740", "emojionev1gemstone"),
+  icoutlineplus: b("1491169577240101075", "icoutlineplus"),
+  materialsymbolscheckbox: b("1491168078694842399", "materialsymbolscheckbox"),
+  topgambler: b("1491217374333108375", "topgambler"),
+  tax: b("1491217082023415948", "tax"),
+  games: b("1491216919972548608", "games"),
+  WinLossInStatsMenu: b("1491218198807187526", "WinLossInStatsMenu"),
+  NetInStatsMenu: b("1491218198169911316", "NetInStatsMenu"),
+  RankInStatsMenu: b("1491218197225934878", "RankInStatsMenu"),
+  streakInStatsMenu: b("1491218195820974262", "streakInStatsMenu"),
 } as const;
 
 const HUB_PAGE_TITLE: readonly string[] = [
   `${M.shop} Shop`,
-  `${M.slots} Games`,
+  `${M.games} Games`,
   `${M.stats} Stats`,
   `${M.pay} Pay`,
 ];

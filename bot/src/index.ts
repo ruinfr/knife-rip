@@ -22,6 +22,7 @@ import {
 import { allowPrefixCommand } from "./lib/command-cooldown";
 import { actionableErrorEmbed } from "./lib/embeds";
 import { handleEconomyInteraction } from "./lib/economy/interaction-handler";
+import { loadEconomyGuildEnvConfig } from "./lib/economy/economy-guild-config";
 import { recordEconomyMessageActivity } from "./lib/economy/milestones";
 import { handlePollInteraction } from "./lib/poll/interaction-handler";
 import {
@@ -61,6 +62,12 @@ const PRIVILEGE_RECONCILE_MS = 20 * 60 * 1000;
 
 client.once(Events.ClientReady, async (c) => {
   console.log(`Knife ready as ${c.user.tag} — prefix "${PREFIX}"`);
+  try {
+    await loadEconomyGuildEnvConfig();
+    console.log("Economy guild env (tracking + shop) loaded.");
+  } catch (e) {
+    console.warn("Economy guild env load failed:", e);
+  }
   const rip = getKnifeRipPrivilegeSyncEnv();
   if (rip) {
     console.log(

@@ -23,6 +23,7 @@ export const gcashCommand: KnifeCommand = {
     usage: ".gcash add @user <amount> · .gcash remove … · .gcash set …",
     tier: "free",
     style: "prefix",
+    developerOnly: true,
   },
   async run({ message, args }) {
     if (!(await isCommandOwnerBypass(message.author.id))) {
@@ -49,7 +50,7 @@ export const gcashCommand: KnifeCommand = {
     let targetId = mention?.id ?? null;
     let amountStr: string | undefined;
     if (targetId) {
-      amountStr = args[1];
+      amountStr = args[2];
     } else if (args[1] && /^\d{17,20}$/.test(args[1])) {
       targetId = args[1];
       amountStr = args[2];

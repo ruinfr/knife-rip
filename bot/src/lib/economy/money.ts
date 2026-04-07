@@ -15,8 +15,7 @@ export function parsePositiveBigInt(raw: string): bigint | null {
   }
 }
 
+/** Upper bound for a bet: entire wallet (no house-imposed cap). */
 export function maxBetForBalance(balance: bigint): bigint {
-  if (balance <= 0n) return 0n;
-  const cap = (balance * 15n) / 100n;
-  return cap > 0n ? cap : 1n;
+  return balance > 0n ? balance : 0n;
 }

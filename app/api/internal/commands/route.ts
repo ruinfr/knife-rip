@@ -19,6 +19,7 @@ function isValidCatalog(body: unknown): body is {
       tier?: string;
       style?: string;
       aliases?: string[];
+      developerOnly?: boolean;
     }>;
   }>;
 } {
@@ -58,6 +59,9 @@ function isValidCatalog(body: unknown): body is {
         for (const a of m.aliases) {
           if (typeof a !== "string" || !a.trim()) return false;
         }
+      }
+      if (m.developerOnly != null && typeof m.developerOnly !== "boolean") {
+        return false;
       }
     }
   }

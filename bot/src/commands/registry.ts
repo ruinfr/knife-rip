@@ -184,6 +184,7 @@ function buildSiteCategories(
         cmd.aliases && cmd.aliases.length > 0
           ? cmd.aliases.map((a) => a.toLowerCase())
           : undefined,
+      ...(s.developerOnly ? { developerOnly: true } : {}),
     });
   }
 

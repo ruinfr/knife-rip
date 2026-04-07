@@ -20,6 +20,7 @@ export const accessCommand: KnifeCommand = {
     usage: ".access yes <guildId> · .access no <guildId>",
     tier: "free",
     style: "prefix",
+    developerOnly: true,
   },
   async run({ message, args }) {
     if (!(await isCommandOwnerBypass(message.author.id))) {

@@ -8,7 +8,7 @@
 import { CANONICAL_COMMAND_SITE_ROWS } from "@/lib/command-catalog-canonical";
 import { db } from "@/lib/db";
 
-export const COMMAND_CATALOG_VERSION = 24 as const;
+export const COMMAND_CATALOG_VERSION = 25 as const;
 export const COMMAND_SNAPSHOT_ID = "default" as const;
 
 export type CommandInvokeStyle = "prefix" | "slash";
@@ -25,6 +25,8 @@ export type BotCommand = {
   style?: CommandInvokeStyle;
   /** Shorter names that call the same command (shown in a disclosure on the site). */
   aliases?: string[];
+  /** Bot owner / operator only — shown as Developer on /commands. */
+  developerOnly?: boolean;
 };
 
 export type CommandCategory = {
@@ -74,6 +76,7 @@ function mergeCanonicalCatalog(db: CommandCategory[]): CommandCategory[] {
       tier: row.tier,
       style: row.style,
       aliases: row.aliases,
+      ...(row.developerOnly ? { developerOnly: true } : {}),
     });
   }
 
@@ -91,7 +94,10 @@ function mergeCanonicalCatalog(db: CommandCategory[]): CommandCategory[] {
     for (const cmd of cat.commands) {
       if (canonicalNames.has(cmd.name)) continue;
       if (!target.commands.some((c) => c.name === cmd.name)) {
-        target.commands.push(cmd);
+        target.commands.push({
+          ...cmd,
+          developerOnly: cmd.developerOnly === true ? true : undefined,
+        });
       }
     }
   }

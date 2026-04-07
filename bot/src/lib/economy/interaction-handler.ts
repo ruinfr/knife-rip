@@ -22,12 +22,25 @@ import {
   dropByToken,
   pickRandomMember,
 } from "./drop-state";
+import {
+  handleBlackjackButton,
+  runBlackjackInitial,
+} from "./blackjack-flow";
 import { ecoM } from "./custom-emojis";
+import {
+  handleMinesCash,
+  handleMinesPick,
+  runMinesInitial,
+} from "./mines-flow";
 import { runHouseGame, type HouseGameKind } from "./games";
+import {
+  findEnvShopItem,
+  parseEnvShopItemId,
+} from "./economy-guild-config";
 import { buildGambleHubPayload } from "./hub-ui";
 import { resolveHubGuild } from "./hub-guild";
 import { economyLogEmbed, sendEconomyLog } from "./log";
-import { formatCash, maxBetForBalance, parsePositiveBigInt } from "./money";
+import { formatCash, parsePositiveBigInt } from "./money";
 import { getBotPrisma } from "../db-prisma";
 import {
   applyCashDelta,
@@ -110,6 +123,99 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
   const { uid, tok } = parsed;
   const guild = interaction.guild;
 
+  if (tok[0] === "gk" && tok[1] === "ok") {
+    await interaction.deferUpdate();
+    const payload = await buildGambleHubPayload({
+      client: interaction.client,
+      userId: uid,
+      page: 0,
+      guild,
+    });
+    await interaction.message.edit({
+      embeds: payload.embeds,
+      components: payload.components,
+    });
+    return;
+  }
+
+  if (
+    tok[0] === "bj" &&
+    tok[1] &&
+    tok[2] &&
+    (tok[2] === "hit" || tok[2] === "stand")
+  ) {
+    await interaction.deferUpdate();
+    const m = await interaction.guild?.members.fetch(uid).catch(() => null);
+    try {
+      const res = await handleBlackjackButton({
+        userId: uid,
+        token: tok[1]!,
+        action: tok[2] as "hit" | "stand",
+        member: m ?? null,
+      });
+      await interaction.editReply({
+        embeds: res.embeds,
+        components: res.components,
+      });
+    } catch {
+      await interaction.editReply({
+        content: "❌ Could not settle — balance may have changed.",
+        embeds: [],
+        components: [],
+      });
+    }
+    return;
+  }
+
+  if (tok[0] === "mn" && tok[1]) {
+    await interaction.deferUpdate();
+    const m = await interaction.guild?.members.fetch(uid).catch(() => null);
+    try {
+      let res;
+      if (tok[2] === "cash") {
+        res = await handleMinesCash({
+          userId: uid,
+          token: tok[1]!,
+          member: m ?? null,
+        });
+      } else if (tok[2] === "p" && tok[3] !== undefined) {
+        const idx = parseInt(tok[3]!, 10);
+        if (!Number.isFinite(idx)) {
+          await interaction.editReply({
+            content: "❌ Invalid tile.",
+            embeds: [],
+            components: [],
+          });
+          return;
+        }
+        res = await handleMinesPick({
+          userId: uid,
+          token: tok[1]!,
+          idx,
+          member: m ?? null,
+        });
+      } else {
+        await interaction.editReply({
+          content: "❌ Unknown action.",
+          embeds: [],
+          components: [],
+        });
+        return;
+      }
+      await interaction.editReply({
+        embeds: res.embeds,
+        components: res.components,
+      });
+    } catch {
+      await interaction.editReply({
+        content: "❌ Could not settle — balance may have changed.",
+        embeds: [],
+        components: [],
+      });
+    }
+    return;
+  }
+
   if (tok[0] === "pg" && tok.length >= 3) {
     const cur = hubPageFromTok(tok);
     if (tok[2] === "prev" || tok[2] === "next") {
@@ -131,15 +237,50 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
 
     if (tok[2] === "g" && tok[3]) {
       const gKey = tok[3];
-      if (gKey !== "cf" && gKey !== "dc" && gKey !== "sl") return;
+      if (
+        gKey !== "cf" &&
+        gKey !== "dc" &&
+        gKey !== "sl" &&
+        gKey !== "bj" &&
+        gKey !== "mn"
+      ) {
+        return;
+      }
+      const cash = await getCash(uid);
+      const input = new TextInputBuilder()
+        .setCustomId("amount")
+        .setLabel(`Bet (you have ${formatCash(cash)})`)
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true)
+        .setPlaceholder("e.g. 100");
+
+      if (gKey === "bj") {
+        const modal = new ModalBuilder()
+          .setCustomId(`${ECON_INTERACTION_PREFIX}${uid}:m:bj`)
+          .setTitle(`${ecoM.blackjack} Blackjack`)
+          .addComponents(
+            new ActionRowBuilder<TextInputBuilder>().addComponents(input),
+          );
+        await interaction.showModal(modal);
+        return;
+      }
+      if (gKey === "mn") {
+        const modal = new ModalBuilder()
+          .setCustomId(`${ECON_INTERACTION_PREFIX}${uid}:m:mn`)
+          .setTitle(`${ecoM.mines} Mines`)
+          .addComponents(
+            new ActionRowBuilder<TextInputBuilder>().addComponents(input),
+          );
+        await interaction.showModal(modal);
+        return;
+      }
+
       const map: Record<string, HouseGameKind> = {
         cf: "coinflip",
         dc: "dice",
         sl: "slots",
       };
       const kind = map[gKey]!;
-      const cash = await getCash(uid);
-      const maxB = maxBetForBalance(cash);
       const modal = new ModalBuilder()
         .setCustomId(`${ECON_INTERACTION_PREFIX}${uid}:m:${gKey}`)
         .setTitle(
@@ -149,12 +290,6 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
               ? `${ecoM.dice} Dice`
               : `${ecoM.slots} Slots`,
         );
-      const input = new TextInputBuilder()
-        .setCustomId("amount")
-        .setLabel(`Bet (max ${formatCash(maxB)})`)
-        .setStyle(TextInputStyle.Short)
-        .setRequired(true)
-        .setPlaceholder("e.g. 100");
       modal.addComponents(
         new ActionRowBuilder<TextInputBuilder>().addComponents(input),
       );
@@ -180,10 +315,10 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
               .setDescription(
                 `${ecoM.cash} **Cash:** **${formatCash(u.cash)}**\n` +
                   `${ecoM.msgs} **Messages (tracked):** **${u.lifetimeMessages.toLocaleString()}**\n` +
-                  `${ecoM.toplb} **Rank:** **#${rank}** by cash\n` +
-                  `${ecoM.slots} **W / L:** **${u.gambleWins}** / **${u.gambleLosses}**\n` +
-                  `${ecoM.rich} **Net (games):** **${formatCash(u.gambleNetProfit)}**\n` +
-                  `${ecoM.booster} **Win streak:** **${u.gambleWinStreak}** (best **${u.gambleBestStreak}**)`,
+                  `${ecoM.rankInStatsMenu} **Rank:** **#${rank}** by cash\n` +
+                  `${ecoM.winLossInStatsMenu} **W / L:** **${u.gambleWins}** / **${u.gambleLosses}**\n` +
+                  `${ecoM.netInStatsMenu} **Net (games):** **${formatCash(u.gambleNetProfit)}**\n` +
+                  `${ecoM.streakInStatsMenu} **Win streak:** **${u.gambleWinStreak}** (best **${u.gambleBestStreak}**)`,
               ),
           ],
         });
@@ -237,7 +372,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
           embeds: [
             new EmbedBuilder()
               .setColor(0x5865f2)
-              .setTitle(`${ecoM.slots} Top gamblers (net profit)`)
+              .setTitle(`${ecoM.topgambler} Top gamblers (net profit)`)
               .setDescription(
                 lines.length > 0
                   ? lines.join("\n")
@@ -291,7 +426,96 @@ async function handleEconomySelect(
 
   await interaction.deferUpdate();
 
+  const guild = interaction.guild;
+  if (!guild) {
+    await interaction.followUp({
+      ephemeral: true,
+      content: "❌ Use the shop from a server.",
+    });
+    return;
+  }
+
   const prisma = getBotPrisma();
+
+  if (itemId.startsWith("envshop:")) {
+    const ref = parseEnvShopItemId(itemId);
+    if (!ref || ref.guildId !== guild.id) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "❌ That item is not sold in this server.",
+      });
+      return;
+    }
+    const envItem = findEnvShopItem(guild.id, itemId);
+    if (!envItem) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "❌ That item is no longer available.",
+      });
+      return;
+    }
+    const price = envItem.price;
+    const row = await getOrCreateEconomyUser(uid);
+    if (row.cash < price) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: `❌ You need **${formatCash(price)}** — you have **${formatCash(row.cash)}**.`,
+      });
+      return;
+    }
+    const member = await guild.members.fetch(uid).catch(() => null);
+    if (!member) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "❌ You need to be in this server to buy that.",
+      });
+      return;
+    }
+    try {
+      await prisma.$transaction(async (tx) => {
+        const u = await tx.economyUser.findUnique({
+          where: { discordUserId: uid },
+        });
+        if (!u || u.cash < price) throw new Error("INSUFFICIENT_FUNDS");
+        const newCash = u.cash - price;
+        await tx.economyUser.update({
+          where: { discordUserId: uid },
+          data: { cash: newCash },
+        });
+        await tx.economyLedger.create({
+          data: {
+            discordUserId: uid,
+            delta: -price,
+            balanceAfter: newCash,
+            reason: "shop_buy",
+            meta: { itemId: envItem.id, name: envItem.name, guildId: guild.id },
+          },
+        });
+      });
+      await member.roles.add(envItem.roleId).catch(() => {
+        throw new Error("ROLE");
+      });
+      await interaction.followUp({
+        ephemeral: true,
+        content: `✅ Bought **${envItem.emoji} ${envItem.name}** for **${formatCash(price)}**!`,
+      });
+      void sendEconomyLog(
+        interaction.client,
+        economyLogEmbed(
+          `${ecoM.shop} Shop purchase`,
+          `<@${uid}> in **${guild.name}** bought **${envItem.name}** for **${formatCash(price)}**.`,
+        ),
+      );
+    } catch (e) {
+      const msg =
+        e instanceof Error && e.message === "ROLE"
+          ? "❌ Could not assign the role — check bot role order / permissions."
+          : "❌ Purchase failed — try again or ask staff.";
+      await interaction.followUp({ ephemeral: true, content: msg });
+    }
+    return;
+  }
+
   const item = await prisma.economyShopItem.findFirst({
     where: { id: itemId, active: true },
   });
@@ -318,7 +542,7 @@ async function handleEconomySelect(
     await interaction.followUp({
       ephemeral: true,
       content:
-        "❌ Shop is not configured (**ECONOMY_LOG_CHANNEL_ID** on the bot).",
+        "❌ This catalog needs the hub server configured on the bot to deliver roles.",
     });
     return;
   }
@@ -388,6 +612,66 @@ async function handleEconomyModal(
   if (tok[0] !== "m") return;
 
   const kind = tok[1];
+  if (kind === "bj" || kind === "mn") {
+    await interaction.deferReply({ ephemeral: true });
+    const amountRaw = interaction.fields.getTextInputValue("amount");
+    const bet = parsePositiveBigInt(amountRaw);
+    if (!bet) {
+      await interaction.editReply({
+        content: "❌ Enter a positive whole amount.",
+      });
+      return;
+    }
+    const cash = await getCash(uid);
+    if (bet > cash) {
+      await interaction.editReply({
+        content: `❌ You only have **${formatCash(cash)}**.`,
+      });
+      return;
+    }
+    const cdKey = `${uid}:${kind}`;
+    const last = gameCooldown.get(cdKey) ?? 0;
+    if (Date.now() - last < GAME_COOLDOWN_MS) {
+      await interaction.editReply({
+        content: "⏳ Game cooldown — try again in a few seconds.",
+      });
+      return;
+    }
+    const m = await interaction.guild?.members.fetch(uid).catch(() => null);
+    try {
+      if (kind === "bj") {
+        const payload = await runBlackjackInitial({
+          userId: uid,
+          bet,
+          member: m ?? null,
+        });
+        gameCooldown.set(cdKey, Date.now());
+        await interaction.editReply({
+          embeds: payload.embeds,
+          components: payload.components,
+        });
+      } else {
+        const payload = await runMinesInitial({
+          userId: uid,
+          bet,
+          member: m ?? null,
+        });
+        gameCooldown.set(cdKey, Date.now());
+        await interaction.editReply({
+          embeds: payload.embeds,
+          components: payload.components,
+        });
+      }
+    } catch (e) {
+      const msg =
+        e instanceof Error && e.message === "INSUFFICIENT_FUNDS"
+          ? "❌ Not enough cash (balance changed?)."
+          : "❌ Game error — try again.";
+      await interaction.editReply({ content: msg });
+    }
+    return;
+  }
+
   if (kind === "pay") {
     await interaction.deferReply({ ephemeral: true });
     const targetRaw = interaction.fields.getTextInputValue("target").trim();
@@ -426,13 +710,13 @@ async function handleEconomyModal(
       await interaction.editReply({
         content:
           `✅ Sent **${formatCash(amount)}** to <@${targetRaw}>.\n` +
-          `They received **${formatCash(recipientGot)}** (tax **${formatCash(tax)}**).`,
+          `They received **${formatCash(recipientGot)}** (${ecoM.tax} tax **${formatCash(tax)}**).`,
       });
       void sendEconomyLog(
         interaction.client,
         economyLogEmbed(
           `${ecoM.pay} Transfer`,
-          `<@${uid}> → <@${targetRaw}> **${formatCash(amount)}** (tax **${formatCash(tax)}**).`,
+          `<@${uid}> → <@${targetRaw}> **${formatCash(amount)}** (${ecoM.tax} tax **${formatCash(tax)}**).`,
         ),
       );
     } catch (e) {
@@ -461,10 +745,9 @@ async function handleEconomyModal(
     return;
   }
   const cash = await getCash(uid);
-  const maxB = maxBetForBalance(cash);
-  if (bet > maxB) {
+  if (bet > cash) {
     await interaction.editReply({
-      content: `❌ Max bet here is **${formatCash(maxB)}** (15% of balance, min 1).`,
+      content: `❌ You only have **${formatCash(cash)}**.`,
     });
     return;
   }
