@@ -208,7 +208,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     description:
       "VoiceMaster — temp voice channels from a hub; paginated panel (lock, ghost, disconnect picker, info, user limit, rename) plus permit, transfer, defaults",
     usage:
-      ".voicemaster setup · panel ({{mdi:lock}} lock · {{mdi:ghost-outline}} ghost · disconnect · {{mdi:plus}} limit · {{mdi:pencil}} rename) · .vm join",
+      ".voicemaster setup · panel ({{mdi:lock}} lock · {{mdi:ghost-outline}} ghost · {{mdi:lan-disconnect}} disconnect · {{mdi:plus}} limit · {{mdi:pencil}} rename) · .vm join",
     tier: "free",
     style: "prefix",
     aliases: ["vm"],
