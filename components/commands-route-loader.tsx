@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandMark } from "@/components/brand-mark";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -88,43 +89,63 @@ function CommandsLoaderOverlay({ open }: { open: boolean }) {
           role="status"
           aria-busy="true"
           aria-live="polite"
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-[#0a0a0a]"
+          className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-5 border-b border-red-950/35 bg-background/88 backdrop-blur-xl backdrop-saturate-150"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduce ? 0 : 0.18 }}
+          transition={{
+            duration: reduce ? 0 : 0.2,
+            ease: [0.16, 1, 0.3, 1] as const,
+          }}
+          style={{ willChange: "opacity" }}
         >
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_75%_55%_at_50%_42%,rgba(220,38,38,0.16),transparent_68%)]"
+            aria-hidden
+          />
           <span className="sr-only">Loading commands</span>
-          <motion.div
-            className="relative flex size-[4.5rem] items-center justify-center sm:size-20"
-            animate={
-              reduce
-                ? undefined
-                : {
-                    scale: [1, 1.06, 1],
-                    opacity: [0.88, 1, 0.88],
-                  }
-            }
-            transition={
-              reduce
-                ? undefined
-                : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }
-            }
-            style={{
-              filter: reduce
-                ? undefined
-                : "drop-shadow(0 0 16px rgba(56, 189, 248, 0.42)) drop-shadow(0 0 40px rgba(56, 189, 248, 0.2))",
-            }}
+          <p
+            className="relative text-[10px] font-semibold uppercase tracking-[0.28em] text-muted"
+            aria-hidden
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/brand/knife-logo.png"
-              alt=""
-              width={72}
-              height={72}
-              className="size-[4.25rem] object-contain opacity-95 sm:size-16"
+            Loading
+          </p>
+          <div
+            className="relative rounded-[1.25rem] border border-red-950/35 bg-surface/85 px-11 py-9 shadow-[var(--shadow-glow-primary),var(--shadow-glow)] ring-1 ring-inset ring-white/[0.05]"
+          >
+            <div
+              className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-red-950/22 via-transparent to-transparent"
+              aria-hidden
             />
-          </motion.div>
+            <div
+              className="pointer-events-none absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(220,38,38,0.22)] blur-3xl motion-reduce:opacity-80"
+              aria-hidden
+            />
+            <motion.div
+              className="relative flex items-center justify-center"
+              animate={
+                reduce ? undefined : { opacity: [0.82, 1, 0.82] }
+              }
+              transition={
+                reduce
+                  ? undefined
+                  : {
+                      duration: 2.35,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }
+              }
+              style={{ willChange: reduce ? "auto" : "opacity" }}
+            >
+              <BrandMark
+                className="relative size-[3.75rem] text-edge sm:size-16"
+                aria-hidden
+              />
+            </motion.div>
+          </div>
+          <p className="font-display text-sm font-medium tracking-tight text-muted">
+            Commands
+          </p>
         </motion.div>
       ) : null}
     </AnimatePresence>
