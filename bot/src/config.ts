@@ -19,7 +19,7 @@ loadEnvFiles();
 export const PREFIX = "." as const;
 
 /** Must match site `lib/commands.ts` → `COMMAND_CATALOG_VERSION`. */
-export const COMMAND_CATALOG_VERSION = 23 as const;
+export const COMMAND_CATALOG_VERSION = 24 as const;
 
 export function getDiscordToken(): string {
   const token = process.env.DISCORD_BOT_TOKEN?.trim();
@@ -67,4 +67,10 @@ export function getRapidApiKey(): string | undefined {
   const k =
     process.env.RAPIDAPI_KEY?.trim() || process.env.RAPIDAPI_API_KEY?.trim();
   return k || undefined;
+}
+
+/** Mod log channel for economy admin + large transfers (optional). */
+export function getEconomyLogChannelId(): string | undefined {
+  const id = process.env.ECONOMY_LOG_CHANNEL_ID?.trim();
+  return id && /^\d{17,20}$/.test(id) ? id : undefined;
 }

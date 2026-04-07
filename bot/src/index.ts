@@ -21,6 +21,8 @@ import {
 } from "./lib/afk/message-flow";
 import { allowPrefixCommand } from "./lib/command-cooldown";
 import { actionableErrorEmbed } from "./lib/embeds";
+import { handleEconomyInteraction } from "./lib/economy/interaction-handler";
+import { recordEconomyMessageActivity } from "./lib/economy/milestones";
 import { handlePollInteraction } from "./lib/poll/interaction-handler";
 import {
   reconcileKnifeRipSuspectRoles,
@@ -114,6 +116,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
     return;
   }
   try {
+    await handleEconomyInteraction(interaction);
+  } catch (err) {
+    console.warn("Economy interaction:", err);
+  }
+  try {
     await handlePollInteraction(interaction);
   } catch (err) {
     console.warn("Poll interaction:", err);
@@ -155,6 +162,7 @@ client.on(Events.MessageCreate, async (message) => {
   }
 
   recordGuildTextMessageForLeaderboard(message);
+  recordEconomyMessageActivity(message);
 
   await handleAfkAuthorReturn(message);
   await handleAfkMentionReplies(message);

@@ -20,6 +20,19 @@ export type ChangelogEntry = {
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
+    id: "2026-04-10-v24-gambling",
+    catalogVersion: 24,
+    date: "2026-04-10",
+    title: "Knife Cash gambling hub",
+    summary:
+      "**.gamble** hub (shop, coinflip/dice/slots, stats, pay), **.cash**, owner **.gcash** / **.luckydrop**; removed standalone **.coinflip**.",
+    bullets: [
+      "Global wallet + milestones from messages; +20% with boost or Pro.",
+      "Site: new **Gambling & economy** section on /commands.",
+      "Set **ECONOMY_LOG_CHANNEL_ID** for shop hub + mod logs.",
+    ],
+  },
+  {
     id: "2026-04-09-v23-leaderboards",
     catalogVersion: 23,
     date: "2026-04-09",

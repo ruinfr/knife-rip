@@ -121,15 +121,54 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Essential prefix commands.",
   },
   {
-    name: "coinflip",
-    description: "Flip a coin — Heads or Tails, or challenge someone",
-    usage: ".coinflip · .coinflip @user · .cf · .flip",
+    name: "cash",
+    description:
+      "Show your global Knife Cash balance (or another user’s); bonus line if +20% earnings apply",
+    usage: ".cash · .bal · .balance · .wallet [@user | ID]",
     tier: "free",
     style: "prefix",
-    aliases: ["flip", "cf"],
-    categoryId: "utility",
-    categoryTitle: "Utility",
-    categoryDescription: "Quick tools and light fun.",
+    aliases: ["bal", "balance", "wallet"],
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
+  },
+  {
+    name: "gamble",
+    description:
+      "Open the interactive hub: shop, games (coinflip, dice, slots), stats, pay — button menus",
+    usage: ".gamble · .economy · .eco",
+    tier: "free",
+    style: "prefix",
+    aliases: ["economy", "eco"],
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
+  },
+  {
+    name: "gcash",
+    description:
+      "Bot owner only — add, remove, or set a user’s global Knife Cash (logged)",
+    usage: ".gcash add @user <amount> · remove · set",
+    tier: "free",
+    style: "prefix",
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
+  },
+  {
+    name: "luckydrop",
+    description:
+      "Bot owner only — pick a random member for a cash drop (confirm, reroll, cancel)",
+    usage: ".luckydrop <amount>",
+    tier: "free",
+    style: "prefix",
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
   },
   {
     name: "command",

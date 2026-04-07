@@ -233,3 +233,56 @@ model VoiceMasterTempChannel {
   @@index([guildId])
   @@index([ownerId])
 }
+
+/// Global per-Discord-user wallet (not per-server).
+model EconomyUser {
+  discordUserId      String    @id
+  cash               BigInt    @default(0)
+  lifetimeMessages   Int       @default(0)
+  /// Next index into milestone thresholds (0 = none claimed yet).
+  nextMilestoneIndex Int       @default(0)
+  gambleWins         Int       @default(0)
+  gambleLosses       Int       @default(0)
+  gambleNetProfit    BigInt    @default(0)
+  gambleWinStreak    Int       @default(0)
+  gambleBestStreak   Int       @default(0)
+  lastPayAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model EconomyLedger {
+  id             String   @id @default(cuid())
+  discordUserId  String
+  delta          BigInt
+  balanceAfter   BigInt
+  reason         String
+  meta           Json?
+  actorUserId    String?
+  createdAt      DateTime @default(now())
+
+  @@index([discordUserId, createdAt])
+}
+
+/// Role shop — roles must exist in the hub guild (see ECONOMY_LOG_CHANNEL_ID).
+model EconomyShopItem {
+  id        String  @id @default(cuid())
+  emoji     String
+  name      String
+  price     Int
+  roleId    String
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+}
+
+model EconomyGambleLog {
+  id            String   @id @default(cuid())
+  discordUserId String
+  game          String
+  bet           BigInt
+  payout        BigInt
+  won           Boolean
+  createdAt     DateTime @default(now())
+
+  @@index([discordUserId, createdAt])
+}
