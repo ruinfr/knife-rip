@@ -35,9 +35,9 @@ export function buildGambleDisclaimerPayload(params: {
     .setTitle(`${ecoM.games} Knife Cash — please read`)
     .setDescription(
       "**Knife Cash is not real money.** It’s a pretend balance for fun on Discord.\n\n" +
-        "• You **can lose** cash on games — only bet what you’re fine losing.\n" +
-        "• This is **not** real-world gambling; there is **no** cash-out or prize value.\n" +
-        "• If you’re not old enough to gamble where you live, **don’t use** these games.\n\n" +
+        "• You can lose cash on games — only bet what you’re fine losing.\n" +
+        "• This is not real-world gambling; there is no cash-out or prize value.\n" +
+        "• Boosters / Knife Pro members get 20% more money.\n\n" +
         `${ecoM.tablerinfosquarefilled} Press **I understand** below to open the Knife Cash menu.`,
     )
     .setFooter({

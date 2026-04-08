@@ -1,10 +1,12 @@
 import { randomBytes, randomInt } from "crypto";
-import type { Client, GuildMember } from "discord.js";
 import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
+  type Client,
+  type Guild,
+  type GuildMember,
   type MessageActionRowComponentBuilder,
 } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
@@ -133,7 +135,7 @@ function minesComponents(
         btn.setLabel("\u200b");
       } else {
         btn.setStyle(ButtonStyle.Secondary);
-        btn.setEmoji(ecoBtn.mines);
+        btn.setEmoji(ecoBtn.MinesTile);
         btn.setLabel("\u200b");
         if (dead) btn.setDisabled(true);
       }
@@ -193,14 +195,15 @@ export async function handleMinesPick(params: {
   userId: string;
   token: string;
   idx: number;
-  member: GuildMember | null;
+  /** Used only when the board clears (payout multiplier). Skips a fetch on bomb / mid-round gems. */
+  guild: Guild | null;
   client: Client;
 }): Promise<{
   embeds: EmbedBuilder[];
   components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
 }> {
   pruneMinesSessions();
-  const { userId, token, idx, member, client } = params;
+  const { userId, token, idx, guild, client } = params;
   const session = minesSessions.get(token);
   if (!session || session.userId !== userId || session.dead) {
     return {
@@ -225,15 +228,13 @@ export async function handleMinesPick(params: {
     };
   }
 
-  const mult = await economyPayoutMultiplier(member, userId, client);
-  const mc = multCents(mult);
   const bet = session.bet;
 
   if (session.mines.has(idx)) {
     session.dead = true;
     session.revealed.add(idx);
     minesSessions.delete(token);
-    await settleMinesRound({ userId, bet, payout: 0n, member });
+    await settleMinesRound({ userId, bet, payout: 0n, member: null });
     return {
       embeds: [
         buildMinesEmbed(session, {
@@ -250,6 +251,10 @@ export async function handleMinesPick(params: {
   const gems = session.revealed.size;
   const safeLeft = MINES_TOTAL - MINES_COUNT - gems;
   if (safeLeft <= 0) {
+    const member =
+      (await guild?.members.fetch(userId).catch(() => null)) ?? null;
+    const mult = await economyPayoutMultiplier(member, userId, client);
+    const mc = multCents(mult);
     const bps = BigInt(payoutBps(gems));
     const payout = (bet * bps * mc) / 1_000_000n;
     minesSessions.delete(token);

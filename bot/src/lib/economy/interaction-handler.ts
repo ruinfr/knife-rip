@@ -170,10 +170,12 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
 
   if (tok[0] === "mn" && tok[1]) {
     await interaction.deferUpdate();
-    const m = await interaction.guild?.members.fetch(uid).catch(() => null);
     try {
       let res;
       if (tok[2] === "cash") {
+        const m = await interaction.guild?.members
+          .fetch(uid)
+          .catch(() => null);
         res = await handleMinesCash({
           userId: uid,
           token: tok[1]!,
@@ -194,7 +196,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
           userId: uid,
           token: tok[1]!,
           idx,
-          member: m ?? null,
+          guild: interaction.guild,
           client: interaction.client,
         });
       } else {

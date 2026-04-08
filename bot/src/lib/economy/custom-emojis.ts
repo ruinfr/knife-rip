@@ -16,6 +16,8 @@ const M = {
   slots: "<:slots:1491208945480630392>",
   blackjack: "<:blackjack:1491208944746762420>",
   mines: "<:mines:1491208943815491624>",
+  /** Unrevealed Mines grid tile (ltccat) */
+  MinesTile: "<:MinesTile:1491226975845617665>",
   icoutlineplus: "<:icoutlineplus:1491169577240101075>",
   icroundminus: "<:icroundminus:1491169569866387546>",
   gridiconslock: "<:gridiconslock:1491168088929079608>",
@@ -84,6 +86,7 @@ export const ecoBtn = {
   slots: b("1491208945480630392", "slots"),
   blackjack: b("1491208944746762420", "blackjack"),
   mines: b("1491208943815491624", "mines"),
+  MinesTile: b("1491226975845617665", "MinesTile"),
   lucidearrowleft: b("1491168047057076336", "lucidearrowleft"),
   lucidearrowright: b("1491168045236752597", "lucidearrowright"),
   stats: b("1491209262846836756", "stats"),
