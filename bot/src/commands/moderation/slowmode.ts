@@ -39,6 +39,7 @@ function channelSupportsSlowmode(
 
 export const slowmodeCommand: KnifeCommand = {
   name: "slowmode",
+  aliases: ["slow", "ratelimit"],
   description: "Set this channel’s slowmode (0–21600 seconds; 0 turns it off)",
   site: {
     categoryId: "moderation",

@@ -3,6 +3,7 @@ import { Events } from "discord.js";
 import {
   recordDeleteSnipe,
   recordEditSnipe,
+  recordReactionHistoryEvent,
   recordReactionSnipe,
 } from "./store";
 
@@ -60,6 +61,44 @@ export function registerSnipeListeners(client: Client): void {
     }
   });
 
+  async function appendReactionHistory(
+    reaction:
+      | import("discord.js").MessageReaction
+      | import("discord.js").PartialMessageReaction,
+    user: import("discord.js").User | import("discord.js").PartialUser,
+    kind: "add" | "remove",
+  ): Promise<void> {
+    const msg = await ensureMessage(reaction.message);
+    if (!msg?.guildId) return;
+    if (msg.author?.bot) return;
+    const u = user.partial ? await user.fetch().catch(() => null) : user;
+    if (!u || u.bot) return;
+    const emojiDisplay = reaction.emoji.toString();
+    recordReactionHistoryEvent(msg.channelId, msg.id, {
+      type: kind,
+      emojiDisplay,
+      userId: u.id,
+      userTag: u.tag,
+      at: Date.now(),
+    });
+  }
+
+  client.on(Events.MessageReactionAdd, async (reaction, user) => {
+    try {
+      let r = reaction;
+      if (reaction.partial) {
+        try {
+          r = await reaction.fetch();
+        } catch {
+          return;
+        }
+      }
+      await appendReactionHistory(r, user, "add");
+    } catch {
+      /* ignore */
+    }
+  });
+
   client.on(Events.MessageReactionRemove, async (reaction, user) => {
     try {
       if (user.bot) return;
@@ -92,6 +131,7 @@ export function registerSnipeListeners(client: Client): void {
         messageAuthorTag,
         at: Date.now(),
       });
+      await appendReactionHistory(r, user, "remove");
     } catch {
       /* ignore */
     }

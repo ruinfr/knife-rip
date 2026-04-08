@@ -11,6 +11,7 @@ function parseSnowflake(raw: string | undefined): string | null {
 
 export const accessCommand: KnifeCommand = {
   name: "access",
+  aliases: ["guildaccess", "botaccess"],
   description:
     "Bot owner only — `.access yes|no <guildId>` allow or deny the bot in a server",
   site: {

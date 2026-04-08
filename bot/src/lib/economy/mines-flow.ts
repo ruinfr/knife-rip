@@ -15,7 +15,7 @@ import { ECON_INTERACTION_PREFIX } from "./config";
 import { ecoBtn, ecoM } from "./custom-emojis";
 import { applyGambleOutcomeInTx } from "./gamble-outcome";
 import { multCents } from "./games";
-import { formatCash } from "./money";
+import { formatCash, formatGambleNetLine } from "./money";
 
 /** 4×4 grid */
 export const MINES_TOTAL = 16;
@@ -191,6 +191,13 @@ export async function runMinesInitial(params: {
   };
 }
 
+export type MinesUiResult = {
+  embeds: EmbedBuilder[];
+  components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
+  /** Bet settled or round ended — outcome message may auto-delete. */
+  roundFinished: boolean;
+};
+
 export async function handleMinesPick(params: {
   userId: string;
   token: string;
@@ -198,10 +205,7 @@ export async function handleMinesPick(params: {
   /** Used only when the board clears (payout multiplier). Skips a fetch on bomb / mid-round gems. */
   guild: Guild | null;
   client: Client;
-}): Promise<{
-  embeds: EmbedBuilder[];
-  components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
-}> {
+}): Promise<MinesUiResult> {
   pruneMinesSessions();
   const { userId, token, idx, guild, client } = params;
   const session = minesSessions.get(token);
@@ -214,6 +218,7 @@ export async function handleMinesPick(params: {
           .setDescription("Open **`.gamble`** to play again."),
       ],
       components: [],
+      roundFinished: true,
     };
   }
   if (session.revealed.has(idx) || idx < 0 || idx >= MINES_TOTAL) {
@@ -225,6 +230,7 @@ export async function handleMinesPick(params: {
         }),
       ],
       components: minesComponents(userId, token, session, false),
+      roundFinished: false,
     };
   }
 
@@ -239,11 +245,12 @@ export async function handleMinesPick(params: {
       embeds: [
         buildMinesEmbed(session, {
           title: "💥 Mine!",
-          subtitle: `You lost **${formatCash(bet)}**.`,
+          subtitle: `You hit a bomb — stake **${formatCash(bet)}** lost.\n${formatGambleNetLine(-bet)}`,
           color: 0xed4245,
         }),
       ],
       components: minesComponents(userId, token, session, true),
+      roundFinished: true,
     };
   }
 
@@ -263,11 +270,12 @@ export async function handleMinesPick(params: {
       embeds: [
         buildMinesEmbed(session, {
           title: "Board cleared!",
-          subtitle: `Paid **${formatCash(payout)}** — every safe tile found.`,
+          subtitle: `Returned **${formatCash(payout)}** total — every safe tile found.\n${formatGambleNetLine(payout - bet)}`,
           color: 0x57f287,
         }),
       ],
       components: minesComponents(userId, token, session, true),
+      roundFinished: true,
     };
   }
 
@@ -279,6 +287,7 @@ export async function handleMinesPick(params: {
       }),
     ],
     components: minesComponents(userId, token, session, false),
+    roundFinished: false,
   };
 }
 
@@ -287,10 +296,7 @@ export async function handleMinesCash(params: {
   token: string;
   member: GuildMember | null;
   client: Client;
-}): Promise<{
-  embeds: EmbedBuilder[];
-  components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
-}> {
+}): Promise<MinesUiResult> {
   pruneMinesSessions();
   const { userId, token, member, client } = params;
   const session = minesSessions.get(token);
@@ -303,6 +309,7 @@ export async function handleMinesCash(params: {
           .setDescription("Open **`.gamble`** to play again."),
       ],
       components: [],
+      roundFinished: true,
     };
   }
   const gems = session.revealed.size;
@@ -315,6 +322,7 @@ export async function handleMinesCash(params: {
         }),
       ],
       components: minesComponents(userId, token, session, false),
+      roundFinished: false,
     };
   }
 
@@ -332,10 +340,11 @@ export async function handleMinesCash(params: {
     embeds: [
       buildMinesEmbed(session, {
         title: "Cashed out",
-        subtitle: `**${gems}** gems — paid **${formatCash(payout)}**.`,
+        subtitle: `**${gems}** gems — returned **${formatCash(payout)}** total.\n${formatGambleNetLine(payout - bet)}`,
         color: 0x57f287,
       }),
     ],
     components: minesComponents(userId, token, session, true),
+    roundFinished: true,
   };
 }

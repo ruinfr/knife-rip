@@ -12,6 +12,8 @@ import {
   parseBanOptions,
   resolveBanTarget,
 } from "../../lib/moderation-target";
+import { BotModCaseKind } from "@prisma/client";
+import { createModCase } from "../../lib/mod-case/service";
 import type { KnifeCommand } from "../types";
 
 async function requireBanPerm(message: Message) {
@@ -130,6 +132,15 @@ export const banCommand: KnifeCommand = {
       delDays > 0
         ? `\n**Message purge:** last **${delDays}** day(s) (Discord limit).`
         : "";
+
+    await createModCase({
+      guildId: message.guild!.id,
+      kind: BotModCaseKind.BAN,
+      actorUserId: message.author.id,
+      targetUserId: targetUser.id,
+      reason: finalReason,
+      metadata: { deleteDays: delDays },
+    });
 
     await message.reply({
       embeds: [

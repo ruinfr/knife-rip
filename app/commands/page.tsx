@@ -51,6 +51,9 @@ export default async function CommandsPage() {
           ) : null}
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
+          <ButtonLink href="/tools/embed" variant="secondary">
+            Embed builder
+          </ButtonLink>
           <ButtonLink href="/pricing">Pricing &amp; Pro</ButtonLink>
           <ButtonLink href="/docs/permissions" variant="secondary">
             Permissions

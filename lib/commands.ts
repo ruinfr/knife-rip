@@ -8,7 +8,7 @@
 import { CANONICAL_COMMAND_SITE_ROWS } from "@/lib/command-catalog-canonical";
 import { db } from "@/lib/db";
 
-export const COMMAND_CATALOG_VERSION = 29 as const;
+export const COMMAND_CATALOG_VERSION = 38 as const;
 export const COMMAND_SNAPSHOT_ID = "default" as const;
 
 export type CommandInvokeStyle = "prefix" | "slash";

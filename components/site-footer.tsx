@@ -1,25 +1,30 @@
+import type { SiteMessages } from "@/lib/i18n/messages";
 import Link from "next/link";
 
-const product = [
-  { href: "/", label: "Home" },
-  { href: "/docs", label: "Docs" },
-  { href: "/commands", label: "Commands" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/dashboard", label: "Dashboard" },
-] as const;
+type Props = {
+  footer: SiteMessages["footer"];
+};
 
-const legal = [
-  { href: "/terms", label: "Terms" },
-  { href: "/privacy", label: "Privacy" },
-] as const;
+export function SiteFooter({ footer }: Props) {
+  const product = [
+    { href: "/", label: footer.home },
+    { href: "/docs", label: footer.docs },
+    { href: "/commands", label: footer.commands },
+    { href: "/pricing", label: footer.pricing },
+    { href: "/dashboard", label: footer.dashboard },
+  ] as const;
 
-const connect: readonly { href: string; label: string; external?: boolean }[] =
-  [
-    { href: "/status", label: "Status" },
-    { href: "mailto:support@knife.rip", label: "Support", external: true },
-  ];
+  const legal = [
+    { href: "/terms", label: footer.terms },
+    { href: "/privacy", label: footer.privacy },
+  ] as const;
 
-export function SiteFooter() {
+  const connect: readonly { href: string; label: string; external?: boolean }[] =
+    [
+      { href: "/status", label: footer.status },
+      { href: "mailto:support@knife.rip", label: footer.support, external: true },
+    ];
+
   return (
     <footer className="relative z-[1] mt-auto border-t border-red-950/45 bg-[#0a0505]/75 backdrop-blur-sm">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
@@ -29,13 +34,12 @@ export function SiteFooter() {
           </p>
           <p className="mt-2 text-sm text-muted">knife.rip</p>
           <p className="mt-3 max-w-xs text-xs leading-relaxed text-muted">
-            Moderation, utilities, and engagement—prefix commands today at
-            knife.rip.
+            {footer.tagline}
           </p>
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-            Product
+            {footer.product}
           </p>
           <ul className="mt-4 flex flex-col gap-2 text-sm">
             {product.map((l) => (
@@ -52,7 +56,7 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-            Legal
+            {footer.legal}
           </p>
           <ul className="mt-4 flex flex-col gap-2 text-sm">
             {legal.map((l) => (
@@ -69,7 +73,7 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-            Connect
+            {footer.connect}
           </p>
           <ul className="mt-4 flex flex-col gap-2 text-sm">
             {connect.map((l) =>

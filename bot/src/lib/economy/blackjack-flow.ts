@@ -13,7 +13,7 @@ import { ECON_INTERACTION_PREFIX } from "./config";
 import { ecoBtn, ecoM } from "./custom-emojis";
 import { applyGambleOutcomeInTx } from "./gamble-outcome";
 import { multCents } from "./games";
-import { formatCash } from "./money";
+import { formatCash, formatGambleNetLine } from "./money";
 
 const RANKS = [
   "A",
@@ -240,7 +240,7 @@ export async function runBlackjackInitial(params: {
             createdAt: Date.now(),
           },
           title: "Blackjack — push",
-          footer: `Both natural 21 — stake returned · **${formatCash(payout)}** back`,
+          footer: `Both natural 21 — stake returned · **${formatCash(payout)}** back\n${formatGambleNetLine(0n)}`,
           color: 0xf0b232,
         }),
       ],
@@ -263,7 +263,7 @@ export async function runBlackjackInitial(params: {
             createdAt: Date.now(),
           },
           title: "Blackjack!",
-          footer: `Natural 21 — paid **${formatCash(payout)}**`,
+          footer: `Natural 21 — returned **${formatCash(payout)}** total\n${formatGambleNetLine(payout - bet)}`,
           color: 0x57f287,
         }),
       ],
@@ -285,7 +285,7 @@ export async function runBlackjackInitial(params: {
             createdAt: Date.now(),
           },
           title: "Dealer blackjack",
-          footer: "House wins — better luck next time.",
+          footer: `House wins.\n${formatGambleNetLine(-bet)}`,
           color: 0xed4245,
         }),
       ],
@@ -356,7 +356,7 @@ export async function handleBlackjackButton(params: {
           buildBlackjackEmbed({
             session: { ...session, phase: "done", dealer: session.dealer },
             title: "Bust",
-            footer: `**${pv}** — you lose **${formatCash(bet)}**.`,
+            footer: `**${pv}** — bust.\n${formatGambleNetLine(-bet)}`,
             color: 0xed4245,
           }),
         ],
@@ -390,22 +390,22 @@ export async function handleBlackjackButton(params: {
   if (dv > 21) {
     payout = (bet * 2n * mc) / 100n;
     title = "Dealer busts — you win";
-    footer = `Paid **${formatCash(payout)}**.`;
+    footer = `Returned **${formatCash(payout)}** total\n${formatGambleNetLine(payout - bet)}`;
     color = 0x57f287;
   } else if (pv > dv) {
     payout = (bet * 2n * mc) / 100n;
     title = "You win";
-    footer = `**${pv}** vs **${dv}** — **${formatCash(payout)}**.`;
+    footer = `**${pv}** vs **${dv}** — returned **${formatCash(payout)}** total\n${formatGambleNetLine(payout - bet)}`;
     color = 0x57f287;
   } else if (pv < dv) {
     payout = 0n;
     title = "House wins";
-    footer = `**${pv}** vs **${dv}**.`;
+    footer = `**${pv}** vs **${dv}**.\n${formatGambleNetLine(-bet)}`;
     color = 0xed4245;
   } else {
     payout = bet;
     title = "Push";
-    footer = `**${pv}** — stake returned.`;
+    footer = `**${pv}** — stake returned.\n${formatGambleNetLine(0n)}`;
     color = 0xf0b232;
   }
 

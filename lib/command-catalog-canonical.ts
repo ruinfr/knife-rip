@@ -152,7 +152,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "gamble",
     description:
-      "Knife Cash — short disclaimer + confirm, then hub: shop, games (coinflip, dice, slots, blackjack, mines), stats, pay",
+      "Knife Cash — private in-channel disclaimer, then hub: shop, games (coinflip, dice, slots, blackjack, mines), stats, pay",
     usage: ".gamble · .economy · .eco",
     tier: "free",
     style: "prefix",
@@ -223,6 +223,19 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     tier: "free",
     style: "prefix",
     aliases: ["cmd"],
+    categoryId: "moderation",
+    categoryTitle: "Moderation",
+    categoryDescription: "Server staff tools.",
+  },
+  {
+    name: "createembed",
+    description:
+      "Post an embed built from a Knife **{embed}$v** script (same rules as **.say**; use the site embed builder)",
+    usage:
+      ".createembed #channel {embed}$v{title: …} — /tools/embed · .ce · .postembed · .embedsend",
+    tier: "pro",
+    style: "prefix",
+    aliases: ["ce", "embedcreate", "sendembed", "postembed", "embedsend"],
     categoryId: "moderation",
     categoryTitle: "Moderation",
     categoryDescription: "Server staff tools.",
@@ -441,7 +454,18 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     usage: ".remind 15m note · .remind list · .remind cancel [id|all]",
     tier: "pro",
     style: "prefix",
-    aliases: ["reminder"],
+    aliases: ["reminder", "remindme"],
+    categoryId: "pro",
+    categoryTitle: "Pro",
+    categoryDescription: "Knife Pro billing and perks.",
+  },
+  {
+    name: "reminders",
+    description:
+      "Same behavior as **.remind** — Pro — list, cancel/remove, or schedule a DM reminder",
+    usage: ".reminders (same as .remind)",
+    tier: "pro",
+    style: "prefix",
     categoryId: "pro",
     categoryTitle: "Pro",
     categoryDescription: "Knife Pro billing and perks.",
@@ -483,10 +507,12 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "say",
     description:
-      "Post as the bot in a channel (Knife Pro + Administrator; bot owners skip both)",
-    usage: ".say #channel your message",
+      "Post as the bot — plain text or **{embed}$v** script from **knife.rip/tools/embed** (Knife Pro + Administrator; owners skip both)",
+    usage:
+      ".say #channel hello · .say #channel {embed}$v… · .botsay · .botpost",
     tier: "pro",
     style: "prefix",
+    aliases: ["botsay", "botpost"],
     categoryId: "moderation",
     categoryTitle: "Moderation",
     categoryDescription: "Server staff tools.",

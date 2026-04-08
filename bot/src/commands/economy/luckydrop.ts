@@ -12,6 +12,7 @@ import type { KnifeCommand } from "../types";
 
 export const luckydropCommand: KnifeCommand = {
   name: "luckydrop",
+  aliases: ["cashdrop", "randdrop"],
   description:
     "Bot owner only — random member wins a lump of Knife Cash (confirm / reroll / cancel)",
   site: {

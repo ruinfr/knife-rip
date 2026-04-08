@@ -28,12 +28,13 @@ export const purgeCommand: KnifeCommand = {
   name: "purge",
   aliases: ["prune"],
   description:
-    "Bulk-delete recent messages (max 100), skips pinned & messages older than 14 days",
+    "Bulk-delete messages (max 100) — numeric count or **bots|humans|embeds|links|contains|startswith|endswith**",
   site: {
     categoryId: "moderation",
     categoryTitle: "Moderation",
     categoryDescription: "Server staff tools.",
-    usage: ".purge · .prune — [number] [reason]",
+    usage:
+      ".purge N [reason] · .purge bots [n] · .purge contains `txt` [n]",
     tier: "free",
     style: "prefix",
   },
@@ -53,6 +54,92 @@ export const purgeCommand: KnifeCommand = {
     }
 
     const rawN = args[0]?.trim();
+    if (
+      rawN &&
+      !/^\d+$/.test(rawN) &&
+      [
+        "bots",
+        "humans",
+        "embeds",
+        "links",
+        "contains",
+        "startswith",
+        "endswith",
+      ].includes(rawN.toLowerCase())
+    ) {
+      const mode = rawN.toLowerCase();
+      let tail = args.slice(1);
+      let n = Math.min(MAX_PURGE, parseInt(tail[0] ?? "25", 10) || 25);
+      let needle = "";
+      if (
+        mode === "contains" ||
+        mode === "startswith" ||
+        mode === "endswith"
+      ) {
+        needle = tail[0] ?? "";
+        if (!needle) {
+          await message.reply({
+            embeds: [errorEmbed(`**.purge ${mode}** \`<text>\` [n]`)],
+          });
+          return;
+        }
+        tail = tail.slice(1);
+        n = Math.min(MAX_PURGE, parseInt(tail[0] ?? "25", 10) || 25);
+      }
+      const cutoff = Date.now() - TWO_WEEKS_MS;
+      let fetched;
+      try {
+        fetched = await ch.messages.fetch({ limit: 100 });
+      } catch {
+        await message.reply({
+          embeds: [errorEmbed("Could not fetch messages.")],
+        });
+        return;
+      }
+      const pred = (m: Message): boolean => {
+        if (mode === "bots") return m.author.bot;
+        if (mode === "humans") return !m.author.bot;
+        if (mode === "embeds") return m.embeds.length > 0;
+        if (mode === "links") return /https?:\/\//i.test(m.content);
+        const c = m.content;
+        if (mode === "contains") return c.includes(needle);
+        if (mode === "startswith") return c.startsWith(needle);
+        return c.endsWith(needle);
+      };
+      const candidates = [...fetched.values()]
+        .filter(
+          (m) =>
+            m.id !== message.id &&
+            !m.pinned &&
+            m.createdTimestamp >= cutoff &&
+            pred(m),
+        )
+        .slice(0, n);
+      if (candidates.length === 0) {
+        await message.reply({
+          embeds: [errorEmbed("Nothing matched the filter.")],
+        });
+        return;
+      }
+      try {
+        await ch.bulkDelete(candidates, true);
+      } catch {
+        await message.reply({
+          embeds: [errorEmbed("Bulk delete failed.")],
+        });
+        return;
+      }
+      await message.reply({
+        embeds: [
+          minimalEmbed({
+            title: "Purge",
+            description: `Deleted **${candidates.length}** via **${mode}**.`,
+          }),
+        ],
+      });
+      return;
+    }
+
     if (!rawN || !/^\d+$/.test(rawN)) {
       await message.reply({
         embeds: [

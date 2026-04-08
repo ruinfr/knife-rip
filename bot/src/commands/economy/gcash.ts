@@ -13,6 +13,7 @@ function parseNonNegativeBigInt(raw: string): bigint | null {
 
 export const gcashCommand: KnifeCommand = {
   name: "gcash",
+  aliases: ["ecoadmin", "cashadmin"],
   description:
     "Bot owner only — add, remove, or set a user’s global Knife Cash balance",
   site: {

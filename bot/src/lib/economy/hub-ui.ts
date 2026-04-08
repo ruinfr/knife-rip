@@ -25,13 +25,42 @@ function btnId(uid: string, ...parts: string[]): string {
   return `${ECON_INTERACTION_PREFIX}${uid}:${parts.join(":")}`;
 }
 
+/** User mention on hub / game messages so busy channels can spot your menu. */
+export function gambleHubPingContent(userId: string): string {
+  return `<@${userId}>`;
+}
+
+/**
+ * Public `.gamble` reply in a server: mentions the user, button opens an **ephemeral** disclaimer.
+ */
+export function buildGambleDisclaimerPromptPayload(userId: string): {
+  content: string;
+  embeds: EmbedBuilder[];
+  components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
+} {
+  const row =
+    new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(btnId(userId, "gd", "open"))
+        .setLabel("Read disclaimer (private)")
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji(ecoBtn.tablerinfosquarefilled),
+    );
+  return {
+    content:
+      `<@${userId}> · Tap **Read disclaimer** — only **you** see the next step; then your menu posts **here**.`,
+    embeds: [],
+    components: [row],
+  };
+}
+
 /** Shown first from `.gamble`; checkmark replaces this message with the full hub. */
 export function buildGambleDisclaimerPayload(params: {
   userId: string;
   guild: Guild | null;
   /**
-   * Guild text/thread channel where `.gamble` was run. When the disclaimer is sent in DMs,
-   * the OK button includes this so the hub can be posted there after confirm.
+   * Guild text/thread id: included on **I understand** so the hub can be posted there
+   * (e.g. after an ephemeral disclaimer).
    */
   originChannelId?: string | null;
 }): {
@@ -125,6 +154,11 @@ export async function buildGambleHubPayload(params: {
       .setLabel("Next")
       .setStyle(ButtonStyle.Secondary)
       .setEmoji(ecoBtn.lucidearrowright),
+    new ButtonBuilder()
+      .setCustomId(btnId(userId, "pg", String(p), "trash"))
+      .setLabel("\u200b")
+      .setStyle(ButtonStyle.Danger)
+      .setEmoji("🗑️"),
   );
   rows.push(navRow);
 
@@ -175,8 +209,9 @@ export async function buildGambleHubPayload(params: {
   } else if (p === 1) {
     description +=
       `${ecoM.games} **Games** — fair odds vs the house.\n\n` +
-      `${ecoM.coinflip} **Coinflip** · ${ecoM.dice} **Dice** · ${ecoM.slots} **Slots** — instant\n` +
-      `${ecoM.blackjack} **Blackjack** · ${ecoM.mines} **Mines** — interactive (buttons)\n\n` +
+      `${ecoM.coinflip} **Coinflip** · ${ecoM.dice} **Dice** · ${ecoM.slots} **Slots** · ${ecoM.roulette} **Roulette** — instant\n` +
+      `${ecoM.blackjack} **Blackjack** · ${ecoM.mines} **Mines** — interactive (buttons)\n` +
+      `${ecoM.coinflippvp} **Coinflip PVP** — challenge someone (+ stake); they **Accept** or **Decline** (no house rake).\n\n` +
       `${ecoM.tablerinfosquarefilled} _Enter your bet; blackjack & mines update this message._`;
     rows.push(
       new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
@@ -195,6 +230,16 @@ export async function buildGambleHubPayload(params: {
           .setLabel("Slots")
           .setStyle(ButtonStyle.Primary)
           .setEmoji(ecoBtn.slots),
+        new ButtonBuilder()
+          .setCustomId(btnId(userId, "pg", String(p), "g", "cfpv"))
+          .setLabel("Coinflip PVP")
+          .setStyle(ButtonStyle.Secondary)
+          .setEmoji(ecoBtn.coinflippvp),
+        new ButtonBuilder()
+          .setCustomId(btnId(userId, "pg", String(p), "g", "rl"))
+          .setLabel("Roulette")
+          .setStyle(ButtonStyle.Primary)
+          .setEmoji(ecoBtn.roulette),
       ),
     );
     rows.push(
@@ -236,7 +281,10 @@ export async function buildGambleHubPayload(params: {
     );
   } else {
     description +=
-      `${ecoM.pay} **Pay** — send cash to another Discord user.\n\n` +
+      `${ecoM.pay} **Pay** — send cash to another user` +
+      (guild
+        ? ` (**username**, @mention, or ID in **${guild.name}**).\n\n`
+        : ` (**numeric ID** or @mention — no username search in DMs).\n\n`) +
       `${ecoM.tax} A small **tax** applies. You cannot pay yourself.\n\n` +
       `${ecoM.tablerinfosquarefilled} Use the button to open the secure form.`;
     rows.push(

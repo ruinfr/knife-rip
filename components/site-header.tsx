@@ -1,27 +1,47 @@
 "use client";
 
 import { BrandMark } from "@/components/brand-mark";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/cn";
+import type { Locale } from "@/lib/i18n/config";
+import type { SiteMessages } from "@/lib/i18n/messages";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 
-const nav = [
-  { href: "/docs", label: "Docs" },
-  { href: "/changelog", label: "News" },
-  { href: "/commands", label: "Commands" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/status", label: "Status" },
-] as const;
+const NAV: ReadonlyArray<{
+  href: string;
+  labelKey: keyof Pick<
+    SiteMessages["header"],
+    | "navDocs"
+    | "navNews"
+    | "navCommands"
+    | "navEmbed"
+    | "navPricing"
+    | "navStatus"
+  >;
+}> = [
+  { href: "/docs", labelKey: "navDocs" },
+  { href: "/changelog", labelKey: "navNews" },
+  { href: "/commands", labelKey: "navCommands" },
+  { href: "/tools/embed", labelKey: "navEmbed" },
+  { href: "/pricing", labelKey: "navPricing" },
+  { href: "/status", labelKey: "navStatus" },
+];
 
 function linkActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteHeader() {
+type Props = {
+  locale: Locale;
+  header: SiteMessages["header"];
+};
+
+export function SiteHeader({ locale, header }: Props) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,10 +63,10 @@ export function SiteHeader() {
 
         <nav
           className="hidden flex-1 justify-center md:flex"
-          aria-label="Main"
+          aria-label={header.mainNavAria}
         >
           <div className="nav-pill-sheen inline-flex items-center gap-0.5 rounded-full border border-white/[0.07] bg-surface/45 px-1 py-1 shadow-[0_0_40px_-18px_rgba(220,38,38,0.18)] backdrop-blur-md">
-            {nav.map((item) => (
+            {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -57,17 +77,22 @@ export function SiteHeader() {
                     : "text-muted hover:bg-white/[0.04] hover:text-foreground",
                 )}
               >
-                {item.label}
+                {header[item.labelKey]}
               </Link>
             ))}
           </div>
         </nav>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <LanguageSwitcher
+            locale={locale}
+            ariaLabel={header.languageAria}
+            selectLanguageLabel={header.selectLanguage}
+          />
           <div className="hidden items-center gap-2 md:flex">
             {status === "loading" ? (
               <span className="text-sm text-muted" aria-live="polite">
-                Signing in…
+                {header.signingIn}
               </span>
             ) : session ? (
               <>
@@ -79,14 +104,14 @@ export function SiteHeader() {
                       "border-red-400/40 bg-red-950/55",
                   )}
                 >
-                  Dashboard
+                  {header.dashboard}
                 </Link>
                 <button
                   type="button"
                   onClick={() => signOut({ callbackUrl: "/" })}
                   className="motion-safe:transition rounded-full px-3 py-2 text-sm text-muted hover:bg-surface hover:text-foreground"
                 >
-                  Sign out
+                  {header.signOut}
                 </button>
               </>
             ) : (
@@ -95,7 +120,7 @@ export function SiteHeader() {
                 onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}
                 className="motion-safe:transition rounded-full border border-red-500/25 bg-red-950/35 px-4 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(220,38,38,0.45)] hover:border-red-400/35 hover:bg-red-950/50"
               >
-                Sign in
+                {header.signIn}
               </button>
             )}
           </div>
@@ -105,7 +130,7 @@ export function SiteHeader() {
             className="motion-safe:transition flex h-10 w-10 items-center justify-center rounded-full border border-surface-border bg-surface/80 text-foreground hover:border-red-500/20 hover:bg-surface-elevated md:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? header.menuClose : header.menuOpen}
             onClick={() => setMenuOpen((o) => !o)}
           >
             {menuOpen ? (
@@ -129,64 +154,67 @@ export function SiteHeader() {
         aria-hidden={!menuOpen}
         inert={menuOpen ? undefined : true}
       >
-        <nav className="flex flex-col gap-1 px-4 py-4" aria-label="Mobile">
-            {nav.map((item) => (
+        <nav
+          className="flex flex-col gap-1 px-4 py-4"
+          aria-label={header.mobileNavAria}
+        >
+          {NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={closeMenu}
+              className={cn(
+                "motion-safe:transition rounded-xl px-3 py-3 text-sm font-medium",
+                linkActive(pathname, item.href)
+                  ? "bg-surface-elevated text-foreground ring-1 ring-red-500/15"
+                  : "text-muted hover:bg-surface hover:text-foreground",
+              )}
+            >
+              {header[item.labelKey]}
+            </Link>
+          ))}
+          <hr className="my-2 border-surface-border" />
+          {status === "loading" ? (
+            <span className="px-3 py-2 text-sm text-muted" aria-live="polite">
+              {header.signingIn}
+            </span>
+          ) : session ? (
+            <>
               <Link
-                key={item.href}
-                href={item.href}
+                href="/dashboard"
                 onClick={closeMenu}
                 className={cn(
-                  "motion-safe:transition rounded-xl px-3 py-3 text-sm font-medium",
-                  linkActive(pathname, item.href)
-                    ? "bg-surface-elevated text-foreground ring-1 ring-red-500/15"
+                  "motion-safe:transition rounded-xl px-3 py-3 text-sm font-semibold",
+                  linkActive(pathname, "/dashboard")
+                    ? "bg-red-950/40 text-foreground"
                     : "text-muted hover:bg-surface hover:text-foreground",
                 )}
               >
-                {item.label}
+                {header.dashboard}
               </Link>
-            ))}
-            <hr className="my-2 border-surface-border" />
-            {status === "loading" ? (
-              <span className="px-3 py-2 text-sm text-muted" aria-live="polite">
-                Signing in…
-              </span>
-            ) : session ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  onClick={closeMenu}
-                  className={cn(
-                    "motion-safe:transition rounded-xl px-3 py-3 text-sm font-semibold",
-                    linkActive(pathname, "/dashboard")
-                      ? "bg-red-950/40 text-foreground"
-                      : "text-muted hover:bg-surface hover:text-foreground",
-                  )}
-                >
-                  Dashboard
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeMenu();
-                    void signOut({ callbackUrl: "/" });
-                  }}
-                  className="motion-safe:transition rounded-xl px-3 py-3 text-left text-sm text-muted hover:bg-surface hover:text-foreground"
-                >
-                  Sign out
-                </button>
-              </>
-            ) : (
               <button
                 type="button"
                 onClick={() => {
                   closeMenu();
-                  void signIn("discord", { callbackUrl: "/dashboard" });
+                  void signOut({ callbackUrl: "/" });
                 }}
-                className="motion-safe:transition rounded-xl px-3 py-3 text-left text-sm font-semibold text-foreground hover:bg-surface"
+                className="motion-safe:transition rounded-xl px-3 py-3 text-left text-sm text-muted hover:bg-surface hover:text-foreground"
               >
-                Sign in with Discord
+                {header.signOut}
               </button>
-            )}
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                closeMenu();
+                void signIn("discord", { callbackUrl: "/dashboard" });
+              }}
+              className="motion-safe:transition rounded-xl px-3 py-3 text-left text-sm font-semibold text-foreground hover:bg-surface"
+            >
+              {header.signInDiscord}
+            </button>
+          )}
         </nav>
       </div>
     </header>

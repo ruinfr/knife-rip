@@ -21,7 +21,7 @@ async function requireManageChannels(message: Message) {
 }
 
 function channelSupportsOverwrites(
-  ch: Message["channel"],
+  ch: Message["channel"] | { isDMBased(): boolean; id: string } | null,
 ): ch is Exclude<Message["channel"], { isDMBased(): true }> & {
   permissionOverwrites: {
     edit: (
@@ -31,26 +31,27 @@ function channelSupportsOverwrites(
     ) => Promise<unknown>;
   };
 } {
+  if (!ch || ch.isDMBased()) return false;
   return (
     "permissionOverwrites" in ch &&
-    typeof ch.permissionOverwrites?.edit === "function" &&
-    !ch.isDMBased()
+    typeof ch.permissionOverwrites?.edit === "function"
   );
 }
 
 export const lockCommand: KnifeCommand = {
   name: "lock",
+  aliases: ["chanlock", "lockchan"],
   description:
     "Stop @everyone from sending messages in this channel (overwrite)",
   site: {
     categoryId: "moderation",
     categoryTitle: "Moderation",
     categoryDescription: "Server staff tools.",
-    usage: ".lock",
+    usage: ".lock [#channel] [reason]",
     tier: "free",
     style: "prefix",
   },
-  async run({ message }) {
+  async run({ message, args }) {
     const deny = await requireManageChannels(message);
     if (deny) {
       await message.reply({ embeds: [deny] });
@@ -58,7 +59,24 @@ export const lockCommand: KnifeCommand = {
     }
 
     const guild = message.guild!;
-    const ch = message.channel;
+    let ch: Message["channel"] | Awaited<ReturnType<typeof guild.channels.fetch>> =
+      message.channel;
+    const raw = args[0]?.trim();
+    const chId =
+      raw?.match(/^<#(\d+)>$/)?.[1] ??
+      (raw && /^\d{17,20}$/.test(raw) ? raw : null);
+    const reasonRest = chId ? args.slice(1).join(" ").trim() : "";
+    if (chId) {
+      const fetched = await guild.channels.fetch(chId).catch(() => null);
+      if (fetched && channelSupportsOverwrites(fetched)) {
+        ch = fetched;
+      } else {
+        await message.reply({
+          embeds: [errorEmbed("Could not use that channel for lock.")],
+        });
+        return;
+      }
+    }
     if (!channelSupportsOverwrites(ch)) {
       await message.reply({
         embeds: [
@@ -76,11 +94,13 @@ export const lockCommand: KnifeCommand = {
       return;
     }
 
+    const lockReason =
+      reasonRest.slice(0, 400) || `Channel locked — ${message.author.tag}`;
     try {
       await ch.permissionOverwrites.edit(
         guild.roles.everyone.id,
         { SendMessages: false },
-        { reason: `Channel locked — ${message.author.tag}` },
+        { reason: lockReason },
       );
     } catch {
       await message.reply({
@@ -109,16 +129,17 @@ export const lockCommand: KnifeCommand = {
 
 export const unlockCommand: KnifeCommand = {
   name: "unlock",
+  aliases: ["unlockchan", "unlockc"],
   description: "Clear the @everyone send lock for this channel (inherit again)",
   site: {
     categoryId: "moderation",
     categoryTitle: "Moderation",
     categoryDescription: "Server staff tools.",
-    usage: ".unlock",
+    usage: ".unlock [#channel] [reason]",
     tier: "free",
     style: "prefix",
   },
-  async run({ message }) {
+  async run({ message, args }) {
     const deny = await requireManageChannels(message);
     if (deny) {
       await message.reply({ embeds: [deny] });
@@ -126,7 +147,24 @@ export const unlockCommand: KnifeCommand = {
     }
 
     const guild = message.guild!;
-    const ch = message.channel;
+    let ch: Message["channel"] | Awaited<ReturnType<typeof guild.channels.fetch>> =
+      message.channel;
+    const raw = args[0]?.trim();
+    const chId =
+      raw?.match(/^<#(\d+)>$/)?.[1] ??
+      (raw && /^\d{17,20}$/.test(raw) ? raw : null);
+    const reasonRest = chId ? args.slice(1).join(" ").trim() : "";
+    if (chId) {
+      const fetched = await guild.channels.fetch(chId).catch(() => null);
+      if (fetched && channelSupportsOverwrites(fetched)) {
+        ch = fetched;
+      } else {
+        await message.reply({
+          embeds: [errorEmbed("Could not use that channel for unlock.")],
+        });
+        return;
+      }
+    }
     if (!channelSupportsOverwrites(ch)) {
       await message.reply({
         embeds: [
@@ -144,11 +182,13 @@ export const unlockCommand: KnifeCommand = {
       return;
     }
 
+    const unlockReason =
+      reasonRest.slice(0, 400) || `Channel unlocked — ${message.author.tag}`;
     try {
       await ch.permissionOverwrites.edit(
         guild.roles.everyone.id,
         { SendMessages: null },
-        { reason: `Channel unlocked — ${message.author.tag}` },
+        { reason: unlockReason },
       );
     } catch {
       await message.reply({

@@ -7,6 +7,11 @@ import {
   type Webhook,
 } from "discord.js";
 import type { APIEmbed } from "discord-api-types/v10";
+import {
+  applyKnifeEmbedPlaceholders,
+  parseKnifeEmbedScript,
+  splitKnifeEmbedScript,
+} from "../../../../lib/embed-script";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { guildMemberOrFetch } from "../../lib/discord-member-perms";
 import { getBotPrisma } from "../../lib/db-prisma";
@@ -64,7 +69,27 @@ function parseMessageOrEmbedPayload(
       }
     }
   } catch {
-    /* plain text */
+    /* plain text or Knife script */
+  }
+  if (/\{embed\}\s*\$v/i.test(t)) {
+    const expanded = applyKnifeEmbedPlaceholders(t, {});
+    const { content, embedSegment } = splitKnifeEmbedScript(expanded);
+    if (embedSegment) {
+      const parsed = parseKnifeEmbedScript(embedSegment);
+      if (!parsed.error) {
+        try {
+          return {
+            content:
+              content.length > MAX_CONTENT
+                ? content.slice(0, MAX_CONTENT)
+                : content || undefined,
+            embeds: [new EmbedBuilder(parsed.embed as APIEmbed)],
+          };
+        } catch {
+          /* fall through */
+        }
+      }
+    }
   }
   return { content: t.length > MAX_CONTENT ? t.slice(0, MAX_CONTENT) : t };
 }
@@ -134,7 +159,7 @@ function helpEmbed(): EmbedBuilder {
       "Set up webhooks in your server.\n\n" +
       "`.webhook create` `name` — create in this channel (Manage Webhooks)\n" +
       "`.webhook list` — webhooks in this server (no member perm)\n" +
-      "`.webhook send` `id|name|#` `message…` — post via webhook (JSON for embeds)\n" +
+      "`.webhook send` `id|name|#` `message…` — JSON embeds **or** Knife `{embed}$v…` scripts\n" +
       "`.webhook edit` `messageLink` `message…` — edit a webhook-owned message\n" +
       "`.webhook delete` `id|name|#` — remove webhook\n" +
       "`.webhook lock` `id|name|#` — only you (and admins) use it via Knife\n" +
@@ -144,6 +169,7 @@ function helpEmbed(): EmbedBuilder {
 
 export const webhookCommand: KnifeCommand = {
   name: "webhook",
+  aliases: ["hook", "hooks", "wh"],
   description:
     "Create, list, send, edit, delete, lock, or unlock channel webhooks (Manage Webhooks where noted)",
   site: {

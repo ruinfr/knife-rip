@@ -101,6 +101,7 @@ async function resolveHandoutTarget(
 
 export const handoutCommand: KnifeCommand = {
   name: "handout",
+  aliases: ["granttier", "tierhandout"],
   description:
     "Handouts in DB — Developers control owner; owners handle premium for non-owners",
   site: {

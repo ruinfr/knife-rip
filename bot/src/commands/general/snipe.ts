@@ -1,9 +1,14 @@
-import { EmbedBuilder } from "discord.js";
-import { errorEmbed } from "../../lib/embeds";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
+import { getSiteApiBase } from "../../config";
+import { guildMemberHas } from "../../lib/command-perms";
+import { errorEmbed, minimalEmbed } from "../../lib/embeds";
+import { parseDiscordMessageUrl } from "../../lib/parse-discord-message-url";
 import {
   SNIPE_TTL_MS,
+  clearChannelSnipes,
   getDeleteSnipe,
   getEditSnipe,
+  getReactionHistory,
   getReactionSnipe,
 } from "../../lib/snipe/store";
 import type { KnifeCommand } from "../types";
@@ -178,6 +183,129 @@ export const rsnipeCommand: KnifeCommand = {
           )
           .setColor(0x2b2d31)
           .setFooter({ text: footer() }),
+      ],
+    });
+  },
+};
+
+export const clearsnipeCommand: KnifeCommand = {
+  name: "clearsnipe",
+  aliases: ["clearsnipes", "snipeclear", "csnipe"],
+  description:
+    "Clear snipe buffers in **this channel** (last delete, edit, reaction removal, and per-message reaction log)",
+  site: {
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Snipe and moderation tools.",
+    usage: ".clearsnipe",
+    tier: "free",
+    style: "prefix",
+  },
+  async run({ message }) {
+    if (!message.guild) {
+      await message.reply({
+        embeds: [errorEmbed("Use **.clearsnipe** in a server channel.")],
+      });
+      return;
+    }
+    if (!guildMemberHas(message, PermissionFlagsBits.ManageMessages)) {
+      await message.reply({
+        embeds: [
+          errorEmbed("You need **Manage Messages** to clear snipes here."),
+        ],
+      });
+      return;
+    }
+
+    clearChannelSnipes(message.channel.id);
+    const origin = getSiteApiBase();
+    await message.reply({
+      embeds: [
+        minimalEmbed({
+          title: "Snipes cleared",
+          description:
+            `Removed cached **delete**, **edit**, and **reaction** snipes for ${message.channel.toString()}, plus **reaction history** for messages in this channel.\n` +
+            `More: [commands](${origin}/commands)`,
+        }),
+      ],
+    });
+  },
+};
+
+export const reactionhistoryCommand: KnifeCommand = {
+  name: "reactionhistory",
+  aliases: ["rh", "reacthistory", "reactionlog"],
+  description:
+    "Recent reaction **add/remove** events Knife logged for a message (in-memory, same window as snipes)",
+  site: {
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Snipe and moderation tools.",
+    usage: ".reactionhistory <message jump link>",
+    tier: "free",
+    style: "prefix",
+  },
+  async run({ message, args }) {
+    if (!message.guild) {
+      await message.reply({
+        embeds: [errorEmbed("Use **.reactionhistory** in a server.")],
+      });
+      return;
+    }
+    if (!guildMemberHas(message, PermissionFlagsBits.ManageMessages)) {
+      await message.reply({
+        embeds: [
+          errorEmbed(
+            "You need **Manage Messages** to view reaction history.",
+          ),
+        ],
+      });
+      return;
+    }
+
+    const raw = args.join(" ").trim();
+    const parsed = parseDiscordMessageUrl(raw);
+    if (!parsed || parsed.guildId !== message.guild.id) {
+      await message.reply({
+        embeds: [
+          errorEmbed(
+            "Paste a **jump link** to a message in **this server** (`https://discord.com/channels/...`).",
+          ),
+        ],
+      });
+      return;
+    }
+
+    const hist = getReactionHistory(parsed.channelId, parsed.messageId);
+    if (hist.length === 0) {
+      await message.reply({
+        embeds: [
+          errorEmbed(
+            `No reaction events recorded for that message in the last **${SNIPE_TTL_MS / 60000}** minutes (bot must see adds/removals; messages from bots are skipped).`,
+          ),
+        ],
+      });
+      return;
+    }
+
+    const lines = [...hist]
+      .reverse()
+      .map(
+        (e) =>
+          `${e.type === "add" ? "**+**" : "**−**"} ${e.emojiDisplay} — ${e.userTag} (<@${e.userId}>) · ${relTs(e.at)}`,
+      );
+
+    await message.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle("Reaction history")
+          .setDescription(
+            `Message [\`${parsed.messageId}\`](https://discord.com/channels/${parsed.guildId}/${parsed.channelId}/${parsed.messageId})\n\n${lines.join("\n").slice(0, 3800)}`,
+          )
+          .setColor(0x2b2d31)
+          .setFooter({
+            text: `Newest at top · ${footer()}`,
+          }),
       ],
     });
   },

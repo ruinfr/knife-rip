@@ -6,6 +6,7 @@ const DEFAULT_REASON = "AFK";
 
 export const afkCommand: KnifeCommand = {
   name: "afk",
+  aliases: ["away", "brb"],
   description:
     "Set AFK with an optional reason (default “AFK”); auto-reply + welcome back when you return",
   site: {

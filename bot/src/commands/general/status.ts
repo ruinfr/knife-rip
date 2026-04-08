@@ -11,13 +11,13 @@ const STATUS_ONELINER =
 
 export const statusCommand: KnifeCommand = {
   name: "status",
-  aliases: ["botstatus"],
+  aliases: ["botstatus", "statuspage"],
   description: "Site status one-liner and link to the full status page",
   site: {
     categoryId: "core",
     categoryTitle: "Core",
     categoryDescription: "Essential prefix commands.",
-    usage: ".status · .botstatus",
+    usage: ".status · .statuspage · .botstatus",
     tier: "free",
     style: "prefix",
   },

@@ -3,6 +3,7 @@ import type { KnifeCommand } from "../types";
 
 export const pingCommand: KnifeCommand = {
   name: "ping",
+  aliases: ["latency", "ms"],
   description: "Check bot and Discord gateway latency",
   site: {
     categoryId: "core",

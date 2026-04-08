@@ -13,6 +13,7 @@
     "start": "next start",
     "lint": "eslint",
     "check:catalog": "node scripts/check-catalog-coverage.mjs",
+    "check:aliases": "node scripts/scan-command-aliases.mjs",
     "postinstall": "prisma generate",
     "bot:dev": "npm run dev --prefix bot",
     "bot:start": "npm run start --prefix bot"

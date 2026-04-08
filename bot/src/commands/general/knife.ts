@@ -13,6 +13,7 @@ const hubInvite = resolveCommunityDiscordInviteUrl();
 
 export const knifeCommand: KnifeCommand = {
   name: "knife",
+  aliases: ["about", "knifeinfo"],
   description: "About Knife — site links, prefix, and gateway latency",
   site: {
     categoryId: "core",

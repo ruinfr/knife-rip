@@ -239,7 +239,9 @@ model EconomyUser {
   discordUserId      String    @id
   cash               BigInt    @default(0)
   lifetimeMessages   Int       @default(0)
-  /// Next index into milestone thresholds (0 = none claimed yet).
+  /// Highest 50-msg tier already paid (0, 50, 100, …). Each step grants +10; every 100 grants +50 extra.
+  milestoneLastPaid50 Int      @default(0)
+  /// Next index into `MILESTONE_HIGH_THRESHOLDS` (500 / 1k / 3k one-time bonuses).
   nextMilestoneIndex Int       @default(0)
   gambleWins         Int       @default(0)
   gambleLosses       Int       @default(0)
@@ -249,6 +251,8 @@ model EconomyUser {
   lastPayAt          DateTime?
   /// Last `.daily` claim (24h cooldown).
   lastDailyAt        DateTime?
+  /// Knife Cash disclaimer completed at least once (global; skips repeat prompts).
+  gambleDisclaimerAcceptedAt DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }
@@ -289,6 +293,57 @@ model EconomyGambleLog {
   @@index([discordUserId, createdAt])
 }
 
+/// PVP coinflip challenge — money moves only when opponent accepts (atomic settle).
+model EconomyCoinflipPvpChallenge {
+  id                  String    @id @default(cuid())
+  guildId             String
+  channelId           String
+  messageId           String?
+  challengerDiscordId String
+  opponentDiscordId   String
+  bet                 BigInt
+  status              String    @default("pending")
+  winnerDiscordId     String?
+  /// Heads = Challenger wins, Tails = Opponent wins (set when completed).
+  outcomeHeads        Boolean?
+  expiresAt           DateTime
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([status, expiresAt])
+  @@index([opponentDiscordId, status])
+}
+
+/// Per-guild jail (`.jailsetup`) — role + channels for `.jail` / `.unjail`.
+model BotGuildJailConfig {
+  guildId           String   @id
+  jailRoleId        String
+  jailChannelId     String
+  logChannelId      String
+  categoryId        String?
+  /// Highest role of whoever ran setup; used for channel view overwrites when not @everyone.
+  staffAccessRoleId String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+/// Member currently jailed — restored roles in `removedRoleIds` (JSON string[]).
+model BotGuildJailMember {
+  id              String    @id @default(cuid())
+  guildId         String
+  userId          String
+  removedRoleIds  Json
+  reason          String?
+  jailedByUserId  String?
+  jailedAt        DateTime  @default(now())
+  /// When set, auto-unjail at this time (optional).
+  releaseAt       DateTime?
+
+  @@unique([guildId, userId])
+  @@index([guildId])
+  @@index([guildId, releaseAt])
+}
+
 /// `.webhook lock` — only `lockedByUserId` may use Knife webhook send/edit/delete for that webhook.
 model BotGuildWebhookLock {
   id             String   @id @default(cuid())
@@ -298,4 +353,351 @@ model BotGuildWebhookLock {
   createdAt      DateTime @default(now())
 
   @@index([guildId])
+}
+
+// --- Moderation mega-suite (mod cases, notes, bans, lockdown, roles) ---
+
+enum BotModCaseKind {
+  WARN
+  BAN
+  UNBAN
+  KICK
+  SOFTBAN
+  TEMPBAN
+  TIMEOUT
+  JAIL
+  UNJAIL
+  MUTE
+  UNMUTE
+  UNMUTE_ROLE
+  HARD_BAN
+  PURGE
+  STRIPSTAFF
+  RAID
+  OTHER
+}
+
+/// Guild-scoped moderation case (sequential caseNum per guild).
+model BotGuildModCase {
+  id           String         @id @default(cuid())
+  guildId      String
+  caseNum      Int
+  kind         BotModCaseKind
+  actorUserId  String
+  targetUserId String
+  reason       String?        @db.Text
+  metadata     Json?
+  createdAt    DateTime       @default(now())
+
+  proofs BotGuildModCaseProof[]
+
+  @@unique([guildId, caseNum])
+  @@index([guildId, targetUserId])
+  @@index([guildId, actorUserId])
+  @@index([guildId, createdAt])
+}
+
+model BotGuildModCaseProof {
+  id        String          @id @default(cuid())
+  modCaseId String
+  modCase   BotGuildModCase @relation(fields: [modCaseId], references: [id], onDelete: Cascade)
+  url       String?         @db.Text
+  note      String?         @db.Text
+  sortIndex Int             @default(0)
+  createdAt DateTime        @default(now())
+
+  @@index([modCaseId])
+}
+
+model BotGuildMemberNote {
+  id          String   @id @default(cuid())
+  guildId     String
+  userId      String
+  authorId    String
+  body        String   @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([guildId, userId])
+}
+
+/// Re-ban on join when set.
+model BotGuildHardban {
+  guildId       String
+  userId        String
+  reason        String?  @db.Text
+  createdById   String?
+  createdAt     DateTime @default(now())
+
+  @@id([guildId, userId])
+  @@index([guildId])
+}
+
+/// Channels skipped by lockdown all / unlock all.
+model BotGuildLockdownIgnore {
+  guildId   String
+  channelId String
+  createdAt DateTime @default(now())
+
+  @@id([guildId, channelId])
+  @@index([guildId])
+}
+
+/// Active lockdown-all session: channel ids that were locked.
+model BotGuildLockdownSession {
+  id         String   @id @default(cuid())
+  guildId    String
+  channelIds Json
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@index([guildId, active])
+}
+
+model BotGuildTempRoleGrant {
+  id        String   @id @default(cuid())
+  guildId   String
+  userId    String
+  roleId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([guildId, expiresAt])
+  @@index([guildId, userId])
+}
+
+model BotGuildStickyRole {
+  guildId String
+  userId  String
+  roleId  String
+  setById String?
+  createdAt DateTime @default(now())
+
+  @@id([guildId, userId, roleId])
+  @@index([guildId])
+}
+
+model BotGuildForcedNickname {
+  guildId   String
+  userId    String
+  nickname  String
+  setById   String?
+  createdAt DateTime @default(now())
+
+  @@id([guildId, userId])
+}
+
+/// Only these roles may use commandKey in guild (exclusive allowlist). Empty for a cmd = not restricted.
+model BotGuildCommandRestrictAllow {
+  id          String   @id @default(cuid())
+  guildId     String
+  commandKey  String
+  roleId      String
+  createdAt   DateTime @default(now())
+
+  @@unique([guildId, commandKey, roleId])
+  @@index([guildId, commandKey])
+}
+
+model BotGuildScheduledUnban {
+  id          String   @id @default(cuid())
+  guildId     String
+  userId      String
+  expiresAt   DateTime
+  actorUserId String?
+  reason      String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  @@unique([guildId, userId])
+  @@index([guildId, expiresAt])
+}
+
+/// Muted role id after `.setupmute`.
+model BotGuildMuteConfig {
+  guildId      String   @id
+  mutedRoleId  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+/// Last known roles for `.role restore` (non-jail).
+model BotGuildMemberRoleSnapshot {
+  guildId    String
+  userId     String
+  roleIds    Json
+  updatedAt  DateTime @updatedAt
+
+  @@id([guildId, userId])
+}
+
+/// Optional modlog channel per guild.
+model BotGuildModSettings {
+  guildId          String   @id
+  modLogChannelId  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+/// Nuke schedule per channel (optional phase-2 persistence).
+model BotGuildNukeSchedule {
+  id          String   @id @default(cuid())
+  guildId     String
+  channelId   String
+  intervalMs  Int
+  messageText String?  @db.Text
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@unique([guildId, channelId])
+}
+
+/// Keyword highlights — subscribers get a DM when a keyword appears (per guild).
+model BotGuildHighlightKeyword {
+  id        String   @id @default(cuid())
+  guildId   String
+  userId    String
+  keyword   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, userId, keyword])
+  @@index([guildId])
+}
+
+/// Per-subscriber ignore rules for highlight DMs.
+model BotGuildHighlightIgnore {
+  id             String   @id @default(cuid())
+  guildId        String
+  subscriberId   String
+  targetType     String
+  targetId       String
+  createdAt      DateTime @default(now())
+
+  @@unique([guildId, subscriberId, targetType, targetId])
+  @@index([guildId, subscriberId])
+}
+
+model BotGuildBirthdaySettings {
+  guildId           String   @id
+  announceChannelId String?
+  roleId            String?
+  celebrateRoleId String?
+  locked            Boolean  @default(false)
+  updatedAt         DateTime @updatedAt
+}
+
+model BotGuildMemberBirthday {
+  guildId   String
+  userId    String
+  month     Int
+  day       Int
+  year      Int?
+  unlocked  Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+
+  @@id([guildId, userId])
+}
+
+model BotUserTimezone {
+  userId    String   @id
+  iana      String
+  updatedAt DateTime @updatedAt
+}
+
+model BotGuildUserLastSeen {
+  guildId    String
+  userId     String
+  lastSeenAt DateTime @updatedAt
+
+  @@id([guildId, userId])
+}
+
+/// Aggregated custom emoji usage from message content (best-effort).
+model BotGuildEmojiUsage {
+  guildId String
+  emojiId String
+  uses    Int     @default(0)
+
+  @@id([guildId, emojiId])
+}
+
+model BotGuildBoosterEvent {
+  id      String   @id @default(cuid())
+  guildId String
+  userId  String
+  kind    String
+  at      DateTime @default(now())
+
+  @@index([guildId, at])
+}
+
+/// Roles assigned automatically on member join.
+model BotGuildAutorole {
+  id        String   @id @default(cuid())
+  guildId   String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, roleId])
+  @@index([guildId])
+}
+
+/// Reaction → role bindings (message must be reachable by the bot).
+model BotGuildReactionRole {
+  id        String   @id @default(cuid())
+  guildId   String
+  channelId String
+  messageId String
+  emojiKey  String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, channelId, messageId, emojiKey])
+  @@index([guildId])
+  @@index([channelId, messageId])
+}
+
+/// Guild flag: re-apply reaction-granted roles on rejoin (persist table below).
+model BotGuildReactionRoleSettings {
+  guildId         String   @id
+  restoreOnRejoin Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+}
+
+/// Persists reaction-role grants for restore-on-rejoin (cleared on unreact; optionally cleared on leave).
+model BotGuildReactionRoleGrant {
+  guildId String
+  userId  String
+  roleId  String
+
+  @@id([guildId, userId, roleId])
+  @@index([guildId, userId])
+}
+
+/// Button on a **bot-sent** message that toggles a role.
+model BotGuildButtonRole {
+  id          String   @id @default(cuid())
+  guildId     String
+  channelId   String
+  messageId   String
+  roleId      String
+  style       Int
+  label       String
+  emojiJson   String?
+  sortIndex   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([guildId])
+  @@index([guildId, channelId, messageId])
+}
+
+/// One-confirmation watch for a Bitcoin tx (mempool.space); notify then delete row.
+model BotBtcTxWatch {
+  id        String   @id @default(cuid())
+  userId    String
+  guildId   String?
+  channelId String?
+  txHash    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, txHash])
+  @@index([txHash])
 }

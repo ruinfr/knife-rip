@@ -10,6 +10,7 @@ import type { KnifeCommand } from "../types";
 
 export const dailyCommand: KnifeCommand = {
   name: "daily",
+  aliases: ["claim", "payday"],
   description:
     "Claim free Knife Cash once every 24 hours (50 cash per claim)",
   site: {

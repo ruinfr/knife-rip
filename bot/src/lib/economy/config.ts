@@ -3,15 +3,21 @@ export const ECON_INTERACTION_PREFIX = "ke:" as const;
 
 export const DROP_INTERACTION_PREFIX = "kd:" as const;
 
-/** Lifetime message milestones (all guild messages the bot sees; not DMs). Paired with MILESTONE_REWARDS. */
-export const MILESTONE_THRESHOLDS = [50, 100, 500, 1000, 3000] as const;
-export const MILESTONE_REWARDS = [10, 50, 500, 2500, 8000] as const;
+/** Cash for each 50 lifetime messages (50, 100, 150, …). */
+export const MILESTONE_STACK_50_CASH = 10;
+/** Extra cash on each 100 boundary (100, 200, 300, …), on top of the +10 for that step. */
+export const MILESTONE_STACK_100_EXTRA_CASH = 50;
 
-/** Human-readable lines for Knife Cash disclaimer — derived from thresholds + rewards. */
-export const MILESTONE_HELP_LINES: readonly string[] = MILESTONE_THRESHOLDS.map(
-  (threshold, i) =>
-    `${threshold} msgs → +${MILESTONE_REWARDS[i]!} Cash`,
-);
+/** One-time bonuses after the repeating 50/100 stack. Paired with MILESTONE_HIGH_REWARDS. */
+export const MILESTONE_HIGH_THRESHOLDS = [500, 1000, 3000] as const;
+export const MILESTONE_HIGH_REWARDS = [500, 2500, 8000] as const;
+
+/** Human-readable lines for Knife Cash disclaimer — message cash stack + high tiers. */
+export const MILESTONE_HELP_LINES: readonly string[] = [
+  `Every **50** msgs → **+${MILESTONE_STACK_50_CASH}** (stacks at **50, 100, 150…**)`,
+  `Every **100** msgs → **+${MILESTONE_STACK_100_EXTRA_CASH}** extra (**100, 200…**)`,
+  `At **500** → **+500** · **1,000** → **+2,500** · **3,000** → **+8,000**`,
+];
 
 /** Transfer tax (recipient receives amount × (1 - TAX_RATE)). */
 export const PAY_TAX_RATE = 0.05;

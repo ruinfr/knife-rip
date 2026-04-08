@@ -4,6 +4,9 @@ import {
   GatewayIntentBits,
   Partials,
 } from "discord.js";
+import { recordBoosterChange } from "./lib/booster-events";
+import { tickBirthdayCelebrateRoles } from "./lib/birthday-scheduler";
+import { handleUtilityMessageSideEffects } from "./lib/utility-social-hooks";
 import { handleVoiceMasterInteraction } from "./lib/voicemaster/interaction-handler";
 import { tryExpandGluedVoicemaster } from "./lib/voicemaster/parse-invoke";
 import { handleVoiceMasterVoiceState } from "./lib/voicemaster/voice-handler";
@@ -37,6 +40,15 @@ import { registerSnipeListeners } from "./lib/snipe/events";
 import { acquireSingleInstanceLock } from "./lib/single-instance";
 import { recordGuildTextMessageForLeaderboard } from "./lib/guild-leaderboards/text-increment";
 import { handleGuildVoiceLeaderboardState } from "./lib/guild-leaderboards/voice-track";
+import { tickBtcTxWatches } from "./lib/crypto/btc-watch-scheduler";
+import { tickModerationSchedulers } from "./lib/moderation-scheduler";
+import { handleButtonRoleInteraction } from "./lib/button-role-interaction";
+import { applyGuildMemberJoinModeration } from "./lib/member-join-moderation";
+import { purgeReactionGrantsOnLeaveIfNeeded } from "./lib/reaction-role-persist";
+import {
+  handleReactionRoleAdd,
+  handleReactionRoleRemove,
+} from "./lib/reaction-role-events";
 
 acquireSingleInstanceLock();
 
@@ -113,6 +125,21 @@ client.once(Events.ClientReady, async (c) => {
   reconcileKnifeRipSuspectRoles(c).catch((err) =>
     console.warn("Privilege role reconcile failed:", err),
   );
+
+  setInterval(() => {
+    void tickModerationSchedulers(c);
+  }, 60_000);
+  void tickModerationSchedulers(c);
+
+  setInterval(() => {
+    void tickBirthdayCelebrateRoles(c);
+  }, 60 * 60 * 1000);
+  void tickBirthdayCelebrateRoles(c);
+
+  setInterval(() => {
+    void tickBtcTxWatches(c);
+  }, 60_000);
+  void tickBtcTxWatches(c);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -121,6 +148,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
     (await isGuildAccessBlocked(interaction.guildId))
   ) {
     return;
+  }
+  if (interaction.isButton()) {
+    const handled = await handleButtonRoleInteraction(interaction);
+    if (handled) return;
   }
   try {
     await handleEconomyInteraction(interaction);
@@ -148,6 +179,13 @@ client.on(Events.VoiceStateUpdate, (oldS, newS) => {
   })();
 });
 
+client.on(Events.GuildMemberUpdate, (oldM, newM) => {
+  void (async () => {
+    if (await isGuildAccessBlocked(newM.guild.id)) return;
+    await recordBoosterChange(oldM, newM);
+  })();
+});
+
 client.on(Events.GuildMemberAdd, (member) => {
   void (async () => {
     if (await isGuildAccessBlocked(member.guild.id)) return;
@@ -155,6 +193,7 @@ client.on(Events.GuildMemberAdd, (member) => {
     if (env && member.guild.id === env.guildId) {
       void syncKnifeRipRolesForDiscordUser(member.id);
     }
+    await applyGuildMemberJoinModeration(member);
   })();
 });
 
@@ -170,6 +209,7 @@ client.on(Events.MessageCreate, async (message) => {
 
   recordGuildTextMessageForLeaderboard(message);
   recordEconomyMessageActivity(message);
+  void handleUtilityMessageSideEffects(message);
 
   await handleAfkAuthorReturn(message);
   await handleAfkMentionReplies(message);

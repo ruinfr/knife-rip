@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import { Geist_Mono, Outfit, Syne } from "next/font/google";
 import { Analytics } from "@/components/analytics";
 import { IconifyRegister } from "@/components/iconify-register";
+import { BackToTop } from "@/components/back-to-top";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Providers } from "@/components/providers";
+import { localeLabels } from "@/lib/i18n/config";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getMessages } from "@/lib/i18n/messages";
 import { siteMetadataBase } from "@/lib/site-url";
 import "./globals.css";
 
@@ -63,24 +67,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = getMessages(locale);
+  const htmlLang = localeLabels[locale].htmlLang;
+
   return (
     <html
-      lang="en"
+      lang={htmlLang}
       className={`${outfit.variable} ${geistMono.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="site-canvas flex min-h-full flex-col font-sans">
         <a href="#site-main" className="skip-to-main">
-          Skip to main content
+          {messages.header.skipToMain}
         </a>
         <Analytics />
         <Providers>
           <IconifyRegister />
-          <SiteHeader />
+          <SiteHeader locale={locale} header={messages.header} />
           <div
             id="site-main"
             className="relative z-[1] flex flex-1 flex-col"
@@ -88,7 +96,8 @@ export default function RootLayout({
           >
             {children}
           </div>
-          <SiteFooter />
+          <SiteFooter footer={messages.footer} />
+          <BackToTop />
         </Providers>
       </body>
     </html>

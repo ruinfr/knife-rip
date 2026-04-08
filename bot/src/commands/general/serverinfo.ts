@@ -8,6 +8,7 @@ import {
   verificationLabel,
 } from "../../lib/discord-info-format";
 import { errorEmbed } from "../../lib/embeds";
+import { resolveGuildByInput } from "../../lib/resolve-guild-by-input";
 import type { KnifeCommand } from "../types";
 
 const EMBED_COLOR = 0x2b2d31;
@@ -20,16 +21,22 @@ export const serverinfoCommand: KnifeCommand = {
     categoryId: "utility",
     categoryTitle: "Utility",
     categoryDescription: "Quick tools and light fun.",
-    usage: ".serverinfo · .si",
+    usage: ".serverinfo [guild ID] · .si",
     tier: "free",
     style: "prefix",
   },
-  async run({ message }) {
-    const guild = message.guild;
+  async run({ message, args }) {
+    const guild = await resolveGuildByInput(
+      message.client,
+      args[0],
+      message.guild,
+    );
     if (!guild) {
       await message.reply({
         embeds: [
-          errorEmbed("Use **.serverinfo** in a server, not in DMs."),
+          errorEmbed(
+            "Use **.serverinfo** in a server the bot shares, or pass a **guild ID** the bot is in.",
+          ),
         ],
       });
       return;

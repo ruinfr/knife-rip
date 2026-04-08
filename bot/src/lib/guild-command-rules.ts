@@ -22,8 +22,45 @@ type RulesPayload = {
 const CACHE_MS = 8000;
 const cache = new Map<string, { payload: RulesPayload; exp: number }>();
 
+/** roleIds that may use commandKey when restriction is configured (empty = no restriction). */
+const restrictCache = new Map<
+  string,
+  { byCmd: Map<string, string[]>; exp: number }
+>();
+
 export function invalidateGuildCommandRulesCache(guildId: string): void {
   cache.delete(guildId);
+  restrictCache.delete(guildId);
+}
+
+async function loadRestrictRoleIds(
+  guildId: string,
+  commandKey: string,
+): Promise<string[] | null> {
+  const now = Date.now();
+  let entry = restrictCache.get(guildId);
+  if (!entry || entry.exp <= now) {
+    try {
+      const prisma = getBotPrisma();
+      const rows = await prisma.botGuildCommandRestrictAllow.findMany({
+        where: { guildId },
+        select: { commandKey: true, roleId: true },
+      });
+      const byCmd = new Map<string, string[]>();
+      for (const r of rows) {
+        const list = byCmd.get(r.commandKey) ?? [];
+        list.push(r.roleId);
+        byCmd.set(r.commandKey, list);
+      }
+      entry = { byCmd, exp: now + CACHE_MS };
+      restrictCache.set(guildId, entry);
+    } catch {
+      return null;
+    }
+  }
+  const roles = entry.byCmd.get(commandKey);
+  if (!roles || roles.length === 0) return null;
+  return roles;
 }
 
 async function loadRulesPayload(guildId: string): Promise<RulesPayload | null> {
@@ -138,6 +175,16 @@ export async function isGuildPrefixCommandAllowed(
   if (!message.guild) return true;
   if (NON_CONFIGURABLE_COMMAND_KEYS.has(canonicalCommandName)) return true;
   if (await isCommandOwnerBypass(message.author.id)) return true;
+
+  const restrictRoles = await loadRestrictRoleIds(
+    message.guild.id,
+    canonicalCommandName,
+  );
+  if (restrictRoles) {
+    const roleIds = await memberRoleIds(message);
+    const allowed = restrictRoles.some((rid) => roleIds.has(rid));
+    if (!allowed) return false;
+  }
 
   const rules = await loadRulesPayload(message.guild.id);
   if (!rules) return true;

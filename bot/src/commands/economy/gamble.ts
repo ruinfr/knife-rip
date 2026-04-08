@@ -1,11 +1,17 @@
-import { buildGambleDisclaimerPayload } from "../../lib/economy/hub-ui";
+import { getBotPrisma } from "../../lib/db-prisma";
+import {
+  buildGambleDisclaimerPayload,
+  buildGambleDisclaimerPromptPayload,
+  buildGambleHubPayload,
+  gambleHubPingContent,
+} from "../../lib/economy/hub-ui";
 import type { KnifeCommand } from "../types";
 
 export const gambleCommand: KnifeCommand = {
   name: "gamble",
   aliases: ["economy", "eco"],
   description:
-    "Knife Cash — disclaimer + confirm, then hub (shop, games, stats, pay)",
+    "Knife Cash — private disclaimer in channel, then hub (shop, games, stats, pay)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
@@ -22,27 +28,45 @@ export const gambleCommand: KnifeCommand = {
       ch.isTextBased() &&
       !ch.isDMBased() &&
       "id" in ch;
-    const originChannelId = inGuildText ? ch.id : null;
+    const uid = message.author.id;
 
-    const payload = buildGambleDisclaimerPayload({
-      userId: message.author.id,
-      guild: message.guild,
-      originChannelId,
+    const prisma = getBotPrisma();
+    const disclaimerRow = await prisma.economyUser.findUnique({
+      where: { discordUserId: uid },
+      select: { gambleDisclaimerAcceptedAt: true },
     });
-
-    if (originChannelId) {
-      try {
-        await message.author.send({
-          embeds: payload.embeds,
-          components: payload.components,
-        });
-        await message.react("✅").catch(() => {});
-        return;
-      } catch {
-        /* closed DMs — show disclaimer in channel */
-      }
+    if (disclaimerRow?.gambleDisclaimerAcceptedAt) {
+      const payload = await buildGambleHubPayload({
+        client: message.client,
+        userId: uid,
+        page: 0,
+        guild: message.guild ?? null,
+      });
+      await message.reply({
+        content: gambleHubPingContent(uid),
+        embeds: payload.embeds,
+        components: payload.components,
+        allowedMentions: { users: [uid] },
+      });
+      return;
     }
 
+    if (inGuildText) {
+      const prompt = buildGambleDisclaimerPromptPayload(uid);
+      await message.reply({
+        content: prompt.content,
+        embeds: prompt.embeds,
+        components: prompt.components,
+        allowedMentions: { users: [uid] },
+      });
+      return;
+    }
+
+    const payload = buildGambleDisclaimerPayload({
+      userId: uid,
+      guild: null,
+      originChannelId: null,
+    });
     await message.reply({
       embeds: payload.embeds,
       components: payload.components,

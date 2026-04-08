@@ -35,6 +35,103 @@ export function formatChangelogDateEst(isoDate: string): string {
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
+    id: "2026-04-18-v38-command-aliases",
+    catalogVersion: 38,
+    date: "2026-04-18",
+    title: "Command aliases and duplicate-trigger fix",
+    summary:
+      "Many commands gained short, memorable aliases (moderation, economy, webhooks, embeds, and more). The remind command no longer claims the same trigger as reminders. Developers can run npm run check:aliases to verify uniqueness.",
+    bullets: [],
+  },
+  {
+    id: "2026-04-18-v37-embed-builder",
+    catalogVersion: 37,
+    date: "2026-04-18",
+    title: "Site: command category tabs + embed builder",
+    summary:
+      "The commands page has horizontal category filters with counts. New /tools/embed builder outputs Knife {embed}$v scripts; .say and .createembed accept those scripts (plus variable substitution from the invoker context). .webhook send/edit also accepts the script after JSON parsing fails.",
+    bullets: [
+      "createembed is Knife Pro plus Administrator, same gates as say, and expects an embed script.",
+    ],
+  },
+  {
+    id: "2026-04-18-v36-crypto-commands",
+    catalogVersion: 36,
+    date: "2026-04-18",
+    title: "Crypto: price, gas, transactions, BTC notify",
+    summary:
+      "Prefix commands for spot prices (.crypto), Ethereum gas (.gas), BTC/LTC/ETH transaction lookup (.transaction), and Bitcoin confirmation alerts (.subscribe). Site command list updates when the bot syncs.",
+    bullets: [
+      ".subscribe needs DATABASE_URL and migration 20260416140000_bot_btc_tx_watch.",
+      "Optional ETHERSCAN_API_KEY improves ETH tx details and gas oracle reliability.",
+    ],
+  },
+  {
+    id: "2026-04-16-v35-snipe-history",
+    catalogVersion: 35,
+    date: "2026-04-16",
+    title: "Snipe: clear and reaction history",
+    summary:
+      "Staff with Manage Messages can clear per-channel snipe buffers (.clearsnipe) and inspect logged reaction adds/removes for a message via jump link (.reactionhistory), within the same in-memory TTL as .snipe.",
+    bullets: [],
+  },
+  {
+    id: "2026-04-05-v34-utility-social",
+    catalogVersion: 34,
+    date: "2026-04-05",
+    title: "Utility and social commands",
+    summary:
+      "Large utility pack: stickers, emoji management, image tools (rotate, compress, invert, hex), lookups (define, Urban Dictionary, osu!, weather, Telegram, invite info, screenshot), server lists and info, highlight DMs, birthdays, timezones, boost history, and more. Requires DATABASE_URL for persistence features.",
+    bullets: [
+      "Optional env: OSU_LEGACY_API_KEY, OPENWEATHER_API_KEY, TELEGRAM_BOT_TOKEN.",
+      "Apply migration 20260415130000_utility_social_features when you deploy the schema.",
+    ],
+  },
+  {
+    id: "2026-04-07-v33-moderation-suite",
+    catalogVersion: 33,
+    date: "2026-04-07",
+    title: "Moderation mega-suite",
+    summary:
+      "Cases (.history), warnings, notes, proofs, bans (unban, softban, tempban, hardban, unbanall), lockdown, expanded purge/role tools, temprole, thread/utility commands, and scheduled jail/unban/temprole.",
+    bullets: [
+      "See /commands for the full list — most actions require Manage Messages, Ban Members, or Manage Roles as documented per command.",
+    ],
+  },
+  {
+    id: "2026-04-05-v32-guild-jail",
+    catalogVersion: 32,
+    date: "2026-04-05",
+    title: "Guild jail system",
+    summary:
+      "Admins run .jailsetup once to create the Jailed role, #jail, and #jail-logs; staff use .jail, .unjail, and .jaillist with role strip and restore.",
+    bullets: [
+      "Aliases: .setupjail / .jset for setup; .jails and .whoisjailed for the list.",
+    ],
+  },
+  {
+    id: "2026-04-05-v31-roulette",
+    catalogVersion: 31,
+    date: "2026-04-05",
+    title: "Knife Cash roulette",
+    summary:
+      "American roulette in the gamble hub: set your bet, then choose Red, Black, or Green on the wheel.",
+    bullets: [
+      "Red or black pays even money; green wins on 0 or 00 with a higher return.",
+    ],
+  },
+  {
+    id: "2026-04-05-v30-coinflip-pvp",
+    catalogVersion: 30,
+    date: "2026-04-05",
+    title: "Coinflip PVP in Knife Cash",
+    summary:
+      "Challenge another member to a fair 50/50 coinflip with matching stakes: they accept or decline, then balances settle in one step with no house rake.",
+    bullets: [
+      "From the gamble hub Games page, use Coinflip PVP and pick opponent plus amount.",
+    ],
+  },
+  {
     id: "2026-04-05-v29-baltop",
     catalogVersion: 29,
     date: "2026-04-05",

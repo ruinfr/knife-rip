@@ -137,6 +137,57 @@ export const timeoutCommand: KnifeCommand = {
   },
 };
 
+export const timeoutlistCommand: KnifeCommand = {
+  name: "timeoutlist",
+  aliases: ["timeouts", "mutelist"],
+  description: "Members currently timed out — **Moderate Members**",
+  site: {
+    categoryId: "moderation",
+    categoryTitle: "Moderation",
+    categoryDescription: "Server staff tools.",
+    usage: ".timeoutlist",
+    tier: "free",
+    style: "prefix",
+  },
+  async run({ message }) {
+    const deny = await requireTimeoutPerm(message);
+    if (deny) {
+      await message.reply({ embeds: [deny] });
+      return;
+    }
+
+    const guild = message.guild!;
+    await guild.members.fetch().catch(() => {});
+    const timed = guild.members.cache.filter(
+      (m) =>
+        m.communicationDisabledUntil !== null &&
+        m.communicationDisabledUntil > new Date(),
+    );
+    if (timed.size === 0) {
+      await message.reply({
+        embeds: [
+          minimalEmbed({ title: "Timeouts", description: "_Nobody is timed out._" }),
+        ],
+      });
+      return;
+    }
+    const lines = [...timed.values()]
+      .slice(0, 25)
+      .map(
+        (m) =>
+          `${m.user.tag} · until <t:${Math.floor(m.communicationDisabledUntil!.getTime() / 1000)}:R>`,
+      );
+    await message.reply({
+      embeds: [
+        minimalEmbed({
+          title: `Timed out (${timed.size})`,
+          description: lines.join("\n").slice(0, 3900),
+        }),
+      ],
+    });
+  },
+};
+
 export const untimeoutCommand: KnifeCommand = {
   name: "untimeout",
   aliases: ["unmute", "ut"],

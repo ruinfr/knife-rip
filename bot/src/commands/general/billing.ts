@@ -37,6 +37,7 @@ async function resolveBillingLabel(discordUserId: string): Promise<string> {
 
 export const billingCommand: KnifeCommand = {
   name: "billing",
+  aliases: ["mysub", "subscription"],
   description:
     "Your Pro status and a short link to manage subscription on the site (sent in DM when possible)",
   site: {

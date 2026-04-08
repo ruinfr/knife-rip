@@ -16,6 +16,7 @@
     "../lib/bot-owners.ts",
     "../lib/knife-premium.ts",
     "../lib/discord-guild-role-sync.ts",
-    "../lib/community-discord.ts"
+    "../lib/community-discord.ts",
+    "../lib/embed-script.ts"
   ]
 }

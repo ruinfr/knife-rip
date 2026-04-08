@@ -4,6 +4,7 @@ import type { KnifeCommand } from "../types";
 
 export const bannerCommand: KnifeCommand = {
   name: "banner",
+  aliases: ["userbanner", "bn"],
   description:
     "Show a user or server banner image (mention, ID, or yourself; use “server” for guild)",
   site: {

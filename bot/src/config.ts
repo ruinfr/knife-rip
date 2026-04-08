@@ -19,7 +19,7 @@ loadEnvFiles();
 export const PREFIX = "." as const;
 
 /** Must match site `lib/commands.ts` → `COMMAND_CATALOG_VERSION`. */
-export const COMMAND_CATALOG_VERSION = 29 as const;
+export const COMMAND_CATALOG_VERSION = 38 as const;
 
 export function getDiscordToken(): string {
   const token = process.env.DISCORD_BOT_TOKEN?.trim();
@@ -73,4 +73,26 @@ export function getRapidApiKey(): string | undefined {
 export function getEconomyLogChannelId(): string | undefined {
   const id = process.env.ECONOMY_LOG_CHANNEL_ID?.trim();
   return id && /^\d{17,20}$/.test(id) ? id : undefined;
+}
+
+/** Legacy osu!api v1 (get_user) — https://github.com/ppy/osu-api/wiki */
+export function getOsuLegacyApiKey(): string | undefined {
+  const k =
+    process.env.OSU_LEGACY_API_KEY?.trim() || process.env.OSU_API_KEY?.trim();
+  return k || undefined;
+}
+
+/** OpenWeatherMap current weather — https://openweathermap.org/api */
+export function getOpenWeatherApiKey(): string | undefined {
+  return process.env.OPENWEATHER_API_KEY?.trim() || undefined;
+}
+
+/** Optional: Telegram Bot API for `.telegram` (getChat). */
+export function getTelegramBotToken(): string | undefined {
+  return process.env.TELEGRAM_BOT_TOKEN?.trim() || undefined;
+}
+
+/** Optional: Etherscan API key — improves `.transaction` (ETH) and `.gas` reliability. */
+export function getEtherscanApiKey(): string | undefined {
+  return process.env.ETHERSCAN_API_KEY?.trim() || undefined;
 }

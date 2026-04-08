@@ -23,7 +23,7 @@ const dmReachable = new Set<string>();
 
 export const remindCommand: KnifeCommand = {
   name: "remind",
-  aliases: ["reminder"],
+  aliases: ["reminder", "remindme"],
   description:
     "Knife Pro — schedule a personal reminder (DM); rate-limited; max 7 days ahead",
   site: {
@@ -74,7 +74,7 @@ export const remindCommand: KnifeCommand = {
       return;
     }
 
-    if (sub === "cancel") {
+    if (sub === "cancel" || sub === "remove") {
       const rawCancel = args[1]?.trim();
       const idOrAll = rawCancel?.toLowerCase();
       if (!idOrAll || idOrAll === "all") {
@@ -192,4 +192,15 @@ export const remindCommand: KnifeCommand = {
       ],
     });
   },
+};
+
+export const remindersCommand: KnifeCommand = {
+  ...remindCommand,
+  name: "reminders",
+  aliases: undefined,
+  description:
+    "Same as **.remind** — Pro — list / cancel (or **remove**) / schedule",
+  site: remindCommand.site
+    ? { ...remindCommand.site, usage: ".reminders (same as .remind)" }
+    : undefined,
 };

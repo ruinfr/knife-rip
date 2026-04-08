@@ -4,6 +4,7 @@ import { CommandAliasesDisclosure } from "@/components/command-aliases-disclosur
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
+import { cn } from "@/lib/cn";
 import type { BotCommand, CommandCategory } from "@/lib/commands";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
@@ -97,8 +98,23 @@ type Props = {
   categories: CommandCategory[];
 };
 
+const CATEGORY_TAB_ICONS: Record<string, string> = {
+  core: "mdi:console",
+  information: "mdi:information-outline",
+  utility: "mdi:wrench-outline",
+  moderation: "mdi:shield-outline",
+  fun: "mdi:emoticon-happy-outline",
+  economy: "mdi:currency-usd",
+  roleplay: "mdi:account-group-outline",
+};
+
+function categoryTabIcon(id: string): string {
+  return CATEGORY_TAB_ICONS[id] ?? "mdi:folder-outline";
+}
+
 export function CommandsCatalog({ categories }: Props) {
   const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string>("all");
 
   const filtered = useMemo(() => {
     const tokens = tokenizeQuery(query);
@@ -116,6 +132,36 @@ export function CommandsCatalog({ categories }: Props) {
     () => filtered.reduce((n, c) => n + c.commands.length, 0),
     [filtered],
   );
+
+  const tabCounts = useMemo(() => {
+    const source = query.trim() ? filtered : categories;
+    const total = source.reduce((n, c) => n + c.commands.length, 0);
+    const perCat = source.map((c) => ({
+      id: c.id,
+      title: c.title,
+      count: c.commands.length,
+    }));
+    return { total, perCat };
+  }, [categories, filtered, query]);
+
+  const effectiveCategory = useMemo(() => {
+    if (activeCategory === "all") return "all";
+    const hit = filtered.find((c) => c.id === activeCategory);
+    if (hit && hit.commands.length > 0) return activeCategory;
+    return "all";
+  }, [activeCategory, filtered]);
+
+  const visibleCategories = useMemo(() => {
+    if (effectiveCategory === "all") return filtered;
+    return filtered.filter((c) => c.id === effectiveCategory);
+  }, [filtered, effectiveCategory]);
+
+  const scrollToCategory = (id: string) => {
+    if (id === "all") return;
+    document
+      .getElementById(`cmd-cat-${id}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="flex flex-col gap-10">
@@ -150,6 +196,82 @@ export function CommandsCatalog({ categories }: Props) {
         ) : null}
       </div>
 
+      <div className="flex flex-col gap-3">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted">
+          Categories
+        </p>
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-background to-transparent" />
+          <div className="flex items-center gap-1 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveCategory("all");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className={cn(
+                "motion-safe:transition flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-semibold",
+                effectiveCategory === "all"
+                  ? "border-white/[0.12] bg-surface-elevated/95 text-foreground shadow-sm ring-1 ring-white/[0.06]"
+                  : "border-transparent bg-surface/55 text-muted hover:bg-white/[0.05] hover:text-foreground",
+              )}
+            >
+              all
+              <span
+                className={cn(
+                  "rounded-full px-2 py-0.5 text-[10px] tabular-nums",
+                  effectiveCategory === "all"
+                    ? "bg-background/80 text-muted"
+                    : "bg-background/50 text-muted",
+                )}
+              >
+                {tabCounts.total}
+              </span>
+            </button>
+            {tabCounts.perCat.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => {
+                  setActiveCategory(c.id);
+                  scrollToCategory(c.id);
+                }}
+                className={cn(
+                  "motion-safe:transition flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-semibold",
+                  effectiveCategory === c.id
+                    ? "border-white/[0.12] bg-surface-elevated/95 text-foreground shadow-sm ring-1 ring-white/[0.06]"
+                    : "border-transparent bg-surface/55 text-muted hover:bg-white/[0.05] hover:text-foreground",
+                )}
+              >
+                <Icon
+                  icon={categoryTabIcon(c.id)}
+                  className="size-4 shrink-0 opacity-80"
+                  aria-hidden
+                />
+                <span className="max-w-[10rem] truncate">{c.title}</span>
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[10px] tabular-nums",
+                    effectiveCategory === c.id
+                      ? "bg-background/80 text-muted"
+                      : "bg-background/50 text-muted",
+                  )}
+                >
+                  {c.count}
+                </span>
+              </button>
+            ))}
+            <span
+              className="mx-1 shrink-0 text-muted/80"
+              aria-hidden
+              title="Scroll for more"
+            >
+              <Icon icon="mdi:chevron-right" className="size-5" />
+            </span>
+          </div>
+        </div>
+      </div>
+
       {query.trim() && totalVisible === 0 ? (
         <Card
           padding="lg"
@@ -176,7 +298,7 @@ export function CommandsCatalog({ categories }: Props) {
       ) : null}
 
       <div className="flex flex-col gap-14">
-        {filtered.map((cat) => (
+        {visibleCategories.map((cat) => (
           <ScrollReveal
             as="section"
             key={cat.id}

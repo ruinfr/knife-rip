@@ -3,6 +3,7 @@ import {
   type ButtonInteraction,
   EmbedBuilder,
   type Interaction,
+  MessageFlags,
   ModalBuilder,
   type ModalSubmitInteraction,
   type StringSelectMenuInteraction,
@@ -23,6 +24,13 @@ import {
   pickRandomMember,
 } from "./drop-state";
 import {
+  buildCoinflipPvpChallengeEmbed,
+  buildCoinflipPvpChallengeRows,
+  COINFLIP_PVP_CHALLENGE_MS,
+  handleCoinflipPvpAccept,
+  handleCoinflipPvpDecline,
+} from "./coinflip-pvp-flow";
+import {
   handleBlackjackButton,
   runBlackjackInitial,
 } from "./blackjack-flow";
@@ -32,12 +40,27 @@ import {
   handleMinesPick,
   runMinesInitial,
 } from "./mines-flow";
+import {
+  buildRoulettePickEmbed,
+  buildRoulettePickRows,
+  newRouletteToken,
+  pruneRouletteSessions,
+  ROULETTE_SESSION_TTL_MS,
+  roulettePickLetterToChoice,
+  rouletteSessions,
+} from "./roulette-flow";
+import { resolveEconomyPayRecipientId } from "./pay-recipient";
+import { scheduleGambleOutcomeDeletion } from "./gamble-result-cleanup";
 import { runHouseGame, type HouseGameKind } from "./games";
 import {
   findEnvShopItem,
   parseEnvShopItemId,
 } from "./economy-guild-config";
-import { buildGambleHubPayload } from "./hub-ui";
+import {
+  buildGambleDisclaimerPayload,
+  buildGambleHubPayload,
+  gambleHubPingContent,
+} from "./hub-ui";
 import { resolveHubGuild } from "./hub-guild";
 import { economyLogEmbed, sendEconomyLog } from "./log";
 import { formatCash, parsePositiveBigInt } from "./money";
@@ -46,10 +69,21 @@ import {
   applyCashDelta,
   getCash,
   getOrCreateEconomyUser,
+  recordGambleDisclaimerAccepted,
   transferBetweenUsers,
 } from "./wallet";
 
 const gameCooldown = new Map<string, number>();
+
+function gamblePingOpts(userId: string): {
+  content: string;
+  allowedMentions: { users: string[] };
+} {
+  return {
+    content: gambleHubPingContent(userId),
+    allowedMentions: { users: [userId] },
+  };
+}
 
 function parseKe(
   id: string,
@@ -123,11 +157,173 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
   const { uid, tok } = parsed;
   const guild = interaction.guild;
 
-  if (tok[0] === "gk" && tok[1] === "ok") {
+  if (
+    tok[0] === "cfpvp" &&
+    tok[1] &&
+    (tok[2] === "a" || tok[2] === "d")
+  ) {
+    const challengeId = tok[1]!;
     await interaction.deferUpdate();
+    if (tok[2] === "a") {
+      await handleCoinflipPvpAccept({
+        interaction,
+        challengeId,
+        opponentId: uid,
+      });
+    } else {
+      await handleCoinflipPvpDecline({
+        interaction,
+        challengeId,
+        opponentId: uid,
+      });
+    }
+    return;
+  }
+
+  if (
+    tok[0] === "rl" &&
+    tok[1] &&
+    tok[2] &&
+    /^[rbg]$/.test(tok[2]!)
+  ) {
+    await interaction.deferUpdate();
+    pruneRouletteSessions();
+    const token = tok[1]!;
+    const letter = tok[2]!;
+    const pick = roulettePickLetterToChoice(letter);
+    if (!pick) return;
+    const session = rouletteSessions.get(token);
+    if (!session || session.userId !== uid) {
+      await interaction.followUp({
+        ephemeral: true,
+        content:
+          "Session expired or not yours — run **`.gamble`** and start again.",
+      });
+      return;
+    }
+    if (Date.now() - session.createdAt > ROULETTE_SESSION_TTL_MS) {
+      rouletteSessions.delete(token);
+      await interaction.followUp({
+        ephemeral: true,
+        content: "That roulette pick expired — start a new bet.",
+      });
+      return;
+    }
+    const cdKeyR = `${uid}:roulette`;
+    const lastR = gameCooldown.get(cdKeyR) ?? 0;
+    if (Date.now() - lastR < GAME_COOLDOWN_MS) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "⏳ Game cooldown — try again in a few seconds.",
+      });
+      return;
+    }
+    rouletteSessions.delete(token);
+    const mR = await interaction.guild?.members.fetch(uid).catch(() => null);
+    try {
+      const res = await runHouseGame({
+        userId: uid,
+        game: "roulette",
+        bet: session.bet,
+        roulettePick: pick,
+        member: mR ?? null,
+        client: interaction.client,
+      });
+      gameCooldown.set(cdKeyR, Date.now());
+      const houseMsgR = await interaction.editReply({
+        content: `${gambleHubPingContent(uid)}\n\n${res.summary}`,
+        embeds: [],
+        components: [],
+        allowedMentions: { users: [uid] },
+      });
+      scheduleGambleOutcomeDeletion(houseMsgR);
+    } catch (e) {
+      const msgR =
+        e instanceof Error && e.message === "INSUFFICIENT_FUNDS"
+          ? "Not enough cash."
+          : "Could not settle — try again.";
+      await interaction.editReply({
+        content: `${gambleHubPingContent(uid)}\n\n${msgR}`,
+        embeds: [],
+        components: [],
+        allowedMentions: { users: [uid] },
+      });
+    }
+    return;
+  }
+
+  if (tok[0] === "gd" && tok[1] === "open") {
+    const ch = interaction.channel;
+    if (!interaction.guild || !ch || ch.isDMBased()) {
+      await interaction.reply({
+        ephemeral: true,
+        content: "Run **`.gamble`** in a **server text channel** to use Knife Cash.",
+      });
+      return;
+    }
+    const disc = buildGambleDisclaimerPayload({
+      userId: uid,
+      guild: interaction.guild,
+      originChannelId: ch.id,
+    });
+    await interaction.reply({
+      ephemeral: true,
+      embeds: disc.embeds,
+      components: disc.components,
+    });
+    return;
+  }
+
+  if (tok[0] === "gk" && tok[1] === "ok") {
     const originChannelId =
       tok[2] && /^\d{17,20}$/.test(tok[2]) ? tok[2] : null;
     const fromDm = interaction.channel?.isDMBased() ?? false;
+    const isEphemeral = interaction.message.flags.has(MessageFlags.Ephemeral);
+
+    if (isEphemeral && originChannelId) {
+      await interaction.deferUpdate();
+      const ch = await interaction.client.channels
+        .fetch(originChannelId)
+        .catch(() => null);
+      if (ch?.isTextBased() && !ch.isDMBased()) {
+        const g = ch.guild;
+        const payload = await buildGambleHubPayload({
+          client: interaction.client,
+          userId: uid,
+          page: 0,
+          guild: g,
+        });
+        try {
+          await ch.send({
+            ...gamblePingOpts(uid),
+            embeds: payload.embeds,
+            components: payload.components,
+          });
+          await recordGambleDisclaimerAccepted(uid);
+          await interaction.editReply({
+            content: "✅ **Knife Cash** menu posted in this channel.",
+            embeds: [],
+            components: [],
+          });
+        } catch {
+          await interaction.editReply({
+            content:
+              "Could not post the menu there. Check that Knife can **send messages** in that channel, then run **`.gamble`** again.",
+            embeds: [],
+            components: [],
+          });
+        }
+        return;
+      }
+      await interaction.editReply({
+        content: "Could not resolve the channel — run **`.gamble`** again.",
+        embeds: [],
+        components: [],
+      });
+      return;
+    }
+
+    await interaction.deferUpdate();
 
     if (fromDm && originChannelId) {
       const ch = await interaction.client.channels
@@ -143,10 +339,11 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         });
         try {
           await ch.send({
+            ...gamblePingOpts(uid),
             embeds: payload.embeds,
             components: payload.components,
-            allowedMentions: { users: [] },
           });
+          await recordGambleDisclaimerAccepted(uid);
           await interaction.message.edit({
             content: null,
             embeds: [
@@ -182,9 +379,11 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
       guild,
     });
     await interaction.message.edit({
+      ...gamblePingOpts(uid),
       embeds: payload.embeds,
       components: payload.components,
     });
+    await recordGambleDisclaimerAccepted(uid);
     return;
   }
 
@@ -204,15 +403,20 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         member: m ?? null,
         client: interaction.client,
       });
-      await interaction.editReply({
+      const bjMsg = await interaction.editReply({
+        ...gamblePingOpts(uid),
         embeds: res.embeds,
         components: res.components,
       });
+      if (res.components.length === 0) {
+        scheduleGambleOutcomeDeletion(bjMsg);
+      }
     } catch {
       await interaction.editReply({
-        content: "❌ Could not settle — balance may have changed.",
+        content: `${gambleHubPingContent(uid)}\n\n❌ Could not settle — balance may have changed.`,
         embeds: [],
         components: [],
+        allowedMentions: { users: [uid] },
       });
     }
     return;
@@ -236,9 +440,10 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         const idx = parseInt(tok[3]!, 10);
         if (!Number.isFinite(idx)) {
           await interaction.editReply({
-            content: "❌ Invalid tile.",
+            content: `${gambleHubPingContent(uid)}\n\n❌ Invalid tile.`,
             embeds: [],
             components: [],
+            allowedMentions: { users: [uid] },
           });
           return;
         }
@@ -251,27 +456,38 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         });
       } else {
         await interaction.editReply({
-          content: "❌ Unknown action.",
+          content: `${gambleHubPingContent(uid)}\n\n❌ Unknown action.`,
           embeds: [],
           components: [],
+          allowedMentions: { users: [uid] },
         });
         return;
       }
-      await interaction.editReply({
+      const mnMsg = await interaction.editReply({
+        ...gamblePingOpts(uid),
         embeds: res.embeds,
         components: res.components,
       });
+      if (res.roundFinished) {
+        scheduleGambleOutcomeDeletion(mnMsg);
+      }
     } catch {
       await interaction.editReply({
-        content: "❌ Could not settle — balance may have changed.",
+        content: `${gambleHubPingContent(uid)}\n\n❌ Could not settle — balance may have changed.`,
         embeds: [],
         components: [],
+        allowedMentions: { users: [uid] },
       });
     }
     return;
   }
 
   if (tok[0] === "pg" && tok.length >= 3) {
+    if (tok[2] === "trash") {
+      await interaction.deferUpdate();
+      await interaction.message.delete().catch(() => {});
+      return;
+    }
     const cur = hubPageFromTok(tok);
     if (tok[2] === "prev" || tok[2] === "next") {
       const delta = tok[2] === "next" ? 1 : -1;
@@ -284,6 +500,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         guild,
       });
       await interaction.message.edit({
+        ...gamblePingOpts(uid),
         embeds: payload.embeds,
         components: payload.components,
       });
@@ -297,7 +514,9 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         gKey !== "dc" &&
         gKey !== "sl" &&
         gKey !== "bj" &&
-        gKey !== "mn"
+        gKey !== "mn" &&
+        gKey !== "cfpv" &&
+        gKey !== "rl"
       ) {
         return;
       }
@@ -309,6 +528,40 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         .setRequired(true)
         .setPlaceholder("e.g. 100");
 
+      if (gKey === "rl") {
+        const modalRl = new ModalBuilder()
+          .setCustomId(`${ECON_INTERACTION_PREFIX}${uid}:m:rl`)
+          .setTitle("Roulette")
+          .addComponents(
+            new ActionRowBuilder<TextInputBuilder>().addComponents(input),
+          );
+        await interaction.showModal(modalRl);
+        return;
+      }
+      if (gKey === "cfpv") {
+        const modal = new ModalBuilder()
+          .setCustomId(`${ECON_INTERACTION_PREFIX}${uid}:m:cfpvp`)
+          // Modal title max 45 chars — custom emoji tokens exceed limit with "Coinflip PVP".
+          .setTitle("Coinflip PVP");
+        const target = new TextInputBuilder()
+          .setCustomId("target")
+          .setLabel("Opponent (username, @mention, or ID)")
+          .setStyle(TextInputStyle.Short)
+          .setRequired(true)
+          .setPlaceholder("e.g. @friend or username");
+        const amountPv = new TextInputBuilder()
+          .setCustomId("amount")
+          .setLabel(`Bet (you have ${formatCash(cash)})`)
+          .setStyle(TextInputStyle.Short)
+          .setRequired(true)
+          .setPlaceholder("e.g. 100");
+        modal.addComponents(
+          new ActionRowBuilder<TextInputBuilder>().addComponents(target),
+          new ActionRowBuilder<TextInputBuilder>().addComponents(amountPv),
+        );
+        await interaction.showModal(modal);
+        return;
+      }
       if (gKey === "bj") {
         const modal = new ModalBuilder()
           .setCustomId(`${ECON_INTERACTION_PREFIX}${uid}:m:bj`)
@@ -446,10 +699,10 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         .setTitle(`${ecoM.pay} Send cash`);
       const target = new TextInputBuilder()
         .setCustomId("target")
-        .setLabel("Recipient user ID")
+        .setLabel("Recipient (username, @mention, or ID)")
         .setStyle(TextInputStyle.Short)
         .setRequired(true)
-        .setPlaceholder("Discord user snowflake");
+        .setPlaceholder("e.g. cobra or @friend or 123…");
       const amount = new TextInputBuilder()
         .setCustomId("amount")
         .setLabel("Amount")
@@ -730,14 +983,16 @@ async function handleEconomyModal(
     const bet = parsePositiveBigInt(amountRaw);
     if (!bet) {
       await interaction.editReply({
-        content: "❌ Enter a positive whole amount.",
+        content: `${gambleHubPingContent(uid)}\n\n❌ Enter a positive whole amount.`,
+        allowedMentions: { users: [uid] },
       });
       return;
     }
     const cash = await getCash(uid);
     if (bet > cash) {
       await interaction.editReply({
-        content: `❌ You only have **${formatCash(cash)}**.`,
+        content: `${gambleHubPingContent(uid)}\n\n❌ You only have **${formatCash(cash)}**.`,
+        allowedMentions: { users: [uid] },
       });
       return;
     }
@@ -745,7 +1000,8 @@ async function handleEconomyModal(
     const last = gameCooldown.get(cdKey) ?? 0;
     if (Date.now() - last < GAME_COOLDOWN_MS) {
       await interaction.editReply({
-        content: "⏳ Game cooldown — try again in a few seconds.",
+        content: `${gambleHubPingContent(uid)}\n\n⏳ Game cooldown — try again in a few seconds.`,
+        allowedMentions: { users: [uid] },
       });
       return;
     }
@@ -759,10 +1015,14 @@ async function handleEconomyModal(
           client: interaction.client,
         });
         gameCooldown.set(cdKey, Date.now());
-        await interaction.editReply({
+        const bjStart = await interaction.editReply({
+          ...gamblePingOpts(uid),
           embeds: payload.embeds,
           components: payload.components,
         });
+        if (payload.components.length === 0) {
+          scheduleGambleOutcomeDeletion(bjStart);
+        }
       } else {
         const payload = await runMinesInitial({
           userId: uid,
@@ -771,6 +1031,7 @@ async function handleEconomyModal(
         });
         gameCooldown.set(cdKey, Date.now());
         await interaction.editReply({
+          ...gamblePingOpts(uid),
           embeds: payload.embeds,
           components: payload.components,
         });
@@ -780,7 +1041,10 @@ async function handleEconomyModal(
         e instanceof Error && e.message === "INSUFFICIENT_FUNDS"
           ? "❌ Not enough cash (balance changed?)."
           : "❌ Game error — try again.";
-      await interaction.editReply({ content: msg });
+      await interaction.editReply({
+        content: `${gambleHubPingContent(uid)}\n\n${msg}`,
+        allowedMentions: { users: [uid] },
+      });
     }
     return;
   }
@@ -789,18 +1053,21 @@ async function handleEconomyModal(
     await interaction.deferReply({ ephemeral: true });
     const targetRaw = interaction.fields.getTextInputValue("target").trim();
     const amountRaw = interaction.fields.getTextInputValue("amount").trim();
-    if (!/^\d{17,20}$/.test(targetRaw)) {
-      await interaction.editReply({
-        content: "❌ **Recipient** must be a numeric Discord user ID.",
-      });
+    const resolved = await resolveEconomyPayRecipientId(
+      interaction.guild,
+      targetRaw,
+    );
+    if (!resolved.ok) {
+      await interaction.editReply({ content: `❌ ${resolved.error}` });
       return;
     }
+    const targetId = resolved.userId;
     const amount = parsePositiveBigInt(amountRaw);
     if (!amount) {
       await interaction.editReply({ content: "❌ Invalid **amount**." });
       return;
     }
-    if (targetRaw === uid) {
+    if (targetId === uid) {
       await interaction.editReply({ content: "❌ You cannot pay yourself." });
       return;
     }
@@ -817,19 +1084,19 @@ async function handleEconomyModal(
     try {
       const { recipientGot, tax } = await transferBetweenUsers({
         fromId: uid,
-        toId: targetRaw,
+        toId: targetId,
         amount,
       });
       await interaction.editReply({
         content:
-          `✅ Sent **${formatCash(amount)}** to <@${targetRaw}>.\n` +
+          `✅ Sent **${formatCash(amount)}** to <@${targetId}>.\n` +
           `They received **${formatCash(recipientGot)}** (${ecoM.tax} tax **${formatCash(tax)}**).`,
       });
       void sendEconomyLog(
         interaction.client,
         economyLogEmbed(
           `${ecoM.pay} Transfer`,
-          `<@${uid}> → <@${targetRaw}> **${formatCash(amount)}** (${ecoM.tax} tax **${formatCash(tax)}**).`,
+          `<@${uid}> → <@${targetId}> **${formatCash(amount)}** (${ecoM.tax} tax **${formatCash(tax)}**).`,
         ),
       );
     } catch (e) {
@@ -839,6 +1106,136 @@ async function handleEconomyModal(
           : "❌ Transfer failed.";
       await interaction.editReply({ content: m });
     }
+    return;
+  }
+
+  if (kind === "cfpvp") {
+    await interaction.deferReply({ ephemeral: true });
+    const guild = interaction.guild;
+    const channel = interaction.channel;
+    if (!guild || !channel?.isTextBased() || channel.isDMBased()) {
+      await interaction.editReply({
+        content: "❌ Use **Coinflip PVP** from a **server** text channel.",
+      });
+      return;
+    }
+    const targetRaw = interaction.fields.getTextInputValue("target").trim();
+    const amountRaw = interaction.fields.getTextInputValue("amount").trim();
+    const resolved = await resolveEconomyPayRecipientId(guild, targetRaw);
+    if (!resolved.ok) {
+      await interaction.editReply({ content: `❌ ${resolved.error}` });
+      return;
+    }
+    const targetId = resolved.userId;
+    if (targetId === uid) {
+      await interaction.editReply({
+        content: "❌ You cannot challenge yourself.",
+      });
+      return;
+    }
+    const oppUser = await interaction.client.users
+      .fetch(targetId)
+      .catch(() => null);
+    if (!oppUser?.id || oppUser.bot) {
+      await interaction.editReply({
+        content: "❌ Opponent must be a normal user (not a bot).",
+      });
+      return;
+    }
+    const betPv = parsePositiveBigInt(amountRaw);
+    if (!betPv) {
+      await interaction.editReply({
+        content: "❌ Enter a positive whole **amount**.",
+      });
+      return;
+    }
+    const challengerCash = await getCash(uid);
+    if (betPv > challengerCash) {
+      await interaction.editReply({
+        content: `❌ You only have **${formatCash(challengerCash)}**.`,
+      });
+      return;
+    }
+    const prismaPv = getBotPrisma();
+    const expiresAtPv = new Date(Date.now() + COINFLIP_PVP_CHALLENGE_MS);
+    const row = await prismaPv.economyCoinflipPvpChallenge.create({
+      data: {
+        guildId: guild.id,
+        channelId: channel.id,
+        challengerDiscordId: uid,
+        opponentDiscordId: targetId,
+        bet: betPv,
+        status: "pending",
+        expiresAt: expiresAtPv,
+      },
+    });
+    const embedPv = buildCoinflipPvpChallengeEmbed({
+      challengerId: uid,
+      opponentId: targetId,
+      bet: betPv,
+      expiresAt: expiresAtPv,
+    });
+    const rowsPv = buildCoinflipPvpChallengeRows({
+      opponentId: targetId,
+      challengeId: row.id,
+    });
+    try {
+      const msgPv = await channel.send({
+        content: `<@${uid}> <@${targetId}>`,
+        embeds: [embedPv],
+        components: rowsPv,
+        allowedMentions: { users: [uid, targetId] },
+      });
+      await prismaPv.economyCoinflipPvpChallenge.update({
+        where: { id: row.id },
+        data: { messageId: msgPv.id },
+      });
+      await interaction.editReply({
+        content: `✅ Challenge posted in <#${channel.id}> — <@${targetId}> can **Accept** or **Decline**.`,
+      });
+    } catch {
+      await prismaPv.economyCoinflipPvpChallenge
+        .delete({ where: { id: row.id } })
+        .catch(() => {});
+      await interaction.editReply({
+        content:
+          "❌ Could not post the challenge. Check that Knife can **Send Messages** in this channel.",
+      });
+    }
+    return;
+  }
+
+  if (kind === "rl") {
+    await interaction.deferReply({ ephemeral: false });
+    const amountRawRl = interaction.fields.getTextInputValue("amount").trim();
+    const betRl = parsePositiveBigInt(amountRawRl);
+    if (!betRl) {
+      await interaction.editReply({
+        content: `${gambleHubPingContent(uid)}\n\n❌ Enter a positive whole amount.`,
+        allowedMentions: { users: [uid] },
+      });
+      return;
+    }
+    const cashRl = await getCash(uid);
+    if (betRl > cashRl) {
+      await interaction.editReply({
+        content: `${gambleHubPingContent(uid)}\n\n❌ You only have **${formatCash(cashRl)}**.`,
+        allowedMentions: { users: [uid] },
+      });
+      return;
+    }
+    pruneRouletteSessions();
+    const tokenRl = newRouletteToken();
+    rouletteSessions.set(tokenRl, {
+      userId: uid,
+      bet: betRl,
+      createdAt: Date.now(),
+    });
+    await interaction.editReply({
+      ...gamblePingOpts(uid),
+      embeds: [buildRoulettePickEmbed(betRl)],
+      components: buildRoulettePickRows({ userId: uid, token: tokenRl }),
+    });
     return;
   }
 
@@ -854,13 +1251,17 @@ async function handleEconomyModal(
   const amountRaw = interaction.fields.getTextInputValue("amount");
   const bet = parsePositiveBigInt(amountRaw);
   if (!bet) {
-    await interaction.editReply({ content: "❌ Enter a positive whole amount." });
+    await interaction.editReply({
+      content: `${gambleHubPingContent(uid)}\n\n❌ Enter a positive whole amount.`,
+      allowedMentions: { users: [uid] },
+    });
     return;
   }
   const cash = await getCash(uid);
   if (bet > cash) {
     await interaction.editReply({
-      content: `❌ You only have **${formatCash(cash)}**.`,
+      content: `${gambleHubPingContent(uid)}\n\n❌ You only have **${formatCash(cash)}**.`,
+      allowedMentions: { users: [uid] },
     });
     return;
   }
@@ -869,7 +1270,8 @@ async function handleEconomyModal(
   const last = gameCooldown.get(cdKey) ?? 0;
   if (Date.now() - last < GAME_COOLDOWN_MS) {
     await interaction.editReply({
-      content: "⏳ Game cooldown — try again in a few seconds.",
+      content: `${gambleHubPingContent(uid)}\n\n⏳ Game cooldown — try again in a few seconds.`,
+      allowedMentions: { users: [uid] },
     });
     return;
   }
@@ -884,13 +1286,20 @@ async function handleEconomyModal(
       client: interaction.client,
     });
     gameCooldown.set(cdKey, Date.now());
-    await interaction.editReply({ content: res.summary });
+    const houseMsg = await interaction.editReply({
+      content: `${gambleHubPingContent(uid)}\n\n${res.summary}`,
+      allowedMentions: { users: [uid] },
+    });
+    scheduleGambleOutcomeDeletion(houseMsg);
   } catch (e) {
     const msg =
       e instanceof Error && e.message === "INSUFFICIENT_FUNDS"
         ? "❌ Not enough cash."
         : "❌ Game error — try again.";
-    await interaction.editReply({ content: msg });
+    await interaction.editReply({
+      content: `${gambleHubPingContent(uid)}\n\n${msg}`,
+      allowedMentions: { users: [uid] },
+    });
   }
 }
 

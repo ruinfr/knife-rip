@@ -15,6 +15,19 @@ export async function getCash(discordUserId: string): Promise<bigint> {
   return u.cash;
 }
 
+/** Persist that the user finished the Knife Cash disclaimer (hub unlock). */
+export async function recordGambleDisclaimerAccepted(
+  discordUserId: string,
+): Promise<void> {
+  const prisma = getBotPrisma();
+  const now = new Date();
+  await prisma.economyUser.upsert({
+    where: { discordUserId },
+    create: { discordUserId, gambleDisclaimerAcceptedAt: now },
+    update: { gambleDisclaimerAcceptedAt: now },
+  });
+}
+
 export type LedgerReason =
   | "milestone"
   | "owner_add"
@@ -27,7 +40,8 @@ export type LedgerReason =
   | "shop_refund"
   | "luckydrop"
   | "daily"
-  | "message_drop";
+  | "message_drop"
+  | "pvp_coinflip";
 
 /**
  * Apply a cash delta in a transaction; rejects if balance would go negative.

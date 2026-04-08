@@ -3,6 +3,13 @@ export function formatCash(n: bigint): string {
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+/** One-line profit / loss after a wager (`payout − bet`). */
+export function formatGambleNetLine(net: bigint): string {
+  if (net === 0n) return "**Net:** ±0";
+  if (net > 0n) return `**Net:** +${formatCash(net)}`;
+  return `**Net:** ${formatCash(net)}`;
+}
+
 export function parsePositiveBigInt(raw: string): bigint | null {
   const t = raw.replace(/[,_\s]/g, "").trim();
   if (!/^\d+$/.test(t)) return null;
