@@ -1,5 +1,5 @@
 import { randomBytes, randomInt } from "crypto";
-import type { GuildMember } from "discord.js";
+import type { Client, GuildMember } from "discord.js";
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -146,7 +146,7 @@ function minesComponents(
     .setCustomId(minesCashId(uid, token))
     .setLabel("Cash out")
     .setStyle(ButtonStyle.Primary)
-    .setEmoji(ecoBtn.cash);
+    .setEmoji(ecoBtn.wallet);
 
   if (session.dead || revealAll || session.revealed.size === 0) {
     cash.setDisabled(true);
@@ -194,12 +194,13 @@ export async function handleMinesPick(params: {
   token: string;
   idx: number;
   member: GuildMember | null;
+  client: Client;
 }): Promise<{
   embeds: EmbedBuilder[];
   components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
 }> {
   pruneMinesSessions();
-  const { userId, token, idx, member } = params;
+  const { userId, token, idx, member, client } = params;
   const session = minesSessions.get(token);
   if (!session || session.userId !== userId || session.dead) {
     return {
@@ -224,7 +225,7 @@ export async function handleMinesPick(params: {
     };
   }
 
-  const mult = await economyPayoutMultiplier(member, userId);
+  const mult = await economyPayoutMultiplier(member, userId, client);
   const mc = multCents(mult);
   const bet = session.bet;
 
@@ -280,12 +281,13 @@ export async function handleMinesCash(params: {
   userId: string;
   token: string;
   member: GuildMember | null;
+  client: Client;
 }): Promise<{
   embeds: EmbedBuilder[];
   components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
 }> {
   pruneMinesSessions();
-  const { userId, token, member } = params;
+  const { userId, token, member, client } = params;
   const session = minesSessions.get(token);
   if (!session || session.userId !== userId || session.dead) {
     return {
@@ -311,7 +313,7 @@ export async function handleMinesCash(params: {
     };
   }
 
-  const mult = await economyPayoutMultiplier(member, userId);
+  const mult = await economyPayoutMultiplier(member, userId, client);
   const mc = multCents(mult);
   const bet = session.bet;
   const bps = BigInt(payoutBps(gems));

@@ -1,4 +1,4 @@
-import type { GuildMember } from "discord.js";
+import type { Client, GuildMember } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
 import { economyPayoutMultiplier } from "./boost";
 import { applyGambleOutcomeInTx } from "./gamble-outcome";
@@ -29,11 +29,12 @@ export async function runHouseGame(params: {
   game: HouseGameKind;
   bet: bigint;
   member: GuildMember | null;
+  client: Client;
 }): Promise<{ summary: string; net: bigint; won: boolean }> {
-  const { userId, game, bet, member } = params;
+  const { userId, game, bet, member, client } = params;
   if (bet <= 0n) throw new Error("BAD_BET");
 
-  const mult = await economyPayoutMultiplier(member, userId);
+  const mult = await economyPayoutMultiplier(member, userId, client);
   const mc = multCents(mult);
   const prisma = getBotPrisma();
 

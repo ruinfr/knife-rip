@@ -15,7 +15,7 @@ export const GAME_COOLDOWN_MS = 12_000;
 
 export const PAY_COOLDOWN_MS = 45_000;
 
-/** +20% on payouts when user has Nitro boost in current guild or Knife Pro / owner. */
+/** +20% on payouts when user boosts a configured partner server (server1/server2/…) or Knife Pro / owner. */
 export const ECONOMY_BONUS_MULT = 1.2;
 
 export const HUB_PAGE_COUNT = 4 as const;

@@ -13,6 +13,8 @@ export type EnvShopDisplayItem = {
 };
 
 let trackedGuildIds = new Set<string>();
+/** Guild IDs from `server1`, `server2`, … (invite or snowflake) — used for economy Nitro boost eligibility. */
+let partnerGuildIds = new Set<string>();
 const shopByGuild = new Map<string, EnvShopDisplayItem[]>();
 let loaded = false;
 
@@ -95,6 +97,7 @@ function parseShopForSlot(
  */
 export async function loadEconomyGuildEnvConfig(): Promise<void> {
   trackedGuildIds = new Set();
+  partnerGuildIds = new Set();
   shopByGuild.clear();
   const env = normalizeEnvKeys();
 
@@ -113,6 +116,7 @@ export async function loadEconomyGuildEnvConfig(): Promise<void> {
     if (!raw) continue;
     const guildId = await resolveGuildId(raw);
     if (!guildId) continue;
+    partnerGuildIds.add(guildId);
     if (explicit.length === 0) trackedGuildIds.add(guildId);
     const items = parseShopForSlot(env, slot, guildId);
     if (items.length > 0) shopByGuild.set(guildId, items);
@@ -128,6 +132,14 @@ export function economyGuildConfigLoaded(): boolean {
 /** Economy milestones + .lb / .vlb only count in these guilds (empty = nowhere). */
 export function isEconomyTrackedGuild(guildId: string): boolean {
   return trackedGuildIds.has(guildId);
+}
+
+/**
+ * Partner servers from `.env` (`server1`, `server2`, …). Nitro boost counts for +20% only when
+ * boosting one of these guilds (when this set is non-empty).
+ */
+export function getEconomyPartnerGuildIds(): ReadonlySet<string> {
+  return partnerGuildIds;
 }
 
 export function getEnvShopItemsForGuild(

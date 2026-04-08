@@ -1,5 +1,5 @@
 import { randomBytes, randomInt } from "crypto";
-import type { GuildMember } from "discord.js";
+import type { Client, GuildMember } from "discord.js";
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -209,13 +209,14 @@ export async function runBlackjackInitial(params: {
   userId: string;
   bet: bigint;
   member: GuildMember | null;
+  client: Client;
 }): Promise<{
   embeds: EmbedBuilder[];
   components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
 }> {
   pruneBlackjackSessions();
-  const { userId, bet, member } = params;
-  const mult = await economyPayoutMultiplier(member, userId);
+  const { userId, bet, member, client } = params;
+  const mult = await economyPayoutMultiplier(member, userId, client);
   const mc = multCents(mult);
 
   const player = [drawCard(), drawCard()];
@@ -320,12 +321,13 @@ export async function handleBlackjackButton(params: {
   token: string;
   action: "hit" | "stand";
   member: GuildMember | null;
+  client: Client;
 }): Promise<{
   embeds: EmbedBuilder[];
   components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
 }> {
   pruneBlackjackSessions();
-  const { userId, token, action, member } = params;
+  const { userId, token, action, member, client } = params;
   const session = blackjackSessions.get(token);
   if (!session || session.userId !== userId || session.phase !== "player") {
     return {
@@ -339,7 +341,7 @@ export async function handleBlackjackButton(params: {
     };
   }
 
-  const mult = await economyPayoutMultiplier(member, userId);
+  const mult = await economyPayoutMultiplier(member, userId, client);
   const mc = multCents(mult);
   const bet = session.bet;
 

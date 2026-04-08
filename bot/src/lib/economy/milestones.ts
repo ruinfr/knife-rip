@@ -22,7 +22,11 @@ export function recordEconomyMessageActivity(message: Message): void {
       const uid = message.author.id;
       const guild = message.guild!;
       const member = await guild.members.fetch(uid).catch(() => null);
-      const mult = await economyPayoutMultiplier(member);
+      const mult = await economyPayoutMultiplier(
+        member,
+        uid,
+        message.client,
+      );
 
       await prisma.$transaction(async (tx) => {
         const row = await tx.economyUser.upsert({

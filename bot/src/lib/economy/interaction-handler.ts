@@ -152,6 +152,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
         token: tok[1]!,
         action: tok[2] as "hit" | "stand",
         member: m ?? null,
+        client: interaction.client,
       });
       await interaction.editReply({
         embeds: res.embeds,
@@ -177,6 +178,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
           userId: uid,
           token: tok[1]!,
           member: m ?? null,
+          client: interaction.client,
         });
       } else if (tok[2] === "p" && tok[3] !== undefined) {
         const idx = parseInt(tok[3]!, 10);
@@ -193,6 +195,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
           token: tok[1]!,
           idx,
           member: m ?? null,
+          client: interaction.client,
         });
       } else {
         await interaction.editReply({
@@ -313,7 +316,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
               .setColor(0x57f287)
               .setTitle(`${ecoM.stats} Your stats`)
               .setDescription(
-                `${ecoM.cash} **Cash:** **${formatCash(u.cash)}**\n` +
+                `${ecoM.wallet} **Cash:** **${formatCash(u.cash)}**\n` +
                   `${ecoM.msgs} **Messages (tracked):** **${u.lifetimeMessages.toLocaleString()}**\n` +
                   `${ecoM.rankInStatsMenu} **Rank:** **#${rank}** by cash\n` +
                   `${ecoM.winLossInStatsMenu} **W / L:** **${u.gambleWins}** / **${u.gambleLosses}**\n` +
@@ -644,6 +647,7 @@ async function handleEconomyModal(
           userId: uid,
           bet,
           member: m ?? null,
+          client: interaction.client,
         });
         gameCooldown.set(cdKey, Date.now());
         await interaction.editReply({
@@ -768,6 +772,7 @@ async function handleEconomyModal(
       game,
       bet,
       member: m ?? null,
+      client: interaction.client,
     });
     gameCooldown.set(cdKey, Date.now());
     await interaction.editReply({ content: res.summary });

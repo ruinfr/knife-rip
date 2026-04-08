@@ -40,8 +40,8 @@ export function buildDropEmbed(
     .setColor(0xf0b232)
     .setTitle(`${ecoM.luckydrop} Lucky drop`)
     .setDescription(
-      `${ecoM.cash} **${formatCash(session.amount)}** cash up for grabs in **${guild.name}**!\n\n` +
-        `${ecoM.stats} **Selected:** <@${session.selectedUserId}>\n\n` +
+      `${ecoM.wallet} **${formatCash(session.amount)}** cash up for grabs in **${guild.name}**!\n\n` +
+        `${ecoM.selectedInLuckyDroporOther} **Selected:** <@${session.selectedUserId}>\n\n` +
         `Use ${ecoM.Confirm} **Confirm** to pay out, ${ecoM.Reroll} **Reroll** for someone else, or ${ecoM.Cancel} **Cancel**.`,
     );
 }

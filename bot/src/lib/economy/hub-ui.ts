@@ -68,7 +68,7 @@ export async function buildGambleHubPayload(params: {
   const user = await client.users.fetch(userId).catch(() => null);
   const tag = user ? `${user.username}` : userId;
 
-  let description = `👋 **${tag}**\n\n${ecoM.cash} **Balance:** **${formatCash(cash)}**\n${ecoM.stats} **Games:** wager any whole amount up to your balance.\n\n`;
+  let description = `👋 **${tag}**\n\n${ecoM.wallet} **Balance:** **${formatCash(cash)}**\n${ecoM.stats} **Games:** wager any whole amount up to your balance.\n\n`;
 
   const rows: ActionRowBuilder<MessageActionRowComponentBuilder>[] = [];
 

@@ -28,18 +28,19 @@ export const cashCommand: KnifeCommand = {
     const mult = await economyPayoutMultiplier(
       member ?? null,
       target.id,
+      message.client,
     );
     const bonus = mult > 1;
     const title =
       target.id === message.author.id
-        ? `${ecoM.cash} Your wallet`
-        : `${ecoM.cash} ${target.username}`;
+        ? `${ecoM.wallet} Your wallet`
+        : `${ecoM.wallet} ${target.username}`;
     await message.reply({
       embeds: [
         minimalEmbed({
           title,
           description:
-            `${ecoM.cash} **Balance:** **${formatCash(bal)}** cash\n` +
+            `${ecoM.wallet} **Balance:** **${formatCash(bal)}** cash\n` +
             (bonus
               ? `${ecoM.booster} **+20%** earnings on wins & milestones (boost / Pro / owner).`
               : `${ecoM.tablerinfosquarefilled} Link Discord Nitro boost or **Knife Pro** for **+20%** on wins & milestones.`),

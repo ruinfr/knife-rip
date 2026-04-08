@@ -4,6 +4,11 @@
  */
 const M = {
   cash: "<:cash:1491209244291235840>",
+  /** Balance / wallet row (ltccat) */
+  wallet: "<:wallet:1491224498689675334>",
+  /** Lucky drop “selected user” line (and similar) */
+  selectedInLuckyDroporOther:
+    "<:selectedInLuckyDroporOther:1491223723758587904>",
   shop: "<:shop:1491209125500030986>",
   dice: "<:dice:1491208948098007222>",
   coinflip: "<:coinflip:1491208947359678544>",
@@ -71,6 +76,7 @@ function b(id: string, name: string): Btn {
 /** `ButtonBuilder#setEmoji` / select option emojis */
 export const ecoBtn = {
   cash: b("1491209244291235840", "cash"),
+  wallet: b("1491224498689675334", "wallet"),
   shop: b("1491209125500030986", "shop"),
   dice: b("1491208948098007222", "dice"),
   coinflip: b("1491208947359678544", "coinflip"),
