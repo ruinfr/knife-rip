@@ -6,6 +6,7 @@ import { bannerCommand } from "./general/banner";
 import { billingCommand } from "./general/billing";
 import { botinfoCommand } from "./general/botinfo";
 import { cashCommand } from "./economy/cash";
+import { dailyCommand } from "./economy/daily";
 import { gambleCommand } from "./economy/gamble";
 import { gcashCommand } from "./economy/gcash";
 import { luckydropCommand } from "./economy/luckydrop";
@@ -34,6 +35,7 @@ import { ttsCommand } from "./general/tts";
 import { uptimeCommand } from "./general/uptime";
 import { userinfoCommand } from "./general/userinfo";
 import { voicemasterCommand } from "./general/voicemaster";
+import { webhookCommand } from "./utility/webhook";
 import { accessCommand } from "./moderation/access";
 import { auditCommand } from "./moderation/audit";
 import { banCommand } from "./moderation/ban";
@@ -65,6 +67,7 @@ export const commandDefinitions: KnifeCommand[] = [
   cashCommand,
   commandConfigCommand,
   creditsCommand,
+  dailyCommand,
   dashboardCommand,
   emojiCommand,
   gambleCommand,
@@ -103,6 +106,7 @@ export const commandDefinitions: KnifeCommand[] = [
   userinfoCommand,
   vlbCommand,
   voicemasterCommand,
+  webhookCommand,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export function buildCommandMap(

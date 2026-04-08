@@ -9,7 +9,11 @@ import {
   type MessageActionRowComponentBuilder,
 } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
-import { ECON_INTERACTION_PREFIX, HUB_PAGE_COUNT } from "./config";
+import {
+  ECON_INTERACTION_PREFIX,
+  HUB_PAGE_COUNT,
+  MILESTONE_HELP_LINES,
+} from "./config";
 import { ecoBtn, ecoM, economyHubPageTitle } from "./custom-emojis";
 import { getEnvShopItemsForGuild } from "./economy-guild-config";
 import { formatCash } from "./money";
@@ -37,7 +41,11 @@ export function buildGambleDisclaimerPayload(params: {
       "**Knife Cash is not real money.** It’s a pretend balance for fun on Discord.\n\n" +
         "• You can lose cash on games — only bet what you’re fine losing.\n" +
         "• This is not real-world gambling; there is no cash-out or prize value.\n" +
-        "• Boosters / Knife Pro members get 20% more money.\n\n" +
+        "• Boosters / Knife Pro members get 20% more money.\n" +
+        "• **.daily** — claim **50** cash once every **24 hours**.\n" +
+        "• Bets you start from the Knife Cash menu appear **in this channel** so others can see wins and losses.\n" +
+        "• Message milestones (in configured servers): " +
+        `${MILESTONE_HELP_LINES.join(" · ")}.\n\n` +
         `${ecoM.tablerinfosquarefilled} Press **I understand** below to open the Knife Cash menu.`,
     )
     .setFooter({

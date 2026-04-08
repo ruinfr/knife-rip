@@ -618,7 +618,7 @@ async function handleEconomyModal(
 
   const kind = tok[1];
   if (kind === "bj" || kind === "mn") {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ ephemeral: false });
     const amountRaw = interaction.fields.getTextInputValue("amount");
     const bet = parsePositiveBigInt(amountRaw);
     if (!bet) {
@@ -743,7 +743,7 @@ async function handleEconomyModal(
   const game = gameMap[kind ?? ""];
   if (!game) return;
 
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply({ ephemeral: false });
   const amountRaw = interaction.fields.getTextInputValue("amount");
   const bet = parsePositiveBigInt(amountRaw);
   if (!bet) {

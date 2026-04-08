@@ -35,6 +35,30 @@ export function formatChangelogDateEst(isoDate: string): string {
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
+    id: "2026-04-08-v27-daily-public-gamble",
+    catalogVersion: 27,
+    date: "2026-04-08",
+    title: "Daily reward and public gamble results",
+    summary:
+      ".daily grants 50 Knife Cash every 24 hours. Coinflip, dice, slots, blackjack, and mines replies from the hub are visible in the channel so others can see wins and losses.",
+    bullets: [
+      "Disclaimer mentions .daily and that game messages post in the channel.",
+      "Database: lastDailyAt on economy users; run prisma migrate for new columns.",
+    ],
+  },
+  {
+    id: "2026-04-08-v26-webhook",
+    catalogVersion: 26,
+    date: "2026-04-08",
+    title: "Webhook commands",
+    summary:
+      "Prefix webhook tools: create, list, send, edit, delete, lock, and unlock. List needs no member permission; other subcommands need Manage Webhooks.",
+    bullets: [
+      "Send and edit support plain text or JSON embed payloads; edit targets a Discord message link for webhook-owned messages.",
+      "Optional lock stores in the database so only the locker (plus Administrators) can use Knife to act on that webhook.",
+    ],
+  },
+  {
     id: "2026-04-07-v25-economy-config",
     catalogVersion: 25,
     date: "2026-04-07",

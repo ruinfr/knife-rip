@@ -247,6 +247,8 @@ model EconomyUser {
   gambleWinStreak    Int       @default(0)
   gambleBestStreak   Int       @default(0)
   lastPayAt          DateTime?
+  /// Last `.daily` claim (24h cooldown).
+  lastDailyAt        DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }
@@ -285,4 +287,15 @@ model EconomyGambleLog {
   createdAt     DateTime @default(now())
 
   @@index([discordUserId, createdAt])
+}
+
+/// `.webhook lock` — only `lockedByUserId` may use Knife webhook send/edit/delete for that webhook.
+model BotGuildWebhookLock {
+  id             String   @id @default(cuid())
+  guildId        String
+  webhookId      String   @unique
+  lockedByUserId String
+  createdAt      DateTime @default(now())
+
+  @@index([guildId])
 }

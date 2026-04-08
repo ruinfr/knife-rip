@@ -19,7 +19,7 @@ loadEnvFiles();
 export const PREFIX = "." as const;
 
 /** Must match site `lib/commands.ts` → `COMMAND_CATALOG_VERSION`. */
-export const COMMAND_CATALOG_VERSION = 25 as const;
+export const COMMAND_CATALOG_VERSION = 27 as const;
 
 export function getDiscordToken(): string {
   const token = process.env.DISCORD_BOT_TOKEN?.trim();

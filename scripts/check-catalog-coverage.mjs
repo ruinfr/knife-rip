@@ -44,6 +44,7 @@ const nameByExport = {
   cashCommand: "cash",
   commandConfigCommand: "command",
   creditsCommand: "credits",
+  dailyCommand: "daily",
   dashboardCommand: "dashboard",
   emojiCommand: "emoji",
   gambleCommand: "gamble",
@@ -81,6 +82,7 @@ const nameByExport = {
   userinfoCommand: "userinfo",
   vlbCommand: "vlb",
   voicemasterCommand: "voicemaster",
+  webhookCommand: "webhook",
   handoutCommand: "handout",
 };
 

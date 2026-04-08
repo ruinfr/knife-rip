@@ -224,6 +224,18 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Essential prefix commands.",
   },
   {
+    name: "daily",
+    description:
+      "Claim 50 Knife Cash once every 24 hours (global wallet; same cooldown everywhere)",
+    usage: ".daily",
+    tier: "free",
+    style: "prefix",
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
+  },
+  {
     name: "emoji",
     description:
       "Show a custom emoji at full size (paste <:name:id> or use numeric ID)",
@@ -596,6 +608,18 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     tier: "free",
     style: "prefix",
     aliases: ["vm"],
+    categoryId: "utility",
+    categoryTitle: "Utility",
+    categoryDescription: "Quick tools and light fun.",
+  },
+  {
+    name: "webhook",
+    description:
+      "Create, list, send, edit, delete, lock, or unlock channel webhooks (Manage Webhooks except list)",
+    usage:
+      ".webhook · .webhook create <name> · .webhook list · .webhook send <id|name|#> <message|JSON> · .webhook edit <messageLink> <message|JSON> · .webhook delete <id> · .webhook lock <id> · .webhook unlock <id>",
+    tier: "free",
+    style: "prefix",
     categoryId: "utility",
     categoryTitle: "Utility",
     categoryDescription: "Quick tools and light fun.",
