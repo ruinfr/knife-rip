@@ -17,7 +17,8 @@ async function memberLabel(
 export const lbCommand: KnifeCommand = {
   name: "lb",
   aliases: ["leaderboard", "textleaderboard", "textlb"],
-  description: "Top members by messages sent in this server (tracked while Knife is online)",
+  description:
+    "Top members by messages sent in this server (every message counts while Knife is online)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",
@@ -46,7 +47,7 @@ export const lbCommand: KnifeCommand = {
           minimalEmbed({
             title: "Text leaderboard",
             description:
-              "No message stats yet — counts start when members chat while Knife is in the server.",
+              "No message stats yet — counts start as soon as members send messages here while Knife is online.",
           }),
         ],
       });
@@ -77,7 +78,7 @@ export const vlbCommand: KnifeCommand = {
   name: "vlb",
   aliases: ["vcleaderboard", "voiceleaderboard", "voicelb"],
   description:
-    "Top members by time in voice channels (AFK excluded; tracked while Knife is online)",
+    "Top members by time in voice channels (AFK excluded; counts while Knife is online)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",

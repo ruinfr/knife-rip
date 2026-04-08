@@ -1,6 +1,5 @@
 import type { Guild, VoiceState } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
-import { isEconomyTrackedGuild } from "../economy/economy-guild-config";
 
 const voiceSessions = new Map<string, number>();
 
@@ -48,7 +47,6 @@ export function handleGuildVoiceLeaderboardState(
 ): void {
   const guild = newS.guild ?? oldS.guild;
   if (!guild) return;
-  if (!isEconomyTrackedGuild(guild.id)) return;
 
   const userId = newS.id;
   const oldId = oldS.channelId;

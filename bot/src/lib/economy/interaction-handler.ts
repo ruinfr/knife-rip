@@ -125,6 +125,56 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
 
   if (tok[0] === "gk" && tok[1] === "ok") {
     await interaction.deferUpdate();
+    const originChannelId =
+      tok[2] && /^\d{17,20}$/.test(tok[2]) ? tok[2] : null;
+    const fromDm = interaction.channel?.isDMBased() ?? false;
+
+    if (fromDm && originChannelId) {
+      const ch = await interaction.client.channels
+        .fetch(originChannelId)
+        .catch(() => null);
+      if (ch?.isTextBased() && !ch.isDMBased()) {
+        const g = ch.guild;
+        const payload = await buildGambleHubPayload({
+          client: interaction.client,
+          userId: uid,
+          page: 0,
+          guild: g,
+        });
+        try {
+          await ch.send({
+            embeds: payload.embeds,
+            components: payload.components,
+            allowedMentions: { users: [] },
+          });
+          await interaction.message.edit({
+            content: null,
+            embeds: [
+              new EmbedBuilder()
+                .setColor(0x57f287)
+                .setDescription(
+                  `✅ **Menu sent** in <#${ch.id}> — continue there.`,
+                ),
+            ],
+            components: [],
+          });
+        } catch {
+          await interaction.message.edit({
+            content: null,
+            embeds: [
+              new EmbedBuilder()
+                .setColor(0xed4245)
+                .setDescription(
+                  "Could not post the menu in that channel. Check that Knife can **send messages** there, then run **`.gamble`** again.",
+                ),
+            ],
+            components: [],
+          });
+        }
+        return;
+      }
+    }
+
     const payload = await buildGambleHubPayload({
       client: interaction.client,
       userId: uid,
@@ -319,7 +369,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
               .setTitle(`${ecoM.stats} Your stats`)
               .setDescription(
                 `${ecoM.wallet} **Cash:** **${formatCash(u.cash)}**\n` +
-                  `${ecoM.msgs} **Messages (tracked):** **${u.lifetimeMessages.toLocaleString()}**\n` +
+                  `${ecoM.msgs} **Messages (lifetime, all servers):** **${u.lifetimeMessages.toLocaleString()}**\n` +
                   `${ecoM.rankInStatsMenu} **Rank:** **#${rank}** by cash\n` +
                   `${ecoM.winLossInStatsMenu} **W / L:** **${u.gambleWins}** / **${u.gambleLosses}**\n` +
                   `${ecoM.netInStatsMenu} **Net (games):** **${formatCash(u.gambleNetProfit)}**\n` +
@@ -497,9 +547,38 @@ async function handleEconomySelect(
           },
         });
       });
-      await member.roles.add(envItem.roleId).catch(() => {
-        throw new Error("ROLE");
-      });
+      try {
+        await member.roles.add(envItem.roleId);
+      } catch {
+        try {
+          await applyCashDelta({
+            discordUserId: uid,
+            delta: price,
+            reason: "shop_refund",
+            meta: {
+              itemId: envItem.id,
+              name: envItem.name,
+              guildId: guild.id,
+              cause: "role_assign_failed",
+            },
+          });
+        } catch {
+          /* refund failed — staff must fix balance manually */
+        }
+        await interaction.followUp({
+          ephemeral: true,
+          content:
+            "❌ Could not assign the role — **your Knife Cash was refunded**. Check bot role order / permissions.",
+        });
+        void sendEconomyLog(
+          interaction.client,
+          economyLogEmbed(
+            `${ecoM.shop} Shop refund`,
+            `<@${uid}> in **${guild.name}** — **${formatCash(price)}** back (**${envItem.name}**, role failed).`,
+          ),
+        );
+        return;
+      }
       await interaction.followUp({
         ephemeral: true,
         content: `✅ Bought **${envItem.emoji} ${envItem.name}** for **${formatCash(price)}**!`,
@@ -513,8 +592,8 @@ async function handleEconomySelect(
       );
     } catch (e) {
       const msg =
-        e instanceof Error && e.message === "ROLE"
-          ? "❌ Could not assign the role — check bot role order / permissions."
+        e instanceof Error && e.message === "INSUFFICIENT_FUNDS"
+          ? "❌ You no longer have enough cash for that."
           : "❌ Purchase failed — try again or ask staff.";
       await interaction.followUp({ ephemeral: true, content: msg });
     }
@@ -581,9 +660,37 @@ async function handleEconomySelect(
         },
       });
     });
-    await member.roles.add(item.roleId).catch(() => {
-      throw new Error("ROLE");
-    });
+    try {
+      await member.roles.add(item.roleId);
+    } catch {
+      try {
+        await applyCashDelta({
+          discordUserId: uid,
+          delta: price,
+          reason: "shop_refund",
+          meta: {
+            itemId: item.id,
+            name: item.name,
+            cause: "role_assign_failed",
+          },
+        });
+      } catch {
+        /* refund failed — staff must fix balance manually */
+      }
+      await interaction.followUp({
+        ephemeral: true,
+        content:
+          "❌ Could not assign the role — **your Knife Cash was refunded**. Check bot role order / permissions.",
+      });
+      void sendEconomyLog(
+        interaction.client,
+        economyLogEmbed(
+          `${ecoM.shop} Shop refund`,
+          `<@${uid}> — **${formatCash(price)}** back (**${item.name}**, role failed).`,
+        ),
+      );
+      return;
+    }
     await interaction.followUp({
       ephemeral: true,
       content: `✅ Bought **${item.emoji} ${item.name}** for **${formatCash(price)}**!`,
@@ -597,8 +704,8 @@ async function handleEconomySelect(
     );
   } catch (e) {
     const msg =
-      e instanceof Error && e.message === "ROLE"
-        ? "❌ Could not assign the role — check bot role order / permissions."
+      e instanceof Error && e.message === "INSUFFICIENT_FUNDS"
+        ? "❌ You no longer have enough cash for that."
         : "❌ Purchase failed — try again or ask staff.";
     await interaction.followUp({ ephemeral: true, content: msg });
   }

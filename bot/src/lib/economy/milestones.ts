@@ -1,7 +1,6 @@
 import type { Message } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
 import { economyPayoutMultiplier } from "./boost";
-import { isEconomyTrackedGuild } from "./economy-guild-config";
 import {
   MILESTONE_REWARDS,
   MILESTONE_THRESHOLDS,
@@ -9,11 +8,11 @@ import {
 
 /**
  * Increment global message count and grant milestone cash (best-effort).
+ * Counts human messages in any guild text context the bot sees (not DMs).
  */
 export function recordEconomyMessageActivity(message: Message): void {
   if (message.author.bot) return;
   if (!message.guild) return;
-  if (!isEconomyTrackedGuild(message.guild.id)) return;
   if (!message.channel.isTextBased() || message.channel.isDMBased()) return;
 
   void (async () => {

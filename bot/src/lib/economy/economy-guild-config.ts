@@ -1,5 +1,5 @@
 /**
- * Optional per-server economy: message/.lb/.vlb tracking + env-defined shop items.
+ * Optional per-server economy: env-defined shop items + partner guilds for Nitro boost.
  * Populated on bot `ready` via `loadEconomyGuildEnvConfig()`.
  */
 
@@ -12,7 +12,6 @@ export type EnvShopDisplayItem = {
   sortOrder: number;
 };
 
-let trackedGuildIds = new Set<string>();
 /** Guild IDs from `server1`, `server2`, … (invite or snowflake) — used for economy Nitro boost eligibility. */
 let partnerGuildIds = new Set<string>();
 const shopByGuild = new Map<string, EnvShopDisplayItem[]>();
@@ -96,19 +95,9 @@ function parseShopForSlot(
  * Call once from `ClientReady`. Resolves invite URLs to guild IDs and builds shop map.
  */
 export async function loadEconomyGuildEnvConfig(): Promise<void> {
-  trackedGuildIds = new Set();
   partnerGuildIds = new Set();
   shopByGuild.clear();
   const env = normalizeEnvKeys();
-
-  const explicit = (process.env.ECONOMY_MESSAGE_TRACK_GUILDS ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter((s) => /^\d{17,20}$/.test(s));
-
-  if (explicit.length > 0) {
-    for (const id of explicit) trackedGuildIds.add(id);
-  }
 
   const slots = serverSlotNumbers(env);
   for (const slot of slots) {
@@ -117,7 +106,6 @@ export async function loadEconomyGuildEnvConfig(): Promise<void> {
     const guildId = await resolveGuildId(raw);
     if (!guildId) continue;
     partnerGuildIds.add(guildId);
-    if (explicit.length === 0) trackedGuildIds.add(guildId);
     const items = parseShopForSlot(env, slot, guildId);
     if (items.length > 0) shopByGuild.set(guildId, items);
   }
@@ -127,11 +115,6 @@ export async function loadEconomyGuildEnvConfig(): Promise<void> {
 
 export function economyGuildConfigLoaded(): boolean {
   return loaded;
-}
-
-/** Economy milestones + .lb / .vlb only count in these guilds (empty = nowhere). */
-export function isEconomyTrackedGuild(guildId: string): boolean {
-  return trackedGuildIds.has(guildId);
 }
 
 /**

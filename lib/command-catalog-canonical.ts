@@ -124,6 +124,19 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Essential prefix commands.",
   },
   {
+    name: "baltop",
+    description:
+      "Global top Knife Cash balances — leaderboard of richest wallets (top 15, cash > 0)",
+    usage: ".baltop · .cashtop · .richest",
+    tier: "free",
+    style: "prefix",
+    aliases: ["cashtop", "richest", "leaderboardcash"],
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
+  },
+  {
     name: "cash",
     description:
       "Show your global Knife Cash balance (or another user’s); bonus line if +20% earnings apply",
@@ -170,6 +183,20 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     tier: "free",
     style: "prefix",
     developerOnly: true,
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
+  },
+  {
+    name: "messagedrop",
+    description:
+      "Bot owner only — pay everyone with at least N lifetime tracked messages a lump of Knife Cash",
+    usage: ".messagedrop <min_messages> <amount> · .msgdrop · .drop",
+    tier: "free",
+    style: "prefix",
+    developerOnly: true,
+    aliases: ["msgdrop", "drop"],
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
@@ -305,7 +332,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "lb",
     description:
-      "Text leaderboard — top members by messages sent (tracked while Knife is in the server)",
+      "Text leaderboard — top members by messages sent (every message while Knife is in the server)",
     usage: ".lb · .leaderboard · .textlb",
     tier: "free",
     style: "prefix",
@@ -590,7 +617,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "vlb",
     description:
-      "Voice leaderboard — top members by time in VC (AFK excluded; tracked while Knife is online)",
+      "Voice leaderboard — top members by time in VC (AFK excluded; while Knife is online)",
     usage: ".vlb · .vcleaderboard · .voicelb",
     tier: "free",
     style: "prefix",

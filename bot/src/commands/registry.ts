@@ -5,11 +5,13 @@ import { avatarCommand } from "./general/avatar";
 import { bannerCommand } from "./general/banner";
 import { billingCommand } from "./general/billing";
 import { botinfoCommand } from "./general/botinfo";
+import { baltopCommand } from "./economy/baltop";
 import { cashCommand } from "./economy/cash";
 import { dailyCommand } from "./economy/daily";
 import { gambleCommand } from "./economy/gamble";
 import { gcashCommand } from "./economy/gcash";
 import { luckydropCommand } from "./economy/luckydrop";
+import { messagedropCommand } from "./economy/messagedrop";
 import { creditsCommand } from "./general/credits";
 import { dashboardCommand } from "./general/dashboard";
 import { eightBallCommand } from "./general/eightball";
@@ -64,6 +66,7 @@ export const commandDefinitions: KnifeCommand[] = [
   botinfoCommand,
   eightBallCommand,
   banCommand,
+  baltopCommand,
   cashCommand,
   commandConfigCommand,
   creditsCommand,
@@ -80,6 +83,7 @@ export const commandDefinitions: KnifeCommand[] = [
   lbCommand,
   lockCommand,
   luckydropCommand,
+  messagedropCommand,
   nicknameCommand,
   newsCommand,
   pingCommand,

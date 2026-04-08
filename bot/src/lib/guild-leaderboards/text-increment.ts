@@ -1,14 +1,13 @@
 import type { Message } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
-import { isEconomyTrackedGuild } from "../economy/economy-guild-config";
 
 /**
- * Count one human message toward guild text leaderboard. Best-effort; no throw.
+ * Count one human message toward this guild’s `.lb` stats. Best-effort; no throw.
+ * Runs for every guild text message the bot receives.
  */
 export function recordGuildTextMessageForLeaderboard(message: Message): void {
   const guild = message.guild;
   if (!guild) return;
-  if (!isEconomyTrackedGuild(guild.id)) return;
   if (message.author.bot) return;
   if (!message.channel.isTextBased()) return;
   if (message.channel.isDMBased()) return;

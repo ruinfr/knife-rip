@@ -64,7 +64,7 @@ client.once(Events.ClientReady, async (c) => {
   console.log(`Knife ready as ${c.user.tag} — prefix "${PREFIX}"`);
   try {
     await loadEconomyGuildEnvConfig();
-    console.log("Economy guild env (tracking + shop) loaded.");
+    console.log("Economy env (shop + partner guilds for boost) loaded.");
   } catch (e) {
     console.warn("Economy guild env load failed:", e);
   }

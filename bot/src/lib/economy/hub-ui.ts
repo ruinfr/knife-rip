@@ -29,11 +29,16 @@ function btnId(uid: string, ...parts: string[]): string {
 export function buildGambleDisclaimerPayload(params: {
   userId: string;
   guild: Guild | null;
+  /**
+   * Guild text/thread channel where `.gamble` was run. When the disclaimer is sent in DMs,
+   * the OK button includes this so the hub can be posted there after confirm.
+   */
+  originChannelId?: string | null;
 }): {
   embeds: EmbedBuilder[];
   components: ActionRowBuilder<MessageActionRowComponentBuilder>[];
 } {
-  const { userId, guild } = params;
+  const { userId, guild, originChannelId } = params;
   const embed = new EmbedBuilder()
     .setColor(0xf0b232)
     .setTitle(`${ecoM.games} Knife Cash`)
@@ -67,7 +72,7 @@ export function buildGambleDisclaimerPayload(params: {
       {
         name: "Message milestones",
         value:
-          "_Only in servers the bot is set to track._\n\n" +
+          "_Every normal message you send in a **server** counts (while Knife is there). DMs do not._\n\n" +
           MILESTONE_HELP_LINES.map((line) => `• ${line}`).join("\n\n"),
         inline: false,
       },
@@ -76,10 +81,15 @@ export function buildGambleDisclaimerPayload(params: {
       text: `${guild?.name ? `${guild.name} · ` : ""}The button only works for you`,
     });
 
+  const okParts =
+    originChannelId && /^\d{17,20}$/.test(originChannelId)
+      ? (["gk", "ok", originChannelId] as const)
+      : (["gk", "ok"] as const);
+
   const row =
     new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
       new ButtonBuilder()
-        .setCustomId(btnId(userId, "gk", "ok"))
+        .setCustomId(btnId(userId, ...okParts))
         .setLabel("I understand")
         .setStyle(ButtonStyle.Success)
         .setEmoji(ecoBtn.Confirm),

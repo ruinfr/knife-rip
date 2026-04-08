@@ -16,10 +16,33 @@ export const gambleCommand: KnifeCommand = {
     style: "prefix",
   },
   async run({ message }) {
+    const ch = message.channel;
+    const inGuildText =
+      Boolean(message.guild) &&
+      ch.isTextBased() &&
+      !ch.isDMBased() &&
+      "id" in ch;
+    const originChannelId = inGuildText ? ch.id : null;
+
     const payload = buildGambleDisclaimerPayload({
       userId: message.author.id,
       guild: message.guild,
+      originChannelId,
     });
+
+    if (originChannelId) {
+      try {
+        await message.author.send({
+          embeds: payload.embeds,
+          components: payload.components,
+        });
+        await message.react("✅").catch(() => {});
+        return;
+      } catch {
+        /* closed DMs — show disclaimer in channel */
+      }
+    }
+
     await message.reply({
       embeds: payload.embeds,
       components: payload.components,

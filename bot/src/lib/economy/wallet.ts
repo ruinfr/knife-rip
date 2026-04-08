@@ -24,8 +24,10 @@ export type LedgerReason =
   | "pay_send"
   | "pay_receive"
   | "shop_buy"
+  | "shop_refund"
   | "luckydrop"
-  | "daily";
+  | "daily"
+  | "message_drop";
 
 /**
  * Apply a cash delta in a transaction; rejects if balance would go negative.

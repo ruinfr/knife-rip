@@ -3,18 +3,15 @@ export const ECON_INTERACTION_PREFIX = "ke:" as const;
 
 export const DROP_INTERACTION_PREFIX = "kd:" as const;
 
-/** Lifetime message milestones (tracked servers only). Paired with MILESTONE_REWARDS. */
+/** Lifetime message milestones (all guild messages the bot sees; not DMs). Paired with MILESTONE_REWARDS. */
 export const MILESTONE_THRESHOLDS = [50, 100, 500, 1000, 3000] as const;
-export const MILESTONE_REWARDS = [1, 5, 100, 300, 1000] as const;
+export const MILESTONE_REWARDS = [10, 50, 500, 2500, 8000] as const;
 
-/** Human-readable lines for Knife Cash disclaimer / docs. */
-export const MILESTONE_HELP_LINES = [
-  "50 msgs → +1 Cash",
-  "100 msgs → +5 Cash",
-  "500 msgs → +100 Cash",
-  "1000 msgs → +300 Cash",
-  "3000 msgs → +1000 Cash",
-] as const;
+/** Human-readable lines for Knife Cash disclaimer — derived from thresholds + rewards. */
+export const MILESTONE_HELP_LINES: readonly string[] = MILESTONE_THRESHOLDS.map(
+  (threshold, i) =>
+    `${threshold} msgs → +${MILESTONE_REWARDS[i]!} Cash`,
+);
 
 /** Transfer tax (recipient receives amount × (1 - TAX_RATE)). */
 export const PAY_TAX_RATE = 0.05;

@@ -35,6 +35,26 @@ export function formatChangelogDateEst(isoDate: string): string {
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
+    id: "2026-04-05-v29-baltop",
+    catalogVersion: 29,
+    date: "2026-04-05",
+    title: ".baltop leaderboard",
+    summary:
+      "New prefix command for the global top Knife Cash balances (aliases .cashtop and .richest).",
+    bullets: ["Same economy database as .cash and the gambling hub stats menu."],
+  },
+  {
+    id: "2026-04-05-v28-messagedrop",
+    catalogVersion: 28,
+    date: "2026-04-05",
+    title: "Message threshold cash drop",
+    summary:
+      "Bot owners can run .messagedrop to pay Knife Cash to every user who has at least a chosen lifetime message count.",
+    bullets: [
+      "Aliases: .msgdrop and .drop. Capped at 10,000 recipients per run; economy log records the payout.",
+    ],
+  },
+  {
     id: "2026-04-08-v27-daily-public-gamble",
     catalogVersion: 27,
     date: "2026-04-08",
