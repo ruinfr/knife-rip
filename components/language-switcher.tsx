@@ -84,26 +84,20 @@ export function LanguageSwitcher({
         aria-haspopup="listbox"
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-surface/50 py-1.5 pl-2 pr-2.5 text-left",
+          "inline-flex h-10 items-center gap-2 rounded-full border border-white/[0.12] bg-surface/50 px-2.5 text-left",
           "motion-safe:transition hover:border-white/[0.18] hover:bg-surface/80",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-edge/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           pending && "opacity-60",
         )}
       >
-        <Icon
-          icon="mdi:translate"
-          className="hidden size-4 shrink-0 text-muted sm:block"
-          aria-hidden
-        />
         <span
-          className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/[0.06] ring-1 ring-white/[0.08]"
+          className="flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/[0.06] ring-1 ring-white/[0.08]"
           aria-hidden
         >
-          <Icon icon={current.flagIcon} className="size-7" aria-hidden />
+          <Icon icon={current.flagIcon} className="size-6" aria-hidden />
         </span>
         <span className="hidden min-w-0 sm:inline">
           <span className="font-semibold text-foreground">{current.label}</span>
-          <span className="text-muted"> ({current.region})</span>
         </span>
         <Icon
           icon={open ? "mdi:chevron-up" : "mdi:chevron-down"}
@@ -114,7 +108,7 @@ export function LanguageSwitcher({
 
       {open ? (
         <div
-          className="absolute right-0 top-[calc(100%+6px)] z-[120] min-w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-white/[0.1] bg-[#1a1414] py-1.5 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.85)]"
+          className="absolute right-0 top-[calc(100%+8px)] z-[120] min-w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-white/[0.1] bg-[#161010] py-1.5 shadow-[0_18px_56px_-14px_rgba(0,0,0,0.9)]"
           role="listbox"
           aria-label={selectLanguageLabel}
         >
@@ -135,8 +129,7 @@ export function LanguageSwitcher({
                 disabled={pending}
                 onClick={() => void choose(code)}
                 className={cn(
-                  "flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm",
-                  "motion-safe:transition",
+                  "flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm motion-safe:transition",
                   active
                     ? "bg-white/[0.07] text-foreground"
                     : "text-muted hover:bg-white/[0.05] hover:text-foreground",
@@ -148,12 +141,23 @@ export function LanguageSwitcher({
                 >
                   <Icon icon={row.flagIcon} className="size-7" aria-hidden />
                 </span>
-                <span className="min-w-0">
-                  <span className="font-semibold text-foreground">
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold text-foreground">
                     {row.label}
                   </span>
-                  <span className="text-muted"> ({row.region})</span>
+                  <span className="block truncate text-xs text-muted">
+                    {row.region}
+                  </span>
                 </span>
+                {active ? (
+                  <Icon
+                    icon="mdi:check"
+                    className="size-5 shrink-0 text-edge"
+                    aria-hidden
+                  />
+                ) : (
+                  <span className="size-5 shrink-0" aria-hidden />
+                )}
               </button>
             );
           })}

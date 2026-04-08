@@ -29,6 +29,7 @@ export type SiteMessages = {
     home: string;
     docs: string;
     commands: string;
+    news: string;
     pricing: string;
     dashboard: string;
     terms: string;
@@ -68,6 +69,7 @@ const en: SiteMessages = {
     home: "Home",
     docs: "Docs",
     commands: "Commands",
+    news: "News",
     pricing: "Pricing",
     dashboard: "Dashboard",
     terms: "Terms",
@@ -107,6 +109,7 @@ const de: SiteMessages = {
     home: "Start",
     docs: "Dokumentation",
     commands: "Befehle",
+    news: "Neuigkeiten",
     pricing: "Preise",
     dashboard: "Dashboard",
     terms: "Nutzungsbedingungen",
@@ -146,6 +149,7 @@ const ja: SiteMessages = {
     home: "ホーム",
     docs: "ドキュメント",
     commands: "コマンド",
+    news: "ニュース",
     pricing: "料金",
     dashboard: "ダッシュボード",
     terms: "利用規約",
@@ -185,6 +189,7 @@ const ko: SiteMessages = {
     home: "홈",
     docs: "문서",
     commands: "명령어",
+    news: "소식",
     pricing: "요금",
     dashboard: "대시보드",
     terms: "이용약관",

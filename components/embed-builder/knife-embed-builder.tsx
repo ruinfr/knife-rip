@@ -2,6 +2,7 @@
 
 import { EmbedBuilderLivePreview } from "@/components/embed-builder/discord-embed-preview";
 import { Card } from "@/components/ui/card";
+import { ColorPicker } from "@/components/ui/color-picker";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/cn";
 import {
@@ -272,7 +273,7 @@ export function KnifeEmbedBuilder() {
       {
         id: randomId(),
         name: "Notes",
-        value: "Placeholder variables show sample data in the preview when enabled.",
+        value: "Toggle Sample data in the panel to see tokens → real demo values.",
         inline: false,
       },
     ]);
@@ -308,74 +309,88 @@ export function KnifeEmbedBuilder() {
         transition: { type: "spring" as const, stiffness: 380, damping: 30 },
       };
 
+  const actionBtn =
+    "inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-full px-3.5 text-xs font-semibold motion-safe:transition sm:px-4";
+
   return (
-    <div className="grid gap-8 xl:grid-cols-12 xl:items-start xl:gap-6">
+    <div className="grid gap-10 xl:grid-cols-12 xl:items-start xl:gap-x-10 xl:gap-y-8 2xl:gap-x-12">
       <div className="min-w-0 xl:col-span-7 2xl:col-span-8">
         <Card
           padding="lg"
           className="border-white/[0.08] bg-surface/50 shadow-[0_0_48px_-20px_rgba(220,38,38,0.2)] motion-safe:transition-shadow motion-safe:hover:shadow-[0_0_56px_-18px_rgba(220,38,38,0.25)]"
         >
-          <div className="flex flex-col gap-4 border-b border-white/[0.06] pb-5 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h2 className="flex items-center gap-2 font-display text-xl font-bold tracking-tight text-accent-strong">
-                <Icon
-                  icon="mdi:card-bulleted-outline"
-                  className="size-7 shrink-0 text-edge"
-                  aria-hidden
-                />
-                Compose
-              </h2>
-              <p className="mt-1 max-w-xl text-sm text-muted">
-                Edits sync to the live Discord preview → Use with{" "}
-                <code className="rounded bg-background/80 px-1 font-mono text-xs text-edge">
-                  .say
-                </code>{" "}
-                or{" "}
-                <code className="rounded bg-background/80 px-1 font-mono text-xs text-edge">
-                  .createembed
-                </code>
-                .
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <motion.button
-                type="button"
-                whileTap={reduce ? undefined : { scale: 0.97 }}
-                onClick={loadStarterTemplate}
-                className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-background/50 px-3 py-2 text-xs font-semibold text-foreground motion-safe:transition hover:border-edge/35 hover:bg-surface-elevated"
-              >
-                <Icon icon="mdi:flare" className="size-4 text-edge" aria-hidden />
-                Try sample
-              </motion.button>
-              <motion.button
-                type="button"
-                whileTap={reduce ? undefined : { scale: 0.97 }}
-                onClick={clearAll}
-                className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] px-3 py-2 text-xs font-semibold text-muted motion-safe:transition hover:border-white/[0.14] hover:text-foreground"
-              >
-                <Icon icon="mdi:broom" className="size-4" aria-hidden />
-                Clear
-              </motion.button>
-              <motion.button
-                type="button"
-                whileTap={reduce ? undefined : { scale: 0.97 }}
-                onClick={() => void copyText("script", generated)}
-                className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-950/35 px-4 py-2 text-xs font-semibold text-foreground shadow-[0_0_24px_-12px_rgba(220,38,38,0.5)] motion-safe:transition hover:border-red-400/40"
-              >
-                <Icon icon="mdi:content-copy" className="size-4" aria-hidden />
-                Copy script
-              </motion.button>
-              {copied === "script" ? (
-                <motion.span
-                  initial={reduce ? false : { opacity: 0, x: 6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="inline-flex items-center gap-1 text-xs text-success"
+          <div className="flex flex-col gap-4 border-b border-white/[0.06] pb-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+              <div className="min-w-0">
+                <h2 className="flex items-center gap-2 font-display text-xl font-bold tracking-tight text-accent-strong">
+                  <Icon
+                    icon="mdi:card-bulleted-outline"
+                    className="size-7 shrink-0 text-edge"
+                    aria-hidden
+                  />
+                  Compose
+                </h2>
+                <p className="mt-1 max-w-xl text-sm text-muted">
+                  Live preview updates as you type. Paste into{" "}
+                  <code className="rounded bg-background/80 px-1 font-mono text-xs text-edge">
+                    .say
+                  </code>{" "}
+                  or{" "}
+                  <code className="rounded bg-background/80 px-1 font-mono text-xs text-edge">
+                    .createembed
+                  </code>
+                  .
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 sm:max-w-[min(100%,22rem)] sm:justify-end">
+                <motion.button
+                  type="button"
+                  whileTap={reduce ? undefined : { scale: 0.97 }}
+                  onClick={loadStarterTemplate}
+                  className={cn(
+                    actionBtn,
+                    "border border-white/[0.12] bg-background/50 text-foreground hover:border-edge/35 hover:bg-surface-elevated",
+                  )}
                 >
-                  <Icon icon="mdi:check-circle" className="size-4" aria-hidden />
-                  Copied
-                </motion.span>
-              ) : null}
+                  <Icon icon="mdi:flare" className="size-4 text-edge" aria-hidden />
+                  Try sample
+                </motion.button>
+                <motion.button
+                  type="button"
+                  whileTap={reduce ? undefined : { scale: 0.97 }}
+                  onClick={clearAll}
+                  className={cn(
+                    actionBtn,
+                    "border border-white/[0.08] text-muted hover:border-white/[0.14] hover:text-foreground",
+                  )}
+                >
+                  <Icon icon="mdi:broom" className="size-4" aria-hidden />
+                  Clear
+                </motion.button>
+                <motion.button
+                  type="button"
+                  whileTap={reduce ? undefined : { scale: 0.97 }}
+                  onClick={() => void copyText("script", generated)}
+                  className={cn(
+                    actionBtn,
+                    "border border-red-500/30 bg-red-950/35 text-foreground shadow-[0_0_24px_-12px_rgba(220,38,38,0.5)] hover:border-red-400/40",
+                  )}
+                >
+                  <Icon icon="mdi:content-copy" className="size-4" aria-hidden />
+                  Copy script
+                </motion.button>
+              </div>
             </div>
+            {copied === "script" ? (
+              <motion.p
+                initial={reduce ? false : { opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="inline-flex items-center gap-1.5 text-xs text-success sm:text-right"
+              >
+                <Icon icon="mdi:check-circle" className="size-4 shrink-0" aria-hidden />
+                Script copied to clipboard
+              </motion.p>
+            ) : null}
           </div>
 
           <div className="mt-5">
@@ -525,36 +540,12 @@ export function KnifeEmbedBuilder() {
                       onChange={(e) => setColor(e.target.value)}
                       className="min-w-0 flex-1 rounded-xl border border-white/[0.08] bg-background/80 px-3 py-2 font-mono text-sm outline-none ring-edge/20 motion-safe:transition focus:border-edge/40 focus:ring-2 sm:max-w-[11rem]"
                     />
-                    <input
-                      type="color"
-                      value={
-                        /^#[0-9a-fA-F]{6}$/.test(color) ? color : "#ef4444"
-                      }
-                      onChange={(e) => setColor(e.target.value)}
-                      className="size-11 cursor-pointer rounded-xl border border-white/[0.12] bg-transparent motion-safe:transition hover:border-edge/40"
-                      title="Picker"
-                      aria-label="Pick embed color"
+                    <ColorPicker
+                      value={color}
+                      onChange={setColor}
+                      ariaLabel="Pick embed color"
+                      presets={COLOR_PRESETS}
                     />
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {COLOR_PRESETS.map((p) => (
-                      <motion.button
-                        key={p.hex}
-                        type="button"
-                        title={p.label}
-                        whileHover={reduce ? undefined : { scale: 1.06 }}
-                        whileTap={reduce ? undefined : { scale: 0.95 }}
-                        onClick={() => setColor(p.hex)}
-                        className={cn(
-                          "size-8 rounded-lg border-2 motion-safe:transition",
-                          color.toLowerCase() === p.hex
-                            ? "border-white shadow-[0_0_12px_-2px_rgba(255,255,255,0.5)]"
-                            : "border-transparent hover:border-white/30",
-                        )}
-                        style={{ backgroundColor: p.hex }}
-                        aria-label={`Color ${p.label}`}
-                      />
-                    ))}
                   </div>
                 </div>
                 <div>
@@ -848,13 +839,13 @@ export function KnifeEmbedBuilder() {
       </div>
 
       <div className="min-w-0 space-y-6 xl:col-span-5 2xl:col-span-4">
-        <div className="xl:sticky xl:top-20 xl:z-10 xl:space-y-6">
-          <div className="space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
+        <div className="xl:sticky xl:top-[4.5rem] xl:z-10 xl:space-y-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <div className="flex min-w-0 items-center gap-2">
                 <Icon
                   icon="mdi:eye-outline"
-                  className="size-5 text-edge"
+                  className="size-5 shrink-0 text-edge"
                   aria-hidden
                 />
                 <h3 className="font-display text-sm font-bold tracking-tight text-accent-strong">
@@ -872,7 +863,7 @@ export function KnifeEmbedBuilder() {
                 }
                 onClick={() => setResolveSamples((v) => !v)}
                 className={cn(
-                  "relative inline-flex h-8 shrink-0 items-center gap-2 rounded-full border px-3 text-[11px] font-semibold motion-safe:transition",
+                  "inline-flex h-9 shrink-0 items-center gap-2 self-start rounded-full border px-3.5 text-xs font-semibold motion-safe:transition sm:self-auto",
                   resolveSamples
                     ? "border-edge/40 bg-red-950/40 text-foreground"
                     : "border-white/[0.1] bg-background/60 text-muted",
@@ -882,7 +873,7 @@ export function KnifeEmbedBuilder() {
                   icon={
                     resolveSamples ? "mdi:flask-outline" : "mdi:code-braces-box"
                   }
-                  className="size-3.5 shrink-0 opacity-90"
+                  className="size-4 shrink-0 opacity-90"
                   aria-hidden
                 />
                 <span
@@ -895,25 +886,34 @@ export function KnifeEmbedBuilder() {
                 {resolveSamples ? "Sample data" : "Raw tokens"}
               </button>
             </div>
-            <p className="flex items-start gap-2 text-[11px] leading-relaxed text-muted">
-              <Icon
-                icon="mdi:gesture-tap"
-                className="mt-0.5 size-3.5 shrink-0 text-edge/70"
-                aria-hidden
-              />
-              <span>
-                Toggle to see how{" "}
-                <code className="rounded bg-surface-elevated px-0.5 font-mono text-[10px] text-edge">
-                  {"{user}"}
-                </code>{" "}
-                and other tokens fill with demo guild data (production uses
-                real context from the command).
-              </span>
-            </p>
             <EmbedBuilderLivePreview
               messageContent={displayMessage}
               embed={displayEmbed}
+              className="shadow-[0_28px_64px_-28px_rgba(0,0,0,0.85)]"
             />
+            <div
+              className="rounded-xl border border-white/[0.07] bg-background/55 px-3.5 py-3 text-[11px] leading-relaxed text-muted backdrop-blur-sm sm:px-4"
+              role="note"
+            >
+              <span className="flex items-start gap-2.5">
+                <Icon
+                  icon="mdi:information-outline"
+                  className="mt-0.5 size-4 shrink-0 text-edge/75"
+                  aria-hidden
+                />
+                <span>
+                  <strong className="font-semibold text-foreground/85">
+                    Sample data
+                  </strong>{" "}
+                  replaces tokens like{" "}
+                  <code className="rounded bg-surface-elevated px-1 font-mono text-[10px] text-edge">
+                    {"{user}"}
+                  </code>{" "}
+                  with demo guild values here. In Discord, the bot uses the real
+                  command context.
+                </span>
+              </span>
+            </div>
           </div>
 
           <Card

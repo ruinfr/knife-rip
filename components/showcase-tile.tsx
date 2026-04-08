@@ -11,10 +11,15 @@ export type ShowcaseTileItem = {
   showPlus?: boolean;
 };
 
+type Props = {
+  s: ShowcaseTileItem;
+  interactive?: boolean;
+};
+
 const tileClassName =
   "group flex flex-col items-center rounded-xl px-1 pb-2 pt-1 text-center motion-safe:transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
-export function ShowcaseTile({ s }: { s: ShowcaseTileItem }) {
+export function ShowcaseTile({ s, interactive = true }: Props) {
   const external = s.href.startsWith("http");
 
   const avatar = (
@@ -52,6 +57,14 @@ export function ShowcaseTile({ s }: { s: ShowcaseTileItem }) {
       ) : null}
     </>
   );
+
+  if (!interactive) {
+    return (
+      <div className={tileClassName} aria-label={s.name}>
+        {body}
+      </div>
+    );
+  }
 
   if (external) {
     return (

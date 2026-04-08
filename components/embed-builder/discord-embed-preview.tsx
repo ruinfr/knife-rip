@@ -64,7 +64,7 @@ function DiscordEmbedInner({ embed }: { embed: KnifeParsedEmbed }) {
         style={{ backgroundColor: rgb }}
         aria-hidden
       />
-      <div className="min-w-0 flex-1 py-2 pl-3 pr-4">
+      <div className="min-w-0 flex-1 py-2.5 pl-3 pr-4 pb-3">
         <div className="flex gap-4">
           <div className="min-w-0 flex-1 space-y-2">
             {embed.author?.name ? (

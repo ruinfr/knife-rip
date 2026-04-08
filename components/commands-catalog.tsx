@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
 const USAGE_ICON_PATTERN = /\{\{([a-z0-9]+:[a-z0-9-]+)\}\}/gi;
+const USAGE_ARG_TOKEN = /[<\[\(]([^>\]\)]+)[>\]\)]/g;
 
 /** Map common usage emojis to Iconify slugs so DB/bot text still renders as icons on the site. */
 function usageEmojisToIconTokens(raw: string): string {
@@ -65,6 +66,34 @@ function invokePrefix(cmd: BotCommand): string {
   return cmd.style === "slash" ? "/" : ".";
 }
 
+function extractArgumentTokens(cmd: BotCommand): string[] {
+  const usage = cmd.usage?.trim();
+  if (!usage) return [];
+  const first = usage.split("·")[0]?.trim() ?? usage;
+  const tokens: string[] = [];
+  for (const m of first.matchAll(USAGE_ARG_TOKEN)) {
+    const t = (m[1] ?? "").trim();
+    if (!t) continue;
+    tokens.push(t.replace(/\s+/g, " "));
+  }
+  return [...new Set(tokens)].slice(0, 6);
+}
+
+function extractPermissionBadges(cmd: BotCommand): string[] {
+  if (cmd.developerOnly) return ["Developer only"];
+  const d = cmd.description.trim();
+  const m = d.match(/^([A-Za-z][A-Za-z\s/&+-]{2,40})\s+—\s+/);
+  if (m?.[1]) {
+    const head = m[1].trim();
+    const split = head
+      .split("/")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return (split.length ? split : [head]).slice(0, 2);
+  }
+  return ["None"];
+}
+
 function tokenizeQuery(raw: string): string[] {
   return raw
     .toLowerCase()
@@ -115,6 +144,18 @@ function categoryTabIcon(id: string): string {
 export function CommandsCatalog({ categories }: Props) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const copyText = async (key: string, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 1400);
+    } catch {
+      setCopiedKey("error");
+      setTimeout(() => setCopiedKey(null), 1400);
+    }
+  };
 
   const filtered = useMemo(() => {
     const tokens = tokenizeQuery(query);
@@ -329,39 +370,116 @@ export function CommandsCatalog({ categories }: Props) {
             <ul className="grid gap-3 sm:grid-cols-1 lg:grid-cols-2">
               {cat.commands.map((cmd) => {
                 const p = invokePrefix(cmd);
+                const args = extractArgumentTokens(cmd);
+                const perms = extractPermissionBadges(cmd);
+                const primary = `${p}${cmd.name}`;
                 return (
                   <li key={`${cat.id}-${cmd.name}`}>
                     <Card
-                      padding="md"
-                      className="h-full motion-safe:transition hover:border-white/[0.1]"
+                      padding="none"
+                      surface="plain"
+                      className={cn(
+                        "group relative h-full overflow-hidden border-white/[0.07] bg-[#0f0b0b]/70 shadow-[0_18px_46px_-28px_rgba(0,0,0,0.9)]",
+                        "motion-safe:transition hover:border-white/[0.12] hover:bg-[#120d0d]/75",
+                      )}
                     >
-                      <div className="flex flex-wrap items-center gap-2 gap-y-1">
-                        <code className="rounded-md bg-surface-elevated px-2 py-1 font-mono text-sm font-semibold text-edge">
-                          {p}
-                          {cmd.name}
-                        </code>
-                        {cmd.developerOnly ? (
-                          <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-200/95">
-                            Developer
-                          </span>
-                        ) : null}
-                        {cmd.tier === "pro" ? (
-                          <span className="rounded-full bg-edge-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-strong">
-                            Premium
-                          </span>
-                        ) : (
-                          <span className="rounded-full border border-white/[0.08] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
-                            Free
-                          </span>
-                        )}
+                      <div className="relative px-5 pb-5 pt-4">
+                        <div
+                          className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.05] to-transparent"
+                          aria-hidden
+                        />
+                        <div className="relative flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <code className="rounded-xl bg-black/30 px-2.5 py-1.5 font-mono text-sm font-semibold text-foreground ring-1 ring-white/[0.07]">
+                                <span className="text-edge">{p}</span>
+                                {cmd.name}
+                              </code>
+                              {cmd.developerOnly ? (
+                                <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-200/95">
+                                  Developer
+                                </span>
+                              ) : null}
+                              {cmd.tier === "pro" ? (
+                                <span className="rounded-full bg-edge-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-strong">
+                                  Premium
+                                </span>
+                              ) : (
+                                <span className="rounded-full border border-white/[0.08] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
+                                  Free
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-2 text-sm leading-relaxed text-muted">
+                              {cmd.description}
+                            </p>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => void copyText(`${cat.id}:${cmd.name}`, primary)}
+                            className={cn(
+                              "motion-safe:transition inline-flex size-9 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-black/20 text-muted",
+                              "hover:border-white/[0.14] hover:bg-white/[0.04] hover:text-foreground",
+                              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-edge/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                            )}
+                            aria-label={`Copy ${primary}`}
+                            title={`Copy ${primary}`}
+                          >
+                            <Icon icon="mdi:content-copy" className="size-5" aria-hidden />
+                          </button>
+                        </div>
                       </div>
-                      <p className="mt-3 text-sm leading-relaxed text-muted">
-                        {cmd.description}
-                      </p>
-                      {cmd.usage ? (
-                        <CommandUsageDisplay text={cmd.usage} />
-                      ) : null}
-                      <CommandAliasesDisclosure cmd={cmd} invoke={p} />
+
+                      <div className="border-t border-white/[0.06] px-5 py-4">
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-[#b9a5e6]">
+                              arguments
+                            </p>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {args.length ? (
+                                args.map((a) => (
+                                  <span
+                                    key={a}
+                                    className="rounded-full border border-white/[0.08] bg-black/20 px-2.5 py-1 text-[11px] font-semibold text-foreground/85"
+                                  >
+                                    ({a})
+                                  </span>
+                                ))
+                              ) : (
+                                <span className="rounded-full border border-white/[0.08] bg-black/20 px-2.5 py-1 text-[11px] font-semibold text-muted">
+                                  None
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-[#b9a5e6]">
+                              permissions
+                            </p>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {perms.map((perm) => (
+                                <span
+                                  key={perm}
+                                  className="rounded-full border border-white/[0.08] bg-black/20 px-2.5 py-1 text-[11px] font-semibold text-foreground/85"
+                                >
+                                  {perm}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {cmd.usage ? <CommandUsageDisplay text={cmd.usage} /> : null}
+                        <CommandAliasesDisclosure cmd={cmd} invoke={p} />
+                        {copiedKey === `${cat.id}:${cmd.name}` ? (
+                          <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-success">
+                            <Icon icon="mdi:check-circle" className="size-4" aria-hidden />
+                            Copied {primary}
+                          </p>
+                        ) : null}
+                      </div>
                     </Card>
                   </li>
                 );

@@ -111,11 +111,18 @@ export const revalidate = 900;
 
 export default async function Home() {
   let featuredCommunities: ShowcaseItem[] = SHOWCASE_FALLBACK;
+  let liveCommunityCount = 0;
+  let liveMemberCount = 0;
   const botToken = process.env.DISCORD_BOT_TOKEN;
   if (botToken?.trim()) {
     try {
       const live = await fetchTopShowcaseCommunities(botToken, SHOWCASE_TOP_N);
       if (live.length > 0) {
+        liveCommunityCount = live.length;
+        liveMemberCount = live.reduce(
+          (sum, g) => sum + Math.max(0, g.approximateMemberCount ?? 0),
+          0,
+        );
         featuredCommunities = live.map((g) => ({
           key: g.id,
           name: g.name,
@@ -148,34 +155,40 @@ export default async function Home() {
 
   const useLiveCarousel =
     showcaseFromBot && featuredCommunities.length > 0;
+  const membersLabel = liveMemberCount > 0
+    ? liveMemberCount.toLocaleString()
+    : "23,686,779";
+  const communitiesLabel = liveCommunityCount > 0
+    ? liveCommunityCount.toLocaleString()
+    : "165,719";
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-16 px-4 py-14 sm:gap-20 sm:px-6 sm:py-20 lg:gap-22">
+    <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-16 px-4 py-12 sm:gap-20 sm:px-6 sm:py-16 lg:gap-22 lg:px-8">
       <ScrollReveal
         as="section"
-        className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-12"
+        className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-14"
       >
         <div className="relative z-[1] min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-muted">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-muted">
             Sharp stack · clean servers
           </p>
-          <h1 className="font-display mt-4 text-4xl font-bold leading-[1.06] text-accent-strong sm:text-5xl lg:text-[3.05rem]">
+          <h1 className="font-display mt-4 max-w-[16ch] text-4xl font-bold leading-[1.04] text-accent-strong sm:text-5xl lg:text-[3.35rem]">
             <span className="bg-gradient-to-r from-edge via-[#fca5a5] to-edge/80 bg-clip-text text-transparent">
               Knife
             </span>{" "}
             — one sharp Discord bot.
           </h1>
-          <p className="mt-6 max-w-[34rem] text-[1.05rem] font-normal leading-relaxed tracking-tight text-muted sm:text-lg">
+          <p className="mt-6 max-w-[35rem] text-[1.02rem] font-normal leading-relaxed tracking-tight text-muted sm:text-[1.08rem]">
             Cuts clutter and dull commands—serious mods and utilities, zero bloat.
           </p>
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div className="mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3">
             {discordInvite ? (
               <ButtonLink
                 href={discordInvite}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="secondary"
-                className="gap-2 px-6 py-3 shadow-[0_0_36px_-14px_rgba(220,38,38,0.22)]"
+                className="gap-2 px-6 py-3.5 shadow-[0_0_36px_-14px_rgba(220,38,38,0.22)]"
               >
                 <Icon
                   icon="mdi:discord"
@@ -198,7 +211,7 @@ export default async function Home() {
               target="_blank"
               rel="noopener noreferrer"
               variant="secondary"
-              className="gap-2 px-5 py-3"
+              className="gap-2 px-5 py-3.5"
             >
               <Icon
                 icon="mdi:discord"
@@ -210,7 +223,7 @@ export default async function Home() {
             <ButtonLink
               href="/pricing"
               variant="ghost"
-              className="rounded-full px-5 text-foreground hover:text-edge"
+              className="rounded-full px-4.5 text-foreground hover:text-edge"
             >
               View pricing{" "}
               <Icon
@@ -222,11 +235,18 @@ export default async function Home() {
             <ButtonLink
               href="/docs"
               variant="ghost"
-              className="hidden px-4 text-muted sm:inline-flex"
+              className="hidden px-3.5 text-muted sm:inline-flex"
             >
               Docs
             </ButtonLink>
           </div>
+          <p className="mt-9 text-sm text-muted">
+            Powering{" "}
+            <span className="font-semibold text-foreground">{membersLabel}</span>{" "}
+            users across{" "}
+            <span className="font-semibold text-foreground">{communitiesLabel}</span>{" "}
+            communities
+          </p>
         </div>
 
         <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
@@ -268,11 +288,11 @@ export default async function Home() {
 
       <ScrollReveal
         as="section"
-        className="border-t border-red-950/30 pt-14 sm:pt-16"
+        className="border-t border-red-950/30 pt-12 sm:pt-14"
         delay={0.05}
         aria-labelledby="proof-heading"
       >
-        <div className="mx-auto w-full max-w-6xl px-4">
+        <div className="mx-auto w-full max-w-7xl px-1 sm:px-2">
           <p
             id="proof-heading"
             className="text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-muted"
@@ -281,16 +301,16 @@ export default async function Home() {
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm font-normal leading-relaxed text-muted">
             {showcaseFromBot
-              ? "Biggest Knife guilds by member count—step in or put the bot on yours."
-              : "Communities running Knife—join them or add the blade to your server."}
+              ? "Biggest Knife guilds by member count."
+              : "Communities running Knife across the ecosystem."}
           </p>
-          <div className="mt-10 flex w-full flex-col items-center justify-center gap-10 sm:gap-12">
+          <div className="mt-8 flex w-full flex-col items-center justify-center gap-8 sm:gap-10">
             {useLiveCarousel ? (
               <div className="flex w-full flex-col items-center justify-center gap-10 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-12 sm:gap-y-10">
                 <ShowcaseCarousel communities={featuredCommunities} />
                 <ul className="m-0 flex shrink-0 list-none justify-center p-0">
                   <li className="w-[7.5rem]">
-                    <ShowcaseTile s={yoursItem} />
+                    <ShowcaseTile s={yoursItem} interactive={false} />
                   </li>
                 </ul>
               </div>
@@ -298,7 +318,7 @@ export default async function Home() {
               <ul className="m-0 flex list-none flex-wrap items-start justify-center gap-[1.125rem] p-0 sm:gap-5">
                 {fallbackShowcase.map((s) => (
                   <li key={s.key} className="w-[7.5rem]">
-                    <ShowcaseTile s={s} />
+                    <ShowcaseTile s={s} interactive={false} />
                   </li>
                 ))}
               </ul>

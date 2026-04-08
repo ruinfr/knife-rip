@@ -18,16 +18,20 @@ export default async function CommandsPage() {
     await getCommandCatalogMeta();
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-4 py-14 sm:gap-14 sm:px-6 sm:py-20">
-      <ScrollReveal as="header" className="border-b border-red-950/35 pb-10" amount={0.15}>
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 py-10 sm:gap-12 sm:px-6 sm:py-14 lg:px-8">
+      <ScrollReveal
+        as="header"
+        className="border-b border-red-950/30 pb-7 sm:pb-8"
+        amount={0.15}
+      >
         <span
-          className="mb-4 block h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/30 to-transparent"
+          className="mb-3 block h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/30 to-transparent"
           aria-hidden
         />
-        <h1 className="font-display text-4xl font-bold tracking-tight text-accent-strong sm:text-5xl">
+        <h1 className="font-display text-3xl font-bold tracking-tight text-accent-strong sm:text-4xl">
           Commands
         </h1>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
           Knife uses the <strong className="text-foreground">.</strong> prefix
           (for example{" "}
           <code className="text-accent-strong">.help</code>). This list updates
@@ -50,7 +54,7 @@ export default async function CommandsPage() {
             </>
           ) : null}
         </p>
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
           <ButtonLink href="/tools/embed" variant="secondary">
             Embed builder
           </ButtonLink>

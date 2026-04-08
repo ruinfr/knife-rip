@@ -10,6 +10,7 @@ export function SiteFooter({ footer }: Props) {
   const product = [
     { href: "/", label: footer.home, icon: "mdi:home-outline" },
     { href: "/docs", label: footer.docs, icon: "mdi:book-open-variant" },
+    { href: "/changelog", label: footer.news, icon: "mdi:newspaper-variant-outline" },
     { href: "/commands", label: footer.commands, icon: "mdi:console" },
     { href: "/pricing", label: footer.pricing, icon: "mdi:tag-outline" },
     {
@@ -41,7 +42,7 @@ export function SiteFooter({ footer }: Props) {
 
   return (
     <footer className="relative z-[1] mt-auto border-t border-red-950/45 bg-[#0a0505]/75 backdrop-blur-sm">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:px-8 md:grid-cols-2 lg:grid-cols-4">
         <div className="md:col-span-2 lg:col-span-1">
           <p className="flex items-center gap-2 font-display text-sm font-bold text-accent-strong">
             <Icon

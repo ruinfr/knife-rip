@@ -90,7 +90,7 @@ export function ShowcaseCarousel({
       >
         {looped.map((s, i) => (
           <li key={`${s.key}-${i}`} className="w-[7.5rem] shrink-0">
-            <ShowcaseTile s={s} />
+            <ShowcaseTile s={s} interactive={false} />
           </li>
         ))}
       </ul>

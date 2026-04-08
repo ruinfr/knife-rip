@@ -21,21 +21,25 @@ export const metadata: Metadata = {
 
 export default function EmbedBuilderPage() {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-20">
-      <ScrollReveal as="header" className="border-b border-red-950/35 pb-8" amount={0.12}>
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-4 py-10 sm:gap-10 sm:px-6 sm:py-14 lg:px-8">
+      <ScrollReveal
+        as="header"
+        className="border-b border-red-950/30 pb-6 sm:pb-7"
+        amount={0.12}
+      >
         <span
-          className="mb-4 block h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/30 to-transparent"
+          className="mb-3 block h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/30 to-transparent"
           aria-hidden
         />
-        <h1 className="flex flex-wrap items-center gap-3 font-display text-4xl font-bold tracking-tight text-accent-strong sm:text-5xl">
+        <h1 className="flex flex-wrap items-center gap-3 font-display text-3xl font-bold tracking-tight text-accent-strong sm:text-4xl">
           <Icon
             icon="mdi:widgets-outline"
-            className="size-10 shrink-0 text-edge sm:size-12"
+            className="size-9 shrink-0 text-edge sm:size-11"
             aria-hidden
           />
           Embed builder
         </h1>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
           Compose a{" "}
           <code className="rounded-md bg-surface-elevated px-1.5 py-0.5 font-mono text-sm text-edge">
             {"{embed}$v"}
@@ -49,7 +53,7 @@ export default function EmbedBuilderPage() {
           <strong className="font-semibold text-foreground/90">sample data</strong>{" "}
           to see how variables resolve. Webhook JSON still works too.
         </p>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-5 flex flex-wrap gap-2 sm:gap-3">
           <ButtonLink href="/commands" variant="secondary">
             <span className="inline-flex items-center gap-2">
               <Icon icon="mdi:console" className="size-4" aria-hidden />

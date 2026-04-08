@@ -17,7 +17,6 @@ const NAV: ReadonlyArray<{
   labelKey: keyof Pick<
     SiteMessages["header"],
     | "navDocs"
-    | "navNews"
     | "navCommands"
     | "navEmbed"
     | "navPricing"
@@ -25,7 +24,6 @@ const NAV: ReadonlyArray<{
   >;
 }> = [
   { href: "/docs", labelKey: "navDocs", icon: "mdi:book-open-variant" },
-  { href: "/changelog", labelKey: "navNews", icon: "mdi:newspaper-variant-outline" },
   { href: "/commands", labelKey: "navCommands", icon: "mdi:console" },
   { href: "/tools/embed", labelKey: "navEmbed", icon: "mdi:widgets-outline" },
   { href: "/pricing", labelKey: "navPricing", icon: "mdi:tag-outline" },
@@ -50,8 +48,8 @@ export function SiteHeader({ locale, header }: Props) {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-red-950/35 bg-background/75 backdrop-blur-xl backdrop-saturate-150">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:gap-4 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-red-950/35 bg-background/80 backdrop-blur-xl backdrop-saturate-150">
+      <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:h-16 sm:gap-5 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="motion-safe:transition flex shrink-0 items-center gap-2.5 rounded-full py-1 text-accent-strong hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -63,16 +61,16 @@ export function SiteHeader({ locale, header }: Props) {
         </Link>
 
         <nav
-          className="hidden flex-1 justify-center md:flex"
+          className="hidden min-w-0 flex-1 justify-center px-2 lg:px-4 xl:px-6 md:flex"
           aria-label={header.mainNavAria}
         >
-          <div className="nav-pill-sheen inline-flex items-center gap-0.5 rounded-full border border-white/[0.07] bg-surface/45 px-1 py-1 shadow-[0_0_40px_-18px_rgba(220,38,38,0.18)] backdrop-blur-md">
+          <div className="nav-pill-sheen inline-flex max-w-full items-center gap-px overflow-x-auto rounded-full border border-white/[0.07] bg-surface/45 px-1 py-1 shadow-[0_0_40px_-18px_rgba(220,38,38,0.18)] backdrop-blur-md scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "motion-safe:transition inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium tracking-tight",
+                  "motion-safe:transition inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium tracking-tight lg:gap-2 lg:px-3.5 lg:py-2 lg:text-sm",
                   linkActive(pathname, item.href)
                     ? "bg-surface-elevated/95 text-foreground shadow-sm ring-1 ring-white/[0.06]"
                     : "text-muted hover:bg-white/[0.04] hover:text-foreground",
@@ -80,7 +78,7 @@ export function SiteHeader({ locale, header }: Props) {
               >
                 <Icon
                   icon={item.icon}
-                  className="size-4 shrink-0 opacity-90"
+                  className="size-3.5 shrink-0 opacity-90 lg:size-4"
                   aria-hidden
                 />
                 {header[item.labelKey]}
@@ -89,16 +87,16 @@ export function SiteHeader({ locale, header }: Props) {
           </div>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+        <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-2.5 lg:gap-3">
           <LanguageSwitcher
             locale={locale}
             ariaLabel={header.languageAria}
             selectLanguageLabel={header.selectLanguage}
           />
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-1.5 md:flex md:pl-1">
             {status === "loading" ? (
               <span
-                className="inline-flex items-center gap-2 text-sm text-muted"
+                className="inline-flex items-center gap-2 whitespace-nowrap px-1 text-sm text-muted"
                 aria-live="polite"
               >
                 <Icon icon="mdi:progress-clock" className="size-4" aria-hidden />
@@ -109,14 +107,14 @@ export function SiteHeader({ locale, header }: Props) {
                 <Link
                   href="/dashboard"
                   className={cn(
-                    "motion-safe:transition inline-flex items-center gap-2 rounded-full border border-red-500/25 bg-red-950/35 px-4 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(220,38,38,0.45)] hover:border-red-400/35 hover:bg-red-950/50",
+                    "motion-safe:transition inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-red-500/25 bg-red-950/35 px-3 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(220,38,38,0.45)] hover:border-red-400/35 hover:bg-red-950/50 lg:gap-2 lg:px-4",
                     linkActive(pathname, "/dashboard") &&
                       "border-red-400/40 bg-red-950/55",
                   )}
                 >
                   <Icon
                     icon="mdi:view-dashboard-outline"
-                    className="size-4"
+                    className="size-4 shrink-0"
                     aria-hidden
                   />
                   {header.dashboard}
@@ -124,9 +122,9 @@ export function SiteHeader({ locale, header }: Props) {
                 <button
                   type="button"
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="motion-safe:transition inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-muted hover:bg-surface hover:text-foreground"
+                  className="motion-safe:transition inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-sm text-muted hover:bg-surface hover:text-foreground lg:gap-2 lg:px-3"
                 >
-                  <Icon icon="mdi:logout" className="size-4" aria-hidden />
+                  <Icon icon="mdi:logout" className="size-4 shrink-0" aria-hidden />
                   {header.signOut}
                 </button>
               </>
@@ -134,9 +132,9 @@ export function SiteHeader({ locale, header }: Props) {
               <button
                 type="button"
                 onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}
-                className="motion-safe:transition inline-flex items-center gap-2 rounded-full border border-red-500/25 bg-red-950/35 px-4 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(220,38,38,0.45)] hover:border-red-400/35 hover:bg-red-950/50"
+                className="motion-safe:transition inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-red-500/25 bg-red-950/35 px-3 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(220,38,38,0.45)] hover:border-red-400/35 hover:bg-red-950/50 lg:gap-2 lg:px-4"
               >
-                <Icon icon="mdi:login" className="size-4" aria-hidden />
+                <Icon icon="mdi:login" className="size-4 shrink-0" aria-hidden />
                 {header.signIn}
               </button>
             )}
