@@ -2,6 +2,7 @@ import {
   buildPetMenuEmbed,
   buildPetMenuRows,
   loadPetPage,
+  petMenuFooterNote,
 } from "../../lib/economy/pet-menu";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { errorEmbed } from "../../lib/embeds";
@@ -31,12 +32,32 @@ export const petsCommand: KnifeCommand = {
 
     const uid = message.author.id;
     const page = 0;
-    const { pets, total } = await loadPetPage(uid, page);
-    await message.reply({
-      content: `<@${uid}>`,
-      embeds: [buildPetMenuEmbed({ ownerId: uid, page, total, pets })],
-      components: buildPetMenuRows({ ownerId: uid, page, total, pets }),
-      allowedMentions: { users: [uid] },
-    });
+    try {
+      const { pets, total } = await loadPetPage(uid, page);
+      const footerNote = await petMenuFooterNote(uid);
+      await message.reply({
+        content: `<@${uid}>`,
+        embeds: [
+          buildPetMenuEmbed({
+            ownerId: uid,
+            page,
+            total,
+            pets,
+            footerNote,
+          }),
+        ],
+        components: buildPetMenuRows({ ownerId: uid, page, total, pets }),
+        allowedMentions: { users: [uid] },
+      });
+    } catch {
+      await message.reply({
+        embeds: [
+          errorEmbed(
+            "Pets could not be loaded (database or migration issue on the bot host). Ask an admin to run **Prisma migrations** and restart the bot.",
+            { title: "Can't load pets" },
+          ),
+        ],
+      });
+    }
   },
 };

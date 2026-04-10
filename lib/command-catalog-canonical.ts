@@ -313,8 +313,9 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "pet",
     description:
-      "Buy, equip, or feed Knife Cash pets — .pet buy, .pet equip, .pet feed",
-    usage: ".pet buy <dog|cat|rabbit> · .pet equip <species> · .pet feed",
+      "Buy, equip, feed, or inspect Knife Cash pets — .pet buy, .pet equip, .pet feed, .pet info (XP and happiness add a small .gamble bonus, capped)",
+    usage:
+      ".pet buy <dog|cat|rabbit> · .pet equip <species> · .pet feed · .pet info",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",

@@ -9,6 +9,11 @@ export const GAMBLE_MULT_MAX = 1.28;
 export const PET_GAMBLE_BONUS_PER_STEP = 0.01;
 export const PET_GAMBLE_BONUS_XP_STEP = 400;
 export const PET_GAMBLE_BONUS_MAX = 0.03;
+/** If happiness is here or above, equipped pet adds a small extra (still capped by PET_GAMBLE_COMBINED_MAX). */
+export const PET_HAPPY_GAMBLE_THRESHOLD = 85;
+export const PET_HAPPY_GAMBLE_EXTRA = 0.005;
+/** Max total pet contribution (XP tiers + happiness extra). Keep modest vs GAMBLE_MULT_MAX. */
+export const PET_GAMBLE_COMBINED_MAX = 0.035;
 
 // —— Work / beg / crime ——
 export const WORK_COOLDOWN_MS = 45 * 60 * 1000;

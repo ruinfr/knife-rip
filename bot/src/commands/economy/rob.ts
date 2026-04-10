@@ -286,7 +286,16 @@ export const robCommand: KnifeCommand = {
         await message.reply({
           embeds: [
             errorEmbed(
-              "That user is too new a target (lifetime messages or wallet floor).",
+              [
+                "That user is **too new** to rob as a target.",
+                "",
+                "They count as established only if **either**:",
+                `• **≥ ${ROB_VICTIM_MIN_LIFETIME_MSGS.toLocaleString()}** lifetime messages tracked in Knife Cash, **or**`,
+                `• **≥ ${formatCash(ROB_VICTIM_ALT_FLOOR_CASH)}** cash on hand.`,
+                "",
+                `(They must still have at least **${formatCash(ROB_MIN_VICTIM_CASH)}** cash to be robbable at all.)`,
+              ].join("\n"),
+              { title: "Rob — target too new" },
             ),
           ],
         });

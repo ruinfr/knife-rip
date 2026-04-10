@@ -35,6 +35,15 @@ export function formatChangelogDateEst(isoDate: string): string {
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
+    id: "2026-04-10-v45-pet-info-bonus",
+    catalogVersion: 45,
+    date: "2026-04-10",
+    title: "Pets: .pet info and clearer gamble bonus",
+    summary:
+      "New .pet info explains XP and happiness bonuses on .gamble house games. Happiness 85+ adds a small extra on top of XP tiers; pet slice stays capped. .pets footer shows the equipped bonus; feeding reports the new approximate bonus. Command catalog v45.",
+    bullets: [],
+  },
+  {
     id: "2026-04-10-v44-canonical-economy",
     catalogVersion: 44,
     date: "2026-04-10",

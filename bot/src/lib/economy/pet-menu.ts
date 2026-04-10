@@ -18,6 +18,7 @@ import {
   PET_MAX_HAPPINESS,
   PET_SPECIES,
 } from "./economy-tuning";
+import { formatPetGambleFooterLine } from "./payout-multiplier";
 import { formatCash } from "./money";
 import {
   creditTreasuryInTx,
@@ -26,16 +27,30 @@ import {
 
 const PETS_PER_PAGE = 2;
 
-export function petPageButtonId(uid: string, page: number): string {
-  return `${ECON_INTERACTION_PREFIX}${uid}:pet:p:${page}`;
+/** Prev page — must differ from next (`pn`) so IDs stay unique when both target page 0. */
+export function petPrevPageButtonId(uid: string, targetPage: number): string {
+  return `${ECON_INTERACTION_PREFIX}${uid}:pet:pp:${targetPage}`;
 }
 
-export function petEquipButtonId(uid: string, petId: string): string {
-  return `${ECON_INTERACTION_PREFIX}${uid}:pet:e:${petId}`;
+export function petNextPageButtonId(uid: string, targetPage: number): string {
+  return `${ECON_INTERACTION_PREFIX}${uid}:pet:pn:${targetPage}`;
 }
 
-export function petFeedButtonId(uid: string, petId: string): string {
-  return `${ECON_INTERACTION_PREFIX}${uid}:pet:f:${petId}`;
+/** Short custom IDs (page + slot) — avoids 100-char limit and `:` inside cuid breaking parse. */
+export function petEquipButtonId(
+  uid: string,
+  page: number,
+  slot: number,
+): string {
+  return `${ECON_INTERACTION_PREFIX}${uid}:pet:e:${page}:${slot}`;
+}
+
+export function petFeedButtonId(
+  uid: string,
+  page: number,
+  slot: number,
+): string {
+  return `${ECON_INTERACTION_PREFIX}${uid}:pet:f:${page}:${slot}`;
 }
 
 export async function loadPetPage(
@@ -53,13 +68,25 @@ export async function loadPetPage(
   return { pets, total };
 }
 
+/** Footer line for the pets menu — documents gamble bonus; always short enough for Discord. */
+export async function petMenuFooterNote(ownerId: string): Promise<string> {
+  const prisma = getBotPrisma();
+  const eq = await prisma.economyPet.findFirst({
+    where: { ownerId, equipped: true },
+    select: { xp: true, happiness: true },
+  });
+  return formatPetGambleFooterLine(eq);
+}
+
 export function buildPetMenuEmbed(params: {
   ownerId: string;
   page: number;
   total: number;
   pets: EconomyPet[];
+  /** Always set (e.g. from {@link petMenuFooterNote}) so bonus rules stay visible. */
+  footerNote: string;
 }): EmbedBuilder {
-  const { page, total, pets, ownerId } = params;
+  const { page, total, pets, ownerId, footerNote } = params;
   const maxPage = Math.max(0, Math.ceil(total / PETS_PER_PAGE) - 1);
   if (pets.length === 0) {
     return new EmbedBuilder()
@@ -67,7 +94,8 @@ export function buildPetMenuEmbed(params: {
       .setTitle(`${ecoM.cash} Pets`)
       .setDescription(
         `<@${ownerId}> has no pets yet.\nBuy one with **\`.pet buy <dog|cat|rabbit>\`**.`,
-      );
+      )
+      .setFooter({ text: footerNote.slice(0, 2048) });
   }
   const lines = pets.map((p) => {
     const spec = PET_SPECIES[p.speciesKey];
@@ -78,7 +106,8 @@ export function buildPetMenuEmbed(params: {
   return new EmbedBuilder()
     .setColor(0x5865f2)
     .setTitle(`${ecoM.cash} Pets — page ${page + 1}/${maxPage + 1}`)
-    .setDescription(lines.join("\n\n"));
+    .setDescription(lines.join("\n\n"))
+    .setFooter({ text: footerNote.slice(0, 2048) });
 }
 
 export function buildPetMenuRows(params: {
@@ -94,33 +123,33 @@ export function buildPetMenuRows(params: {
   rows.push(
     new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
       new ButtonBuilder()
-        .setCustomId(petPageButtonId(ownerId, Math.max(0, page - 1)))
+        .setCustomId(petPrevPageButtonId(ownerId, Math.max(0, page - 1)))
         .setLabel("Prev")
         .setStyle(ButtonStyle.Secondary)
         .setDisabled(page <= 0),
       new ButtonBuilder()
-        .setCustomId(petPageButtonId(ownerId, Math.min(maxPage, page + 1)))
+        .setCustomId(petNextPageButtonId(ownerId, Math.min(maxPage, page + 1)))
         .setLabel("Next")
         .setStyle(ButtonStyle.Secondary)
         .setDisabled(page >= maxPage),
     ),
   );
 
-  for (const p of pets) {
+  pets.forEach((p, slot) => {
     rows.push(
       new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
         new ButtonBuilder()
-          .setCustomId(petEquipButtonId(ownerId, p.id))
+          .setCustomId(petEquipButtonId(ownerId, page, slot))
           .setLabel(p.equipped ? "Equipped" : "Equip")
           .setStyle(p.equipped ? ButtonStyle.Success : ButtonStyle.Primary)
           .setDisabled(p.equipped),
         new ButtonBuilder()
-          .setCustomId(petFeedButtonId(ownerId, p.id))
+          .setCustomId(petFeedButtonId(ownerId, page, slot))
           .setLabel("Feed")
           .setStyle(ButtonStyle.Secondary),
       ),
     );
-  }
+  });
 
   return rows;
 }
@@ -133,19 +162,174 @@ export async function handlePetMenuButton(params: {
   const { uid, tok, interaction } = params;
   const prisma = getBotPrisma();
 
-  if (tok[1] === "p" && tok[2]) {
+  if (
+    (tok[1] === "pp" || tok[1] === "pn" || tok[1] === "p") &&
+    tok[2] !== undefined
+  ) {
     const page = parseInt(tok[2]!, 10);
     if (!Number.isFinite(page) || page < 0) return true;
     await interaction.deferUpdate();
     const { pets, total } = await loadPetPage(uid, page);
+    const footerNote = await petMenuFooterNote(uid);
     await interaction.message.edit({
-      embeds: [buildPetMenuEmbed({ ownerId: uid, page, total, pets })],
+      embeds: [
+        buildPetMenuEmbed({ ownerId: uid, page, total, pets, footerNote }),
+      ],
       components: buildPetMenuRows({ ownerId: uid, page, total, pets }),
     });
     return true;
   }
 
-  if (tok[1] === "e" && tok[2]) {
+  if (tok[1] === "e" && tok[2] !== undefined && tok[3] !== undefined) {
+    const page = parseInt(tok[2]!, 10);
+    const slot = parseInt(tok[3]!, 10);
+    if (!Number.isFinite(page) || page < 0 || slot < 0 || slot >= PETS_PER_PAGE) {
+      return true;
+    }
+    await interaction.deferUpdate();
+    const { pets: pagePets } = await loadPetPage(uid, page);
+    const target = pagePets[slot];
+    if (!target) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "❌ That pet row is out of date — run **`.pets`** again.",
+      });
+      return true;
+    }
+    const petId = target.id;
+    await prisma.$transaction(async (tx) => {
+      const pet = await tx.economyPet.findFirst({
+        where: { id: petId, ownerId: uid },
+      });
+      if (!pet) return;
+      await tx.economyPet.updateMany({
+        where: { ownerId: uid },
+        data: { equipped: false },
+      });
+      await tx.economyPet.update({
+        where: { id: petId },
+        data: { equipped: true },
+      });
+    });
+    const { pets, total } = await loadPetPage(uid, page);
+    const footerNoteEq = await petMenuFooterNote(uid);
+    await interaction.message.edit({
+      embeds: [
+        buildPetMenuEmbed({
+          ownerId: uid,
+          page,
+          total,
+          pets,
+          footerNote: footerNoteEq,
+        }),
+      ],
+      components: buildPetMenuRows({ ownerId: uid, page, total, pets }),
+    });
+    return true;
+  }
+
+  if (tok[1] === "f" && tok[2] !== undefined && tok[3] !== undefined) {
+    const page = parseInt(tok[2]!, 10);
+    const slot = parseInt(tok[3]!, 10);
+    if (!Number.isFinite(page) || page < 0 || slot < 0 || slot >= PETS_PER_PAGE) {
+      return true;
+    }
+    await interaction.deferUpdate();
+    const { pets: pagePetsF } = await loadPetPage(uid, page);
+    const targetPet = pagePetsF[slot];
+    if (!targetPet) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "❌ That pet row is out of date — run **`.pets`** again.",
+      });
+      return true;
+    }
+    const petId = targetPet.id;
+    try {
+      await prisma.$transaction(async (tx) => {
+        const pet = await tx.economyPet.findFirst({
+          where: { id: petId, ownerId: uid },
+        });
+        if (!pet) throw new Error("NONE");
+        const spec = PET_SPECIES[pet.speciesKey];
+        if (!spec) throw new Error("BAD");
+        const u = await tx.economyUser.findUnique({
+          where: { discordUserId: uid },
+        });
+        if (!u || u.cash < spec.feedCost) throw new Error("POOR");
+        const happyGain =
+          PET_FEED_HAPPY_MIN +
+          Math.floor(
+            Math.random() * (PET_FEED_HAPPY_MAX - PET_FEED_HAPPY_MIN + 1),
+          );
+        const newHappy = Math.min(
+          PET_MAX_HAPPINESS,
+          pet.happiness + happyGain,
+        );
+        const cashAfter = u.cash - spec.feedCost;
+        await tx.economyUser.update({
+          where: { discordUserId: uid },
+          data: { cash: cashAfter },
+        });
+        await tx.economyPet.update({
+          where: { id: petId },
+          data: {
+            xp: pet.xp + PET_FEED_XP,
+            happiness: newHappy,
+          },
+        });
+        await tx.economyLedger.create({
+          data: {
+            discordUserId: uid,
+            delta: -spec.feedCost,
+            balanceAfter: cashAfter,
+            reason: "pet" satisfies LedgerReason,
+            meta: { op: "feed", petId },
+          },
+        });
+        const toTreasury =
+          (spec.feedCost * BigInt(PET_FEED_TREASURY_PCT) + 99n) / 100n;
+        if (toTreasury > 0n) {
+          await creditTreasuryInTx(tx, {
+            delta: toTreasury,
+            reason: "treasury_fee",
+            meta: { kind: "pet_feed", userId: uid },
+            actorUserId: uid,
+          });
+        }
+      });
+    } catch (e) {
+      const code = e instanceof Error ? e.message : "";
+      await interaction.followUp({
+        ephemeral: true,
+        content:
+          code === "POOR"
+            ? "❌ Not enough cash to feed."
+            : code === "NONE"
+              ? "❌ Pet not found."
+              : "❌ Could not feed.",
+      });
+      return true;
+    }
+    const { pets, total } = await loadPetPage(uid, page);
+    const footerNoteFd = await petMenuFooterNote(uid);
+    await interaction.message.edit({
+      embeds: [
+        buildPetMenuEmbed({
+          ownerId: uid,
+          page,
+          total,
+          pets,
+          footerNote: footerNoteFd,
+        }),
+      ],
+      components: buildPetMenuRows({ ownerId: uid, page, total, pets }),
+    });
+    return true;
+  }
+
+  // Legacy: `ke:uid:pet:e:<petId>` / `pet:f:<petId>` (before page:slot IDs)
+  if (tok[1] === "e" && tok[2] && tok[3] === undefined) {
     const petId = tok[2]!;
     await interaction.deferUpdate();
     await prisma.$transaction(async (tx) => {
@@ -163,14 +347,23 @@ export async function handlePetMenuButton(params: {
       });
     });
     const { pets, total } = await loadPetPage(uid, 0);
+    const footerNoteLe = await petMenuFooterNote(uid);
     await interaction.message.edit({
-      embeds: [buildPetMenuEmbed({ ownerId: uid, page: 0, total, pets })],
+      embeds: [
+        buildPetMenuEmbed({
+          ownerId: uid,
+          page: 0,
+          total,
+          pets,
+          footerNote: footerNoteLe,
+        }),
+      ],
       components: buildPetMenuRows({ ownerId: uid, page: 0, total, pets }),
     });
     return true;
   }
 
-  if (tok[1] === "f" && tok[2]) {
+  if (tok[1] === "f" && tok[2] && tok[3] === undefined) {
     const petId = tok[2]!;
     await interaction.deferUpdate();
     try {
@@ -240,8 +433,17 @@ export async function handlePetMenuButton(params: {
       return true;
     }
     const { pets, total } = await loadPetPage(uid, 0);
+    const footerNoteLf = await petMenuFooterNote(uid);
     await interaction.message.edit({
-      embeds: [buildPetMenuEmbed({ ownerId: uid, page: 0, total, pets })],
+      embeds: [
+        buildPetMenuEmbed({
+          ownerId: uid,
+          page: 0,
+          total,
+          pets,
+          footerNote: footerNoteLf,
+        }),
+      ],
       components: buildPetMenuRows({ ownerId: uid, page: 0, total, pets }),
     });
     return true;
