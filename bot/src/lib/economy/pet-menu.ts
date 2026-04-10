@@ -66,7 +66,7 @@ export function buildPetMenuEmbed(params: {
       .setColor(0x5865f2)
       .setTitle(`${ecoM.cash} Pets`)
       .setDescription(
-        `<@${ownerId}> has no pets yet.\nBuy one with **\`.pet buy <rat|crow|fox>\`**.`,
+        `<@${ownerId}> has no pets yet.\nBuy one with **\`.pet buy <dog|cat|rabbit>\`**.`,
       );
   }
   const lines = pets.map((p) => {

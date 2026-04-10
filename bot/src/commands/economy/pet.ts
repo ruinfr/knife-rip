@@ -1,5 +1,6 @@
 import { ecoM } from "../../lib/economy/custom-emojis";
 import {
+  PET_BUYABLE_SPECIES,
   PET_FEED_HAPPY_MAX,
   PET_FEED_HAPPY_MIN,
   PET_FEED_TREASURY_PCT,
@@ -17,7 +18,7 @@ import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import type { KnifeCommand } from "../types";
 
-const SPECIES_KEYS = Object.keys(PET_SPECIES);
+const BUYABLE_HINT = PET_BUYABLE_SPECIES.join("|");
 
 export const petCommand: KnifeCommand = {
   name: "pet",
@@ -28,7 +29,7 @@ export const petCommand: KnifeCommand = {
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Knife Cash (global wallet), shop, house games, and transfers — virtual currency for fun.",
-    usage: ".pet buy <rat|crow|fox> · .pet equip <species> · .pet feed",
+    usage: ".pet buy <dog|cat|rabbit> · .pet equip <species> · .pet feed",
     tier: "free",
     style: "prefix",
   },
@@ -52,7 +53,7 @@ export const petCommand: KnifeCommand = {
           minimalEmbed({
             title: `${ecoM.cash} Pet commands`,
             description:
-              `**buy** — \`.pet buy <${SPECIES_KEYS.join("|")}>\`\n` +
+              `**buy** — \`.pet buy <${BUYABLE_HINT}>\`\n` +
               `**equip** — \`.pet equip <species>\` (your newest of that species)\n` +
               `**feed** — \`.pet feed\` (feeds your **equipped** pet)\n` +
               `Use **\`.pets\`** for the button menu.`,
@@ -64,11 +65,14 @@ export const petCommand: KnifeCommand = {
 
     if (sub === "buy") {
       const species = args[1]?.toLowerCase();
-      if (!species || !PET_SPECIES[species]) {
+      const buyable =
+        species &&
+        (PET_BUYABLE_SPECIES as readonly string[]).includes(species);
+      if (!buyable) {
         await message.reply({
           embeds: [
             errorEmbed(
-              `Pick a species: **${SPECIES_KEYS.join("**, **")}**.`,
+              `Pick a species: **${PET_BUYABLE_SPECIES.join("**, **")}**.`,
             ),
           ],
         });
@@ -133,7 +137,7 @@ export const petCommand: KnifeCommand = {
         await message.reply({
           embeds: [
             errorEmbed(
-              `Usage: **\`.pet equip <${SPECIES_KEYS.join("|")}>\`**.`,
+              `Usage: **\`.pet equip <species>\`** — you must own that pet type.`,
             ),
           ],
         });

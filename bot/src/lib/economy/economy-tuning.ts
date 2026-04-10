@@ -78,10 +78,18 @@ export const BUSINESS_MAX_ACCRUE_HOURS = 48;
 export const BUSINESS_PURCHASE_TAX_PCT = 6;
 
 // —— Pets ——
+/** Species players can buy with `.pet buy` (shown in help). */
+export const PET_BUYABLE_SPECIES = ["dog", "cat", "rabbit"] as const;
+export type PetBuyableSpecies = (typeof PET_BUYABLE_SPECIES)[number];
+
 export const PET_SPECIES: Record<
   string,
   { label: string; price: bigint; feedCost: bigint }
 > = {
+  dog: { label: "Dog", price: 400n, feedCost: 15n },
+  cat: { label: "Cat", price: 900n, feedCost: 22n },
+  rabbit: { label: "Rabbit", price: 2_200n, feedCost: 35n },
+  /** Legacy keys — still honored for feed / display if already owned. */
   rat: { label: "Street rat", price: 400n, feedCost: 15n },
   crow: { label: "Lucky crow", price: 900n, feedCost: 22n },
   fox: { label: "Quick fox", price: 2_200n, feedCost: 35n },

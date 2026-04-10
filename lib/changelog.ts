@@ -35,6 +35,15 @@ export function formatChangelogDateEst(isoDate: string): string {
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
+    id: "2026-04-10-v43-pet-species",
+    catalogVersion: 43,
+    date: "2026-04-10",
+    title: "Pets: dog, cat, rabbit",
+    summary:
+      "Knife Cash pet shop species are now dog, cat, and rabbit (command catalog v43). Older pet types in the database still work for feed and equip.",
+    bullets: [],
+  },
+  {
     id: "2026-04-08-v42-economy-expansion",
     catalogVersion: 42,
     date: "2026-04-08",
