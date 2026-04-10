@@ -1,7 +1,7 @@
 import { randomInt } from "crypto";
 import type { Client, GuildMember } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
-import { resolvePayoutMultiplier } from "./payout-multiplier";
+import { resolvePayoutMultiplierDetails } from "./payout-multiplier";
 import { applyGambleOutcomeInTx } from "./gamble-outcome";
 import { ecoM } from "./custom-emojis";
 import { formatCash, formatGambleNetLine } from "./money";
@@ -50,6 +50,11 @@ export function multCents(mult: number): bigint {
   return BigInt(Math.round(mult * 100));
 }
 
+function petPayoutNote(petBonusAdd: number, payout: bigint): string {
+  if (payout <= 0n || petBonusAdd <= 0) return "";
+  return `_+\`${(petBonusAdd * 100).toFixed(1)}%\` from your equipped pet applied to this payout._\n`;
+}
+
 /**
  * Play a house game: deducts bet, credits payout, logs row. Throws INSUFFICIENT_FUNDS.
  */
@@ -75,7 +80,11 @@ export async function runHouseGame(params: {
     }
   }
 
-  const mult = await resolvePayoutMultiplier({ userId, member, client });
+  const { mult, petBonusAdd } = await resolvePayoutMultiplierDetails({
+    userId,
+    member,
+    client,
+  });
   const mc = multCents(mult);
   const prisma = getBotPrisma();
 
@@ -118,21 +127,21 @@ export async function runHouseGame(params: {
         `${ecoM.roulette} **Roulette** (American) — you bet **${pickLabel}**\n` +
         `Ball **${pocketLabel}** ${ballEmoji}\n` +
         (win
-          ? `You **won**! Returned **${formatCash(payout)}** total.\n${formatGambleNetLine(net)}`
+          ? `You **won**! Returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(net)}`
           : `You **lost**.\n${formatGambleNetLine(net)}`);
     } else if (game === "coinflip") {
       const win = Math.random() < 0.5;
       payout = win ? (bet * 2n * mc) / 100n : 0n;
       const net = payout - bet;
       summary = win
-        ? `${ecoM.coinflip} **Coinflip** — you **won**! Returned **${formatCash(payout)}** total.\n${formatGambleNetLine(net)}`
+        ? `${ecoM.coinflip} **Coinflip** — you **won**! Returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(net)}`
         : `${ecoM.coinflip} **Coinflip** — you **lost**.\n${formatGambleNetLine(net)}`;
     } else if (game === "dice") {
       const you = 1 + Math.floor(Math.random() * 6);
       const house = 1 + Math.floor(Math.random() * 6);
       if (you > house) {
         payout = (bet * 2n * mc) / 100n;
-        summary = `${ecoM.dice} You **${you}** vs house **${house}** — you **win**! Returned **${formatCash(payout)}** total.\n${formatGambleNetLine(payout - bet)}`;
+        summary = `${ecoM.dice} You **${you}** vs house **${house}** — you **win**! Returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(payout - bet)}`;
       } else if (you < house) {
         payout = 0n;
         summary = `${ecoM.dice} You **${you}** vs house **${house}** — house wins.\n${formatGambleNetLine(-bet)}`;
@@ -145,11 +154,11 @@ export async function runHouseGame(params: {
       const line = `${a} │ ${b} │ ${c}`;
       if (a === b && b === c) {
         payout = (bet * 5n * mc) / 100n;
-        summary = `${ecoM.slots} ${line}\n**Triple** — returned **${formatCash(payout)}** total.\n${formatGambleNetLine(payout - bet)}`;
+        summary = `${ecoM.slots} ${line}\n**Triple** — returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(payout - bet)}`;
       } else if (a === b || b === c || a === c) {
         payout = (bet * 3n * mc) / 200n;
         if (payout < 1n) payout = 1n;
-        summary = `${ecoM.slots} ${line}\n**Pair** — returned **${formatCash(payout)}** total.\n${formatGambleNetLine(payout - bet)}`;
+        summary = `${ecoM.slots} ${line}\n**Pair** — returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(payout - bet)}`;
       } else {
         payout = 0n;
         summary = `${ecoM.slots} ${line}\nNo match — you lost **${formatCash(bet)}**.\n${formatGambleNetLine(-bet)}`;

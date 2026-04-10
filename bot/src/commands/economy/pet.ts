@@ -1,4 +1,5 @@
-import { ecoM } from "../../lib/economy/custom-emojis";
+/** Default emoji — custom <:cash:…> does not render in some embed contexts. */
+const PET_EMOJI = "\u{1F4B0}";
 import {
   GAMBLE_MULT_MAX,
   PET_BUYABLE_SPECIES,
@@ -64,7 +65,7 @@ export const petCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Pet commands`,
+            title: `${PET_EMOJI} Pet commands`,
             description:
               `**buy** — \`.pet buy <${BUYABLE_HINT}>\`\n` +
               `**equip** — \`.pet equip <species>\` (your newest of that species)\n` +
@@ -111,7 +112,7 @@ export const petCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Pet bonuses (.gamble)`,
+            title: `${PET_EMOJI} Pet bonuses (.gamble)`,
             description: intro.join("\n"),
           }),
         ],
@@ -168,7 +169,7 @@ export const petCommand: KnifeCommand = {
         await message.reply({
           embeds: [
             minimalEmbed({
-              title: `${ecoM.cash} Pet adopted`,
+              title: `${PET_EMOJI} Pet adopted`,
               description:
                 `You bought a **${species}** for **${formatCash(price)}**.\n` +
                 `Balance: **${formatCash(row)}** · Use **\`.pets\`** to equip or feed.`,
@@ -227,7 +228,7 @@ export const petCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Pet equipped`,
+            title: `${PET_EMOJI} Pet equipped`,
             description:
               `Your **${species}** is now equipped — small **.gamble** payout bonus while it stays equipped.\n` +
               `See **\`.pet info\`** for XP and happiness breakdown.`,
@@ -304,7 +305,7 @@ export const petCommand: KnifeCommand = {
         await message.reply({
           embeds: [
             minimalEmbed({
-              title: `${ecoM.cash} Pet fed`,
+              title: `${PET_EMOJI} Pet fed`,
               description:
                 `Your **${fed.label}** · XP **${fed.prevXp.toLocaleString()} → ${fed.xp.toLocaleString()}** (+${PET_FEED_XP}) · ❤️ **${fed.prevHappy} → ${fed.happiness}**.\n` +
                 `Equipped pet **.gamble** bonus is now **~+${(total * 100).toFixed(1)}%** (see **\`.pet info\`**).`,

@@ -1,7 +1,6 @@
 import type { Client, GuildMember } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
 import { economyPayoutMultiplier } from "./boost";
-import { ecoM } from "./custom-emojis";
 import {
   GAMBLE_MULT_MAX,
   PET_GAMBLE_BONUS_MAX,
@@ -57,39 +56,60 @@ export function describePetHappinessBonusLine(happiness: number): string {
   return `Happiness **${happiness}** — reach **${PET_HAPPY_GAMBLE_THRESHOLD}+** for up to **+${(PET_HAPPY_GAMBLE_EXTRA * 100).toFixed(1)}%** extra.`;
 }
 
+/** Unicode only — Discord embed footers do not render guild custom emoji. */
+const PET_UI = "\u{1F4B0}";
+
 export function formatPetGambleFooterLine(
   equipped: { xp: number; happiness: number } | null,
 ): string {
   if (!equipped) {
-    return `${ecoM.cash} Equip a pet for a small **.gamble** house-game bonus — \`.pet info\``;
+    return `${PET_UI} Equip a pet for a small **.gamble** house-game bonus — \`.pet info\``;
   }
   const { total } = computeEquippedPetGambleBonus(equipped.xp, equipped.happiness);
   const capPct = (PET_GAMBLE_COMBINED_MAX * 100).toFixed(1);
   if (total <= 0) {
-    return `${ecoM.cash} Equipped: gain XP (feed) for up to +${(PET_GAMBLE_BONUS_MAX * 100).toFixed(0)}% · happy ≥${PET_HAPPY_GAMBLE_THRESHOLD} adds +${(PET_HAPPY_GAMBLE_EXTRA * 100).toFixed(1)}% — \`.pet info\``;
+    return `${PET_UI} Equipped: gain XP (feed) for up to +${(PET_GAMBLE_BONUS_MAX * 100).toFixed(0)}% · happy ≥${PET_HAPPY_GAMBLE_THRESHOLD} adds +${(PET_HAPPY_GAMBLE_EXTRA * 100).toFixed(1)}% — \`.pet info\``;
   }
-  return `${ecoM.cash} Equipped pet: **+${(total * 100).toFixed(1)}%** on **.gamble** payouts (pet cap **${capPct}%**) — \`.pet info\``;
+  return `${PET_UI} Equipped pet: **+${(total * 100).toFixed(1)}%** on **.gamble** payouts (pet cap **${capPct}%**) — \`.pet info\``;
 }
+
+export type ResolvedPayoutMultiplier = {
+  /** Final multiplier applied to wins (boost + pet, capped). */
+  mult: number;
+  /** Additive slice from equipped pet only (for win messages). */
+  petBonusAdd: number;
+  /** Nitro / Pro / site entitlement slice before pet. */
+  baseMult: number;
+};
 
 /**
  * House-game payout multiplier: Nitro/Pro boost eligibility + equipped pet bonus, hard-clamped.
  */
-export async function resolvePayoutMultiplier(params: {
+export async function resolvePayoutMultiplierDetails(params: {
   userId: string;
   member: GuildMember | null;
   client: Client;
-}): Promise<number> {
+}): Promise<ResolvedPayoutMultiplier> {
   const { userId, member, client } = params;
-  const base = await economyPayoutMultiplier(member, userId, client);
+  const baseMult = await economyPayoutMultiplier(member, userId, client);
 
   const prisma = getBotPrisma();
   const equipped = await prisma.economyPet.findFirst({
     where: { ownerId: userId, equipped: true },
     select: { xp: true, happiness: true },
   });
-  const petBonus = equipped
+  const petBonusAdd = equipped
     ? petGambleBonusFromPet(equipped.xp, equipped.happiness)
     : 0;
-  const combined = base + petBonus;
-  return Math.min(GAMBLE_MULT_MAX, combined);
+  const mult = Math.min(GAMBLE_MULT_MAX, baseMult + petBonusAdd);
+  return { mult, petBonusAdd, baseMult };
+}
+
+export async function resolvePayoutMultiplier(params: {
+  userId: string;
+  member: GuildMember | null;
+  client: Client;
+}): Promise<number> {
+  const d = await resolvePayoutMultiplierDetails(params);
+  return d.mult;
 }

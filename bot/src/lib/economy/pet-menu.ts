@@ -9,7 +9,6 @@ import {
 import type { EconomyPet } from "@prisma/client";
 import { getBotPrisma } from "../db-prisma";
 import { ECON_INTERACTION_PREFIX } from "./config";
-import { ecoM } from "./custom-emojis";
 import {
   PET_FEED_HAPPY_MAX,
   PET_FEED_HAPPY_MIN,
@@ -91,7 +90,7 @@ export function buildPetMenuEmbed(params: {
   if (pets.length === 0) {
     return new EmbedBuilder()
       .setColor(0x5865f2)
-      .setTitle(`${ecoM.cash} Pets`)
+      .setTitle(`\u{1F4B0} Pets`)
       .setDescription(
         `<@${ownerId}> has no pets yet.\nBuy one with **\`.pet buy <dog|cat|rabbit>\`**.`,
       )
@@ -105,7 +104,7 @@ export function buildPetMenuEmbed(params: {
   });
   return new EmbedBuilder()
     .setColor(0x5865f2)
-    .setTitle(`${ecoM.cash} Pets — page ${page + 1}/${maxPage + 1}`)
+    .setTitle(`\u{1F4B0} Pets — page ${page + 1}/${maxPage + 1}`)
     .setDescription(lines.join("\n\n"))
     .setFooter({ text: footerNote.slice(0, 2048) });
 }
