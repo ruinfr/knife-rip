@@ -1,12 +1,20 @@
+import type { EconomyUser } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import { computeBankAccrual } from "./bank-accrual";
 import { BANK_CAP_BY_TIER } from "./economy-tuning";
+import { rebirthBankCapFlatBonus } from "./rebirth-mult";
 import type { Tx } from "./wallet";
 import type { LedgerReason } from "./wallet";
 
 export function bankCapForTier(tier: number): bigint {
   const idx = Math.min(Math.max(0, tier), BANK_CAP_BY_TIER.length - 1);
   return BANK_CAP_BY_TIER[idx]!;
+}
+
+export function effectiveBankCapForUser(
+  row: Pick<EconomyUser, "bankTier" | "rebirthCount">,
+): bigint {
+  return bankCapForTier(row.bankTier) + rebirthBankCapFlatBonus(row.rebirthCount);
 }
 
 /**

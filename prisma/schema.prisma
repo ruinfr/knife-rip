@@ -263,16 +263,38 @@ model EconomyUser {
   lastRobAt          DateTime?
   lastMineAt         DateTime?
   lastFishAt         DateTime?
+  /// Equipped gathering pole for `.fish` (minigame + payout band).
+  fishingPoleEquipped String   @default("twig")
+  /// JSON string[] of owned pole keys (always includes free `twig` once migrated).
+  fishingPolesOwned   Json?
+  /// Equipped pickaxe for `.mine` (minigame + ore payout band).
+  miningPickEquipped String   @default("wood")
+  /// JSON string[] of owned pickaxe keys (always includes free `wood` once normalized).
+  miningPicksOwned   Json?
+  /// Equipped job tier for `.work` (minigame + gross pay band).
+  workJobEquipped String   @default("intern")
+  /// JSON string[] of owned job keys (always includes free `intern` once normalized).
+  workJobsOwned   Json?
   /// Victim-side: last successful robbery (anti chain-rob).
   lastRobbedAt       DateTime?
   /// Count of successful robberies against this user (UTC day in `robVictimDay`).
   robVictimCount     Int       @default(0)
   robVictimDay       String?
+  /// Throttle randomized `.business` events (rush, inspection, etc.).
+  businessEventLastRollAt DateTime?
+  /// Times the user has rebirthed (soft reset); drives permanent bonuses.
+  rebirthCount       Int       @default(0)
+  /// Spend in `.rebirth` gem shop (earned each rebirth).
+  rebirthGems        BigInt    @default(0)
+  lastRebirthAt      DateTime?
+  /// JSON: { coin?: number, daily?: number, rob?: number, petXp?: number } — shop levels 0–5.
+  rebirthShop        Json?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
   pets          EconomyPet[]
   businessSlots EconomyBusinessSlot[]
+  businessEvents EconomyBusinessEvent[]
 }
 
 model EconomyLedger {
@@ -354,10 +376,38 @@ model EconomyBusinessSlot {
   businessKey     String
   tier            Int         @default(1)
   lastCollectedAt DateTime    @default(now())
+  /// 📈 Marketing — % income (see economy tuning).
+  marketingLevel   Int        @default(0)
+  /// ⚡ Automation — extra accrue cap + silent collect on menu open.
+  automationLevel  Int        @default(0)
+  /// 🧑‍💼 Staff — mitigates inspection penalties.
+  staffLevel       Int        @default(0)
+  /// 🛠️ Equipment — boosts effective hourly rate.
+  equipmentLevel   Int        @default(0)
+  /// Temporary income debuff (e.g. ignored fire), basis points; cleared when `debuffUntil` passes.
+  debuffBps        Int        @default(0)
+  debuffUntil      DateTime?
   createdAt       DateTime    @default(now())
 
   @@unique([ownerId, businessKey])
   @@index([ownerId])
+}
+
+/// Time-limited randomized business events (per owner + site).
+model EconomyBusinessEvent {
+  id          String      @id @default(cuid())
+  ownerId     String
+  owner       EconomyUser @relation(fields: [ownerId], references: [discordUserId], onDelete: Cascade)
+  businessKey String
+  /// rush_hour | inspection | tip_jar | fire
+  kind        String
+  startsAt    DateTime    @default(now())
+  expiresAt   DateTime
+  resolved    Boolean     @default(false)
+  meta        Json?
+  createdAt   DateTime    @default(now())
+
+  @@index([ownerId, resolved, expiresAt])
 }
 
 /// Stake duel (rake to treasury) — settle when opponent accepts.

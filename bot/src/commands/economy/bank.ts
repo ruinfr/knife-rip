@@ -1,9 +1,13 @@
 import { ecoM } from "../../lib/economy/custom-emojis";
 import {
   applyBankInterestIfAny,
-  bankCapForTier,
+  effectiveBankCapForUser,
 } from "../../lib/economy/bank-touch";
-import { BANK_TIER_UPGRADE_COSTS } from "../../lib/economy/economy-tuning";
+import {
+  BANK_CAP_BY_TIER,
+  BANK_DAILY_INTEREST_BPS,
+  BANK_TIER_UPGRADE_COSTS,
+} from "../../lib/economy/economy-tuning";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { formatCash } from "../../lib/economy/money";
 import type { LedgerReason } from "../../lib/economy/wallet";
@@ -13,6 +17,7 @@ import type { KnifeCommand } from "../types";
 
 export const bankCommand: KnifeCommand = {
   name: "bank",
+  aliases: ["vault", "savings"],
   description:
     "View bank balance, tier cap, and lazy interest — or **`.bank upgrade`** for a higher cap",
   site: {
@@ -20,7 +25,7 @@ export const bankCommand: KnifeCommand = {
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".bank · .bank upgrade",
+    usage: ".bank · .vault · .bank upgrade",
     tier: "free",
     style: "prefix",
   },
@@ -68,14 +73,17 @@ export const bankCommand: KnifeCommand = {
               meta: { op: "tier_upgrade", tier: nextTier },
             },
           });
-          return { cashAfter, tier: nextTier, cost };
+          return { cashAfter, tier: nextTier, cost, rebirthCount: u.rebirthCount };
         });
 
-        const cap = bankCapForTier(res.tier);
+        const cap = effectiveBankCapForUser({
+          bankTier: res.tier,
+          rebirthCount: res.rebirthCount,
+        });
         await message.reply({
           embeds: [
             minimalEmbed({
-              title: `${ecoM.cash} Bank tier upgraded`,
+              title: `${ecoM.bank} Bank tier upgraded`,
               description:
                 `Paid **${formatCash(res.cost)}** → tier **${res.tier + 1}** (cap **${formatCash(cap)}**).\n` +
                 `Cash: **${formatCash(res.cashAfter)}**.`,
@@ -110,17 +118,30 @@ export const bankCommand: KnifeCommand = {
       return;
     }
 
-    const cap = bankCapForTier(row.bankTier);
+    const cap = effectiveBankCapForUser(row);
+    const tierRows = BANK_CAP_BY_TIER.map((c, i) => {
+      const label = `Tier **${i + 1}**`;
+      const capStr = `cap **${formatCash(c)}**`;
+      const up =
+        i < BANK_TIER_UPGRADE_COSTS.length
+          ? ` · upgrade **${formatCash(BANK_TIER_UPGRADE_COSTS[i]!)}**`
+          : "";
+      const you = i === row.bankTier ? " ← _you_" : "";
+      return `${ecoM.bank} ${label} — ${capStr}${up}${you}`;
+    }).join("\n");
+    const dailyPct = (BANK_DAILY_INTEREST_BPS / 100).toFixed(2);
     await message.reply({
       embeds: [
         minimalEmbed({
-          title: `${ecoM.cash} Knife Cash — bank`,
+          title: `${ecoM.bank} Knife Cash — bank`,
           description:
             `**Wallet:** **${formatCash(row.cash)}**\n` +
             `**Bank:** **${formatCash(row.bankCash)}** / **${formatCash(cap)}** (tier **${row.bankTier + 1}**)\n` +
             (row.bankTier < BANK_TIER_UPGRADE_COSTS.length
-              ? `Upgrade: **\`.bank upgrade\`** — **${formatCash(BANK_TIER_UPGRADE_COSTS[row.bankTier]!)}**`
-              : "_Max tier reached._"),
+              ? `Next upgrade: **\`.bank upgrade\`** — **${formatCash(BANK_TIER_UPGRADE_COSTS[row.bankTier]!)}**\n`
+              : "_Max tier reached._\n") +
+            `\n**Tiers & caps**\n${tierRows}\n\n` +
+            `_Lazy interest ~**${dailyPct}%** / day on bank balance (pro-rated; capped by tier)._`,
         }),
       ],
     });

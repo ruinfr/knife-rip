@@ -1,5 +1,6 @@
 import type { Message } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
+import { rebirthBoostEarn } from "./rebirth-income";
 import { resolvePayoutMultiplier } from "./payout-multiplier";
 import {
   MILESTONE_HIGH_REWARDS,
@@ -65,7 +66,11 @@ export function recordEconomyMessageActivity(message: Message): void {
 
         if (totalReward > 0) {
           const bonus = Math.floor(totalReward * mult);
-          const delta = BigInt(bonus);
+          const delta = rebirthBoostEarn(
+            row,
+            member,
+            BigInt(bonus),
+          );
           const newCash = row.cash + delta;
           await tx.economyUser.update({
             where: { discordUserId: uid },

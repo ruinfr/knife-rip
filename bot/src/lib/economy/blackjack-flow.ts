@@ -12,6 +12,7 @@ import { resolvePayoutMultiplier } from "./payout-multiplier";
 import { ECON_INTERACTION_PREFIX } from "./config";
 import { ecoBtn, ecoM } from "./custom-emojis";
 import { applyGambleOutcomeInTx } from "./gamble-outcome";
+import { boostGambleWinPayout } from "./rebirth-mult";
 import { multCents } from "./games";
 import { formatCash, formatGambleNetLine } from "./money";
 
@@ -150,10 +151,14 @@ async function settleBlackjack(params: {
       update: {},
     });
     if (row.cash < bet) throw new Error("INSUFFICIENT_FUNDS");
+    let pay = payout;
+    if (payout > bet) {
+      pay = boostGambleWinPayout(bet, payout, row, member);
+    }
     await applyGambleOutcomeInTx(tx, row, {
       userId,
       bet,
-      payout,
+      payout: pay,
       game: "blackjack",
     });
   });

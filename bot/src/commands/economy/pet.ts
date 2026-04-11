@@ -1,12 +1,7 @@
-/** Default emoji — custom <:cash:…> does not render in some embed contexts. */
-const PET_EMOJI = "\u{1F4B0}";
 import {
   GAMBLE_MULT_MAX,
   PET_BUYABLE_SPECIES,
-  PET_FEED_HAPPY_MAX,
-  PET_FEED_HAPPY_MIN,
   PET_FEED_TREASURY_PCT,
-  PET_FEED_XP,
   PET_GAMBLE_BONUS_MAX,
   PET_GAMBLE_BONUS_PER_STEP,
   PET_GAMBLE_BONUS_XP_STEP,
@@ -14,27 +9,53 @@ import {
   PET_HAPPY_GAMBLE_EXTRA,
   PET_HAPPY_GAMBLE_THRESHOLD,
   PET_MAX_HAPPINESS,
+  PET_REBIRTH_EXCLUSIVE_MIN,
   PET_SPECIES,
+  petFeedXpFor,
+  petGambleTuningFor,
+  rollPetFeedHappyGain,
 } from "../../lib/economy/economy-tuning";
+import { petFeedXpMultBps } from "../../lib/economy/rebirth-mult";
 import {
   computeEquippedPetGambleBonus,
   describePetHappinessBonusLine,
   describePetXpBonusProgress,
 } from "../../lib/economy/payout-multiplier";
+import { ecoM, petSpeciesEmoji } from "../../lib/economy/custom-emojis";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { formatCash } from "../../lib/economy/money";
 import {
   creditTreasuryInTx,
   type LedgerReason,
 } from "../../lib/economy/wallet";
+import { formatPetCallName } from "../../lib/economy/pet-menu";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import type { KnifeCommand } from "../types";
 
 const BUYABLE_HINT = PET_BUYABLE_SPECIES.join("|");
+const PET_NICKNAME_MAX_LEN = 32;
+
+function sanitizePetNickname(raw: string): string | null {
+  const s = raw
+    .replace(/[\r\n\t]/g, " ")
+    .replace(/<@!?[0-9]{17,20}>/g, "")
+    .trim()
+    .slice(0, PET_NICKNAME_MAX_LEN)
+    .trim();
+  return s.length > 0 ? s : null;
+}
+
+function petShopCatalogLines(): string {
+  return PET_BUYABLE_SPECIES.map((s) => {
+    const sp = PET_SPECIES[s]!;
+    return `${petSpeciesEmoji(s)} **${sp.label}** — **${formatCash(sp.price)}** · feed **${formatCash(sp.feedCost)}**`;
+  }).join("\n");
+}
 
 export const petCommand: KnifeCommand = {
   name: "pet",
+  aliases: ["adopt", "mypet"],
   description:
     "Buy, equip, feed, or inspect Knife Cash pets — **`.pet buy`** · **`.pet equip`** · **`.pet feed`** · **`.pet info`**",
   site: {
@@ -43,7 +64,7 @@ export const petCommand: KnifeCommand = {
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage:
-      ".pet buy <dog|cat|rabbit> · .pet equip <species> · .pet feed · .pet info",
+      ".pet buy <dog|cat|rabbit> · .adopt · .pet equip <species> · .pet feed · .pet name <name|clear> · .pet info",
     tier: "free",
     style: "prefix",
   },
@@ -65,13 +86,16 @@ export const petCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${PET_EMOJI} Pet commands`,
+            title: `${ecoM.petfood} Pet commands`,
             description:
               `**buy** — \`.pet buy <${BUYABLE_HINT}>\`\n` +
               `**equip** — \`.pet equip <species>\` (your newest of that species)\n` +
               `**feed** — \`.pet feed\` (feeds your **equipped** pet)\n` +
+              `**name** — \`.pet name <name>\` or \`.pet name clear\` (equipped pet only, max **${PET_NICKNAME_MAX_LEN}** chars)\n` +
               `**info** — \`.pet info\` (XP + happiness → small **.gamble** payout bonus)\n` +
-              `Use **\`.pets\`** for the button menu.`,
+              `Use **\`.pets\`** for the button menu.\n\n` +
+              `**Adoption & feed**\n${petShopCatalogLines()}\n` +
+              `${petSpeciesEmoji("phoenix")} **Ash phoenix** — **${formatCash(PET_SPECIES.phoenix!.price)}** · requires **${PET_REBIRTH_EXCLUSIVE_MIN}+** rebirths (**\`.pet buy phoenix\`**)`,
           }),
         ],
       });
@@ -87,7 +111,8 @@ export const petCommand: KnifeCommand = {
         "",
         `**XP:** **+${(PET_GAMBLE_BONUS_PER_STEP * 100).toFixed(0)}%** per **${PET_GAMBLE_BONUS_XP_STEP.toLocaleString()}** XP (up to **+${(PET_GAMBLE_BONUS_MAX * 100).toFixed(0)}%** from XP).`,
         `**Happiness:** **+${(PET_HAPPY_GAMBLE_EXTRA * 100).toFixed(1)}%** when ❤️ ≥ **${PET_HAPPY_GAMBLE_THRESHOLD}**.`,
-        `**Pet total cap:** **+${(PET_GAMBLE_COMBINED_MAX * 100).toFixed(1)}%** from the pet · **overall** payout mult cap **${GAMBLE_MULT_MAX}×** (boost + pet).`,
+        `**Pet bonus cap:** up to **+${(PET_GAMBLE_COMBINED_MAX * 100).toFixed(1)}%** (Dog) — **Cat** & **Rabbit** get a bit more XP & ❤️ per feed plus a slightly **higher cap** & tiny flat bonus.`,
+        `**Overall** payout mult cap **${GAMBLE_MULT_MAX}×** (boost + pet).`,
         "",
       ];
       if (!pet) {
@@ -95,16 +120,19 @@ export const petCommand: KnifeCommand = {
           "You **don’t** have an equipped pet. Buy with **`.pet buy`** and equip with **`.pet equip`** or **`.pets`**.",
         );
       } else {
-        const spec = PET_SPECIES[pet.speciesKey];
-        const label = spec?.label ?? pet.speciesKey;
+        const call = formatPetCallName(pet);
         const { total, xpPart, happyPart } = computeEquippedPetGambleBonus(
           pet.xp,
           pet.happiness,
+          pet.speciesKey,
         );
+        const capPct = (
+          petGambleTuningFor(pet.speciesKey).cap * 100
+        ).toFixed(1);
         intro.push(
-          `**Equipped:** **${label}** · XP **${pet.xp.toLocaleString()}** · ❤️ **${pet.happiness}**`,
+          `**Equipped:** ${petSpeciesEmoji(pet.speciesKey)} **${call}** · ${ecoM.xp} **${pet.xp.toLocaleString()}** · ❤️ **${pet.happiness}**`,
           "",
-          `**Your pet bonus now:** **+${(total * 100).toFixed(1)}%** on wins that use this multiplier (**+${(xpPart * 100).toFixed(1)}%** from XP · **+${(happyPart * 100).toFixed(1)}%** from happiness).`,
+          `**Your pet bonus now:** **+${(total * 100).toFixed(1)}%** on wins (**+${(xpPart * 100).toFixed(1)}%** from XP · **+${(happyPart * 100).toFixed(1)}%** beyond XP). **Breed cap:** **${capPct}%**.`,
           describePetXpBonusProgress(pet.xp),
           describePetHappinessBonusLine(pet.happiness),
         );
@@ -112,8 +140,66 @@ export const petCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${PET_EMOJI} Pet bonuses (.gamble)`,
+            title: `${ecoM.petfood} Pet bonuses (.gamble)`,
             description: intro.join("\n"),
+          }),
+        ],
+      });
+      return;
+    }
+
+    if (sub === "name" || sub === "rename") {
+      const rest = args.slice(1).join(" ").trim();
+      if (!rest) {
+        await message.reply({
+          embeds: [
+            errorEmbed(
+              `Usage: **\`.pet name <name>\`** — names your **equipped** pet (max **${PET_NICKNAME_MAX_LEN}** chars). **\`.pet name clear\`** removes the name.`,
+            ),
+          ],
+        });
+        return;
+      }
+      const clear = rest.toLowerCase() === "clear";
+      const nickname = clear ? null : sanitizePetNickname(rest);
+      if (!clear && !nickname) {
+        await message.reply({
+          embeds: [
+            errorEmbed(
+              `That name is empty or invalid. Use letters/numbers/spaces — max **${PET_NICKNAME_MAX_LEN}** chars (no pings).`,
+            ),
+          ],
+        });
+        return;
+      }
+      const equipped = await prisma.economyPet.findFirst({
+        where: { ownerId: uid, equipped: true },
+      });
+      if (!equipped) {
+        await message.reply({
+          embeds: [
+            errorEmbed(
+              "Equip a pet first (**`.pet equip <species>`** or **`.pets`**).",
+            ),
+          ],
+        });
+        return;
+      }
+      await prisma.economyPet.update({
+        where: { id: equipped.id },
+        data: { nickname },
+      });
+      const call = formatPetCallName({
+        nickname,
+        speciesKey: equipped.speciesKey,
+      });
+      await message.reply({
+        embeds: [
+          minimalEmbed({
+            title: `${ecoM.petfood} Pet name`,
+            description: clear
+              ? `Cleared the name for **${call}**.`
+              : `Your equipped pet is now **${call}**.`,
           }),
         ],
       });
@@ -124,18 +210,26 @@ export const petCommand: KnifeCommand = {
       const species = args[1]?.toLowerCase();
       const buyable =
         species &&
-        (PET_BUYABLE_SPECIES as readonly string[]).includes(species);
+        ((PET_BUYABLE_SPECIES as readonly string[]).includes(species) ||
+          species === "phoenix");
       if (!buyable) {
         await message.reply({
           embeds: [
             errorEmbed(
-              `Pick a species: **${PET_BUYABLE_SPECIES.join("**, **")}**.`,
+              `Pick a species: **${PET_BUYABLE_SPECIES.join("**, **")}**, or **phoenix** (rebirth **${PET_REBIRTH_EXCLUSIVE_MIN}+**).\n\n${petShopCatalogLines()}`,
             ),
           ],
         });
         return;
       }
-      const { price } = PET_SPECIES[species]!;
+      const specBuy = PET_SPECIES[species]!;
+      if (!specBuy) {
+        await message.reply({
+          embeds: [errorEmbed("Unknown species.")],
+        });
+        return;
+      }
+      const { price } = specBuy;
       try {
         const row = await prisma.$transaction(async (tx) => {
           const u = await tx.economyUser.upsert({
@@ -144,6 +238,12 @@ export const petCommand: KnifeCommand = {
             update: {},
           });
           if (u.cash < price) throw new Error("POOR");
+          if (
+            species === "phoenix" &&
+            u.rebirthCount < PET_REBIRTH_EXCLUSIVE_MIN
+          ) {
+            throw new Error("REBIRTH");
+          }
           const cashAfter = u.cash - price;
           await tx.economyUser.update({
             where: { discordUserId: uid },
@@ -169,9 +269,10 @@ export const petCommand: KnifeCommand = {
         await message.reply({
           embeds: [
             minimalEmbed({
-              title: `${PET_EMOJI} Pet adopted`,
+              title: `${ecoM.petfood} Pet adopted`,
               description:
-                `You bought a **${species}** for **${formatCash(price)}**.\n` +
+                `You adopted ${petSpeciesEmoji(species)} **${specBuy.label}** for **${formatCash(price)}**.\n` +
+                `${ecoM.petfood} Feeding costs **${formatCash(specBuy.feedCost)}** per feed.\n` +
                 `Balance: **${formatCash(row)}** · Use **\`.pets\`** to equip or feed.`,
             }),
           ],
@@ -179,7 +280,21 @@ export const petCommand: KnifeCommand = {
       } catch (e) {
         if (e instanceof Error && e.message === "POOR") {
           await message.reply({
-            embeds: [errorEmbed("You can't afford that pet.")],
+            embeds: [
+              errorEmbed(
+                `You need **${formatCash(price)}** for a **${specBuy.label}**.`,
+              ),
+            ],
+          });
+          return;
+        }
+        if (e instanceof Error && e.message === "REBIRTH") {
+          await message.reply({
+            embeds: [
+              errorEmbed(
+                `**Ash phoenix** unlocks at **${PET_REBIRTH_EXCLUSIVE_MIN}** rebirths — check **\`.rebirth stats\`**.`,
+              ),
+            ],
           });
           return;
         }
@@ -225,13 +340,20 @@ export const petCommand: KnifeCommand = {
         }
         throw e;
       }
+      const equippedRow = await prisma.economyPet.findFirst({
+        where: { ownerId: uid, speciesKey: species, equipped: true },
+        orderBy: { createdAt: "desc" },
+      });
+      const callEq = equippedRow
+        ? formatPetCallName(equippedRow)
+        : PET_SPECIES[species]!.label;
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${PET_EMOJI} Pet equipped`,
+            title: `${ecoM.petfood} Pet equipped`,
             description:
-              `Your **${species}** is now equipped — small **.gamble** payout bonus while it stays equipped.\n` +
-              `See **\`.pet info\`** for XP and happiness breakdown.`,
+              `Your ${petSpeciesEmoji(species)} **${callEq}** is now equipped — small **.gamble** payout bonus while it stays equipped.\n` +
+              `Rename anytime: **\`.pet name <name>\`** · **\`.pet info\`** for stats.`,
           }),
         ],
       });
@@ -256,16 +378,15 @@ export const petCommand: KnifeCommand = {
             where: { discordUserId: uid },
             data: { cash: cashAfter },
           });
-          const happyGain =
-            PET_FEED_HAPPY_MIN +
-            Math.floor(
-              Math.random() * (PET_FEED_HAPPY_MAX - PET_FEED_HAPPY_MIN + 1),
-            );
+          const happyGain = rollPetFeedHappyGain(pet.speciesKey);
           const newHappy = Math.min(
             PET_MAX_HAPPINESS,
             pet.happiness + happyGain,
           );
-          const newXp = pet.xp + PET_FEED_XP;
+          const feedXp = Math.floor(
+            (petFeedXpFor(pet.speciesKey) * petFeedXpMultBps(u)) / 10000,
+          );
+          const newXp = pet.xp + feedXp;
           await tx.economyPet.update({
             where: { id: pet.id },
             data: {
@@ -293,21 +414,28 @@ export const petCommand: KnifeCommand = {
             });
           }
           const label = spec.label;
+          const display = formatPetCallName(pet);
           return {
-            label,
+            display,
+            speciesKey: pet.speciesKey,
+            feedXp,
             prevXp: pet.xp,
             prevHappy: pet.happiness,
             xp: newXp,
             happiness: newHappy,
           };
         });
-        const { total } = computeEquippedPetGambleBonus(fed.xp, fed.happiness);
+        const { total } = computeEquippedPetGambleBonus(
+          fed.xp,
+          fed.happiness,
+          fed.speciesKey,
+        );
         await message.reply({
           embeds: [
             minimalEmbed({
-              title: `${PET_EMOJI} Pet fed`,
+              title: `${ecoM.petfood} Pet fed`,
               description:
-                `Your **${fed.label}** · XP **${fed.prevXp.toLocaleString()} → ${fed.xp.toLocaleString()}** (+${PET_FEED_XP}) · ❤️ **${fed.prevHappy} → ${fed.happiness}**.\n` +
+                `Your **${fed.display}** · XP **${fed.prevXp.toLocaleString()} → ${fed.xp.toLocaleString()}** (+${fed.feedXp}) · ❤️ **${fed.prevHappy} → ${fed.happiness}**.\n` +
                 `Equipped pet **.gamble** bonus is now **~+${(total * 100).toFixed(1)}%** (see **\`.pet info\`**).`,
             }),
           ],
@@ -337,7 +465,7 @@ export const petCommand: KnifeCommand = {
     await message.reply({
       embeds: [
         errorEmbed(
-          "Unknown subcommand. Try **`.pet buy`**, **`.pet equip`**, **`.pet feed`**, or **`.pet info`**.",
+          "Unknown subcommand. Try **`.pet buy`**, **`.pet equip`**, **`.pet feed`**, **`.pet name`**, or **`.pet info`**.",
         ),
       ],
     });

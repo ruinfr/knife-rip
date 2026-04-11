@@ -2,7 +2,7 @@ import { ecoM } from "../../lib/economy/custom-emojis";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import {
   applyBankInterestIfAny,
-  bankCapForTier,
+  effectiveBankCapForUser,
   ledgerBankMove,
 } from "../../lib/economy/bank-touch";
 import { formatCash, parsePositiveBigInt } from "../../lib/economy/money";
@@ -12,13 +12,14 @@ import type { KnifeCommand } from "../types";
 
 export const depositCommand: KnifeCommand = {
   name: "deposit",
+  aliases: ["dep", "save"],
   description: "Move Knife Cash from wallet into the bank (lazy interest, tier cap)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".deposit <amount>",
+    usage: ".deposit <amount> · .dep · .save",
     tier: "free",
     style: "prefix",
   },
@@ -53,7 +54,7 @@ export const depositCommand: KnifeCommand = {
         const u = await tx.economyUser.findUnique({ where: { discordUserId: uid } });
         if (!u) throw new Error("NOUSER");
         if (u.cash < amount) throw new Error("POOR");
-        const cap = bankCapForTier(u.bankTier);
+        const cap = effectiveBankCapForUser(u);
         const room = cap - u.bankCash;
         if (room < amount) throw new Error(`FULL:${room.toString()}`);
         const cashAfter = u.cash - amount;
@@ -71,7 +72,7 @@ export const depositCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Bank deposit`,
+            title: `${ecoM.bank} Bank deposit`,
             description:
               `Deposited **${formatCash(amount)}**.\n` +
               `Cash: **${formatCash(res.cashAfter)}** · Bank: **${formatCash(res.bankAfter)}** / **${formatCash(res.cap)}**.`,

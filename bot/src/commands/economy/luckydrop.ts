@@ -12,7 +12,7 @@ import type { KnifeCommand } from "../types";
 
 export const luckydropCommand: KnifeCommand = {
   name: "luckydrop",
-  aliases: ["cashdrop", "randdrop"],
+  aliases: ["cashdrop", "randdrop", "ownerdrop"],
   description:
     "Bot owner only — random member wins a lump of Knife Cash (confirm / reroll / cancel)",
   site: {
@@ -20,7 +20,7 @@ export const luckydropCommand: KnifeCommand = {
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".luckydrop <amount>",
+    usage: ".luckydrop <amount> · .cashdrop · .ownerdrop",
     tier: "free",
     style: "prefix",
     developerOnly: true,

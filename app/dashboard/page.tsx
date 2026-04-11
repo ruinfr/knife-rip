@@ -242,6 +242,24 @@ export default async function DashboardPage({
       </Card>
       </ScrollReveal>
 
+      <ScrollReveal as="section" delay={0.035} amount={0.08}>
+        <Card
+          padding="md"
+          className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">
+              Knife Cash
+            </h2>
+            <p className="mt-1 max-w-lg text-sm leading-relaxed text-muted">
+              Play on the web with the same wallet and leaderboards as Discord
+              (after signing in with Discord).
+            </p>
+          </div>
+          <ButtonLink href="/knife-cash">Open Knife Cash</ButtonLink>
+        </Card>
+      </ScrollReveal>
+
       <ScrollReveal as="section" className="space-y-4" delay={0.04} amount={0.08}>
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">

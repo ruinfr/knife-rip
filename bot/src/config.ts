@@ -19,7 +19,7 @@ loadEnvFiles();
 export const PREFIX = "." as const;
 
 /** Must match site `lib/commands.ts` → `COMMAND_CATALOG_VERSION`. */
-export const COMMAND_CATALOG_VERSION = 45 as const;
+export const COMMAND_CATALOG_VERSION = 48 as const;
 
 export function getDiscordToken(): string {
   const token = process.env.DISCORD_BOT_TOKEN?.trim();
@@ -101,4 +101,24 @@ export function getTelegramBotToken(): string | undefined {
 /** Optional: Etherscan API key — improves `.transaction` (ETH) and `.gas` reliability. */
 export function getEtherscanApiKey(): string | undefined {
   return process.env.ETHERSCAN_API_KEY?.trim() || undefined;
+}
+
+/**
+ * Optional hub flex roles after rebirth: comma-separated `tier:roleId` (e.g. `1:123,5:456`).
+ * Bot syncs roles in the economy hub guild (same as ECONOMY_LOG_CHANNEL_ID).
+ */
+export function getRebirthDisplayRolePairs(): { tier: number; roleId: string }[] {
+  const raw = process.env.REBIRTH_DISPLAY_ROLES?.trim();
+  if (!raw) return [];
+  const out: { tier: number; roleId: string }[] = [];
+  for (const part of raw.split(",")) {
+    const s = part.trim();
+    const idx = s.indexOf(":");
+    if (idx <= 0) continue;
+    const tier = parseInt(s.slice(0, idx), 10);
+    const roleId = s.slice(idx + 1).trim();
+    if (!Number.isFinite(tier) || !/^\d{17,20}$/.test(roleId)) continue;
+    out.push({ tier, roleId });
+  }
+  return out.sort((a, b) => a.tier - b.tier);
 }

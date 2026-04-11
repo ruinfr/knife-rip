@@ -17,6 +17,7 @@
     "../lib/knife-premium.ts",
     "../lib/discord-guild-role-sync.ts",
     "../lib/community-discord.ts",
-    "../lib/embed-script.ts"
+    "../lib/embed-script.ts",
+    "../lib/economy/**/*.ts"
   ]
 }

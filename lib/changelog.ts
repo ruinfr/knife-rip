@@ -35,6 +35,15 @@ export function formatChangelogDateEst(isoDate: string): string {
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
+    id: "2026-04-10-v46-pet-name",
+    catalogVersion: 46,
+    date: "2026-04-10",
+    title: "Pets: custom names",
+    summary:
+      ".pet name / .pet rename sets a nickname for your equipped pet (or clear it). Names show on .pets and .pet info. Command catalog v46.",
+    bullets: [],
+  },
+  {
     id: "2026-04-10-v45-pet-info-bonus",
     catalogVersion: 45,
     date: "2026-04-10",

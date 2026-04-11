@@ -66,6 +66,18 @@ const M = {
   netInStatsMenu: "<:NetInStatsMenu:1491218198169911316>",
   rankInStatsMenu: "<:RankInStatsMenu:1491218197225934878>",
   streakInStatsMenu: "<:streakInStatsMenu:1491218195820974262>",
+  /** Pet / bank / business / gathering (ltccat) */
+  xp: "<:xp:1492280542446747718>",
+  cat: "<:cat:1492280232206536885>",
+  dog: "<:dog:1492280231376195624>",
+  bunny: "<:bunny:1492280230650576966>",
+  petfood: "<:petfood:1492280229836886056>",
+  bank: "<:bank:1492280228892901478>",
+  fish: "<:fish:1492280227886399600>",
+  fishingpole: "<:fishingpole:1492280225696841809>",
+  arcade: "<:arcade:1492280223138316630>",
+  diner: "<:diner:1492280221997465621>",
+  lemonade: "<:lemonade:1492280221053747230>",
 } as const;
 
 export const ecoM = M;
@@ -113,6 +125,17 @@ export const ecoBtn = {
   NetInStatsMenu: b("1491218198169911316", "NetInStatsMenu"),
   RankInStatsMenu: b("1491218197225934878", "RankInStatsMenu"),
   streakInStatsMenu: b("1491218195820974262", "streakInStatsMenu"),
+  xp: b("1492280542446747718", "xp"),
+  cat: b("1492280232206536885", "cat"),
+  dog: b("1492280231376195624", "dog"),
+  bunny: b("1492280230650576966", "bunny"),
+  petfood: b("1492280229836886056", "petfood"),
+  bank: b("1492280228892901478", "bank"),
+  fish: b("1492280227886399600", "fish"),
+  fishingpole: b("1492280225696841809", "fishingpole"),
+  arcade: b("1492280223138316630", "arcade"),
+  diner: b("1492280221997465621", "diner"),
+  lemonade: b("1492280221053747230", "lemonade"),
 } as const;
 
 const HUB_PAGE_TITLE: readonly string[] = [
@@ -125,4 +148,53 @@ const HUB_PAGE_TITLE: readonly string[] = [
 export function economyHubPageTitle(page: number): string {
   const p = Math.max(0, Math.min(HUB_PAGE_TITLE.length - 1, page));
   return `${HUB_PAGE_TITLE[p]!} · Knife Cash`;
+}
+
+/** Custom emoji for a pet species key (buyable + legacy). */
+export function petSpeciesEmoji(speciesKey: string): string {
+  switch (speciesKey) {
+    case "dog":
+      return M.dog;
+    case "cat":
+      return M.cat;
+    case "rabbit":
+    case "fox":
+      return M.bunny;
+    case "rat":
+      return M.bunny;
+    case "crow":
+      return M.cat;
+    case "phoenix":
+      return "\u{1F525}";
+    default:
+      return M.petfood;
+  }
+}
+
+/** Custom emoji for a passive business key (unicode fallback for new types). */
+export function businessKeyEmoji(key: string): string {
+  switch (key) {
+    case "lemonade":
+      return M.lemonade;
+    case "arcade":
+      return M.arcade;
+    case "diner":
+      return M.diner;
+    case "car_wash":
+      return "🧺";
+    case "food_truck":
+      return "🍔";
+    case "gym":
+      return "🏋️";
+    case "movie_theater":
+      return "🎬";
+    case "hotel":
+      return "🏨";
+    case "airline":
+      return "✈️";
+    case "invest_bank":
+      return "🏦";
+    default:
+      return M.cash;
+  }
 }

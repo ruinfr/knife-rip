@@ -273,3 +273,35 @@ export function guildIconUrl(id: string, icon: string | null, size = 64) {
   if (!icon) return null;
   return `https://cdn.discordapp.com/icons/${id}/${icon}.webp?size=${size}`;
 }
+
+export type DiscordApiUser = {
+  id: string;
+  username: string;
+  global_name?: string | null;
+  avatar: string | null;
+};
+
+/** Resolve a user by snowflake using the bot token (for leaderboards, etc.). */
+export async function fetchDiscordUserAsBot(
+  botToken: string,
+  userId: string,
+): Promise<DiscordApiUser | null> {
+  if (!/^\d{17,20}$/.test(userId)) return null;
+  const res = await fetch(`${DISCORD_API}/users/${userId}`, {
+    headers: { Authorization: `Bot ${botToken.trim()}` },
+    next: { revalidate: 60 },
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) return null;
+  return (await res.json()) as DiscordApiUser;
+}
+
+export function discordUserAvatarUrl(
+  userId: string,
+  avatarHash: string | null,
+  size = 64,
+): string | null {
+  if (!avatarHash) return null;
+  const ext = avatarHash.startsWith("a_") ? "gif" : "webp";
+  return `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.${ext}?size=${size}`;
+}

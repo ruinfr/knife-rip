@@ -6,6 +6,7 @@ import {
   BEG_MIN,
   BEG_MISS_CHANCE,
 } from "../../lib/economy/economy-tuning";
+import { rebirthBoostEarn } from "../../lib/economy/rebirth-income";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { formatCash } from "../../lib/economy/money";
 import type { LedgerReason } from "../../lib/economy/wallet";
@@ -15,13 +16,14 @@ import type { KnifeCommand } from "../types";
 
 export const begCommand: KnifeCommand = {
   name: "beg",
+  aliases: ["panhandle", "sparechange"],
   description: "Beg for a tiny Knife Cash tip (short cooldown, often nothing)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".beg",
+    usage: ".beg · .panhandle · .sparechange",
     tier: "free",
     style: "prefix",
   },
@@ -38,6 +40,11 @@ export const begCommand: KnifeCommand = {
     const uid = message.author.id;
     const prisma = getBotPrisma();
     const now = Date.now();
+    const member =
+      message.member ??
+      (message.guild
+        ? await message.guild.members.fetch(uid).catch(() => null)
+        : null);
 
     try {
       const { newCash, got } = await prisma.$transaction(async (tx) => {
@@ -56,9 +63,10 @@ export const begCommand: KnifeCommand = {
         }
 
         const miss = Math.random() < BEG_MISS_CHANCE;
-        const delta = miss
+        const raw = miss
           ? 0n
           : BigInt(randomInt(Number(BEG_MIN), Number(BEG_MAX) + 1));
+        const delta = raw > 0n ? rebirthBoostEarn(u, member, raw) : 0n;
         const next = u.cash + delta;
 
         await tx.economyUser.update({

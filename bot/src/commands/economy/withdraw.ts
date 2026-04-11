@@ -11,13 +11,14 @@ import type { KnifeCommand } from "../types";
 
 export const withdrawCommand: KnifeCommand = {
   name: "withdraw",
+  aliases: ["wd", "take"],
   description: "Move Knife Cash from bank to wallet (applies lazy interest first)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".withdraw <amount>",
+    usage: ".withdraw <amount> · .wd · .take",
     tier: "free",
     style: "prefix",
   },
@@ -69,7 +70,7 @@ export const withdrawCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Bank withdraw`,
+            title: `${ecoM.bank} Bank withdraw`,
             description:
               `Withdrew **${formatCash(amount)}**.\n` +
               `Cash: **${formatCash(res.cashAfter)}** · Bank: **${formatCash(res.bankAfter)}**.`,

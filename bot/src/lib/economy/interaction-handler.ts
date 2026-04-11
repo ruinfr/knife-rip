@@ -36,6 +36,41 @@ import {
 } from "./duel-flow";
 import { handlePetMenuButton } from "./pet-menu";
 import {
+  handleFishBuyPole,
+  handleFishEquipSelect,
+  handleFishMenuCast,
+  handleFishMinigamePick,
+  parseFishingPoleKey,
+} from "./fish-flow";
+import {
+  handleMineBuyPickaxe,
+  handleMineEquipSelect,
+  handleMineMenuDig,
+  handleMineMinigamePick,
+  parseMiningPickKey,
+} from "./mine-flow";
+import {
+  handleWorkBuyJob,
+  handleWorkEquipSelect,
+  handleWorkMenuClockIn,
+  handleWorkMinigamePick,
+  parseWorkJobKey,
+} from "./work-flow";
+import {
+  handleBusinessBackToMenu,
+  handleBusinessEventComply,
+  handleBusinessEventIgnore,
+  handleBusinessEventRepair,
+  handleBusinessMenuBuy,
+  handleBusinessMenuCollect,
+  handleBusinessMenuRefresh,
+  handleBusinessSiteFocusSelect,
+  handleBusinessTrackUpgrade,
+  handleBusinessUpgradeTierSelect,
+  type BusinessTrackLetter,
+} from "./business-flow";
+import { parseBusinessKey } from "./economy-tuning";
+import {
   handleBlackjackButton,
   runBlackjackInitial,
 } from "./blackjack-flow";
@@ -69,6 +104,18 @@ import {
 import { resolveHubGuild } from "./hub-guild";
 import { economyLogEmbed, sendEconomyLog } from "./log";
 import { formatCash, parsePositiveBigInt } from "./money";
+import {
+  buildRebirthEmbed,
+  buildRebirthRows,
+  executeRebirth,
+  loadRebirthMenuCtx,
+  purchaseRebirthShopUpgrade,
+  REBIRTH_MENU_PAGE_COUNT,
+  REBIRTH_PAGE_INDEX_CONFIRM,
+  REBIRTH_PAGE_INDEX_SHOP,
+  syncRebirthDisplayRoles,
+} from "./rebirth-flow";
+import type { RebirthShopState } from "./rebirth-mult";
 import { getBotPrisma } from "../db-prisma";
 import {
   applyCashDelta,
@@ -112,7 +159,7 @@ async function denyNotYours(interaction: Interaction): Promise<void> {
   await interaction.reply({
     ephemeral: true,
     content:
-      `${ecoM.gridiconslock} **This menu belongs to someone else.** Run **\`.gamble\`** to open your own.`,
+      `${ecoM.gridiconslock} **These buttons belong to another user.** Use your own **\`.fish\`**, **\`.mine\`**, **\`.work\`**, **\`.business\`**, **\`.pets\`**, **\`.rebirth\`**, or **\`.gamble\`** menu.`,
   });
 }
 
@@ -218,6 +265,200 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
       });
     }
     return;
+  }
+
+  if (tok[0] === "rb") {
+    if (tok[1] === "p" && tok[2] !== undefined) {
+      const raw = parseInt(tok[2]!, 10);
+      if (!Number.isFinite(raw)) return;
+      const page = Math.max(
+        0,
+        Math.min(REBIRTH_MENU_PAGE_COUNT - 1, Math.floor(raw)),
+      );
+      await interaction.deferUpdate();
+      const ctx = await loadRebirthMenuCtx(uid);
+      await interaction.editReply({
+        embeds: [buildRebirthEmbed(page, ctx)],
+        components: buildRebirthRows(page, ctx),
+      });
+      return;
+    }
+    if (tok[1] === "yes") {
+      await interaction.deferUpdate();
+      try {
+        const r = await executeRebirth(uid, Date.now());
+        await syncRebirthDisplayRoles(interaction.client, uid, r.newCount);
+        await interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setColor(0x2ecc71)
+              .setTitle("✅ Rebirth complete")
+              .setDescription(
+                `You are now **Rebirth ${r.newCount}** · **+${formatCash(r.gemsGained)}** gems (**${formatCash(r.gemsTotal)}** total).\n` +
+                  `Wallet progress reset — permanent bonuses stay. Open **\`.rebirth\`** anytime for the full guide.`,
+              ),
+          ],
+          components: [],
+        });
+      } catch (e) {
+        const code = e instanceof Error ? e.message : "";
+        const map: Record<string, string> = {
+          POOR: "❌ Not enough **cash** for the next rebirth.",
+          WEAK: "❌ Not enough **lifetime messages** yet.",
+          COOLDOWN: "⏳ **Rebirth cooldown** — wait before trying again.",
+          NOUSER: "❌ No economy profile — chat first.",
+        };
+        await interaction.followUp({
+          ephemeral: true,
+          content:
+            map[code] ?? "❌ Could not rebirth — try **`.rebirth`** again.",
+        });
+        const ctx = await loadRebirthMenuCtx(uid);
+        await interaction.editReply({
+          embeds: [buildRebirthEmbed(REBIRTH_PAGE_INDEX_CONFIRM, ctx)],
+          components: buildRebirthRows(REBIRTH_PAGE_INDEX_CONFIRM, ctx),
+        });
+      }
+      return;
+    }
+    if (tok[1] === "sh" && tok[2]) {
+      const track = tok[2]! as keyof RebirthShopState;
+      if (!["coin", "daily", "rob", "petXp"].includes(track)) return;
+      await interaction.deferUpdate();
+      const res = await purchaseRebirthShopUpgrade(uid, track);
+      const ctx = await loadRebirthMenuCtx(uid);
+      const msg =
+        res === "ok"
+          ? "✅ Upgrade purchased."
+          : res === "max"
+            ? "Already maxed on that track."
+            : res === "poor"
+              ? "❌ Not enough gems."
+              : "❌ Could not buy.";
+      await interaction.followUp({ ephemeral: true, content: msg });
+      await interaction.editReply({
+        embeds: [buildRebirthEmbed(REBIRTH_PAGE_INDEX_SHOP, ctx)],
+        components: buildRebirthRows(REBIRTH_PAGE_INDEX_SHOP, ctx),
+      });
+      return;
+    }
+  }
+
+  if (tok[0] === "fish") {
+    if (tok[1] === "c") {
+      await handleFishMenuCast(interaction, uid);
+      return;
+    }
+    if (tok[1] === "p" && tok[2] && tok[3] !== undefined) {
+      const pick = parseInt(tok[3]!, 10);
+      if (!Number.isFinite(pick)) return;
+      await handleFishMinigamePick({
+        interaction,
+        uid,
+        token: tok[2]!,
+        pick,
+      });
+      return;
+    }
+    if (tok[1] === "b" && tok[2]) {
+      const pk = parseFishingPoleKey(tok[2]!);
+      if (pk) await handleFishBuyPole(interaction, uid, pk);
+      return;
+    }
+  }
+
+  if (tok[0] === "mine") {
+    if (tok[1] === "d") {
+      await handleMineMenuDig(interaction, uid);
+      return;
+    }
+    if (tok[1] === "p" && tok[2] && tok[3] !== undefined) {
+      const pickN = parseInt(tok[3]!, 10);
+      if (!Number.isFinite(pickN)) return;
+      await handleMineMinigamePick({
+        interaction,
+        uid,
+        token: tok[2]!,
+        pick: pickN,
+      });
+      return;
+    }
+    if (tok[1] === "b" && tok[2]) {
+      const mk = parseMiningPickKey(tok[2]!);
+      if (mk) await handleMineBuyPickaxe(interaction, uid, mk);
+      return;
+    }
+  }
+
+  if (tok[0] === "work") {
+    if (tok[1] === "s") {
+      await handleWorkMenuClockIn(interaction, uid);
+      return;
+    }
+    if (tok[1] === "p" && tok[2] && tok[3] !== undefined) {
+      const pickN = parseInt(tok[3]!, 10);
+      if (!Number.isFinite(pickN)) return;
+      await handleWorkMinigamePick({
+        interaction,
+        uid,
+        token: tok[2]!,
+        pick: pickN,
+      });
+      return;
+    }
+    if (tok[1] === "b" && tok[2]) {
+      const jk = parseWorkJobKey(tok[2]!);
+      if (jk) await handleWorkBuyJob(interaction, uid, jk);
+      return;
+    }
+  }
+
+  if (tok[0] === "biz") {
+    if (tok[1] === "col") {
+      await handleBusinessMenuCollect(interaction, uid);
+      return;
+    }
+    if (tok[1] === "ref") {
+      await handleBusinessMenuRefresh(interaction, uid);
+      return;
+    }
+    if (tok[1] === "b" && tok[2]) {
+      const bk = parseBusinessKey(tok[2]!);
+      if (bk) {
+        await handleBusinessMenuBuy(interaction, uid, bk);
+        return;
+      }
+      await interaction.reply({
+        ephemeral: true,
+        content:
+          "That purchase link is no longer valid — open **`.business`** again.",
+      });
+      return;
+    }
+    if (tok[1] === "back") {
+      await handleBusinessBackToMenu(interaction, uid);
+      return;
+    }
+    if (tok[1] === "ut" && tok[2] && /^[mase]$/.test(tok[2]!)) {
+      await handleBusinessTrackUpgrade(
+        interaction,
+        uid,
+        tok[2]! as BusinessTrackLetter,
+      );
+      return;
+    }
+    if (tok[1] === "ev" && tok[2] === "cmp" && tok[3]) {
+      await handleBusinessEventComply(interaction, uid, tok[3]!);
+      return;
+    }
+    if (tok[1] === "ev" && tok[2] === "rep" && tok[3]) {
+      await handleBusinessEventRepair(interaction, uid, tok[3]!);
+      return;
+    }
+    if (tok[1] === "ev" && tok[2] === "ign" && tok[3]) {
+      await handleBusinessEventIgnore(interaction, uid, tok[3]!);
+      return;
+    }
   }
 
   if (
@@ -767,6 +1008,42 @@ async function handleEconomySelect(
     return;
   }
   const { uid, tok } = parsed;
+
+  if (tok[0] === "fish" && tok[1] === "sel" && tok[2] === "eq") {
+    const choice = interaction.values[0];
+    if (!choice) return;
+    await handleFishEquipSelect(interaction, uid, choice);
+    return;
+  }
+
+  if (tok[0] === "mine" && tok[1] === "sel" && tok[2] === "eq") {
+    const choice = interaction.values[0];
+    if (!choice) return;
+    await handleMineEquipSelect(interaction, uid, choice);
+    return;
+  }
+
+  if (tok[0] === "work" && tok[1] === "sel" && tok[2] === "eq") {
+    const choice = interaction.values[0];
+    if (!choice) return;
+    await handleWorkEquipSelect(interaction, uid, choice);
+    return;
+  }
+
+  if (tok[0] === "biz" && tok[1] === "sel" && tok[2] === "up") {
+    const choice = interaction.values[0];
+    if (!choice) return;
+    await handleBusinessUpgradeTierSelect(interaction, uid, choice);
+    return;
+  }
+
+  if (tok[0] === "biz" && tok[1] === "sel" && tok[2] === "focus") {
+    const choice = interaction.values[0];
+    if (!choice) return;
+    await handleBusinessSiteFocusSelect(interaction, uid, choice);
+    return;
+  }
+
   if (tok[0] !== "pg" || tok[2] !== "shop" || tok[3] !== "sel") return;
 
   const itemId = interaction.values[0];

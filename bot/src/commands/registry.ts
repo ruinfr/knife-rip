@@ -29,6 +29,7 @@ import { messagedropCommand } from "./economy/messagedrop";
 import { mineCommand } from "./economy/mine";
 import { petCommand } from "./economy/pet";
 import { petsCommand } from "./economy/pets";
+import { rebirthCommand } from "./economy/rebirth";
 import { robCommand } from "./economy/rob";
 import { withdrawCommand } from "./economy/withdraw";
 import { workCommand } from "./economy/work";
@@ -238,6 +239,7 @@ export const commandDefinitions: KnifeCommand[] = [
   reasonCommand,
   reactionhistoryCommand,
   recentbanCommand,
+  rebirthCommand,
   remindCommand,
   remindersCommand,
   restrictcommandCommand,

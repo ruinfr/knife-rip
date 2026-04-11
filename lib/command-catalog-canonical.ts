@@ -126,11 +126,11 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "baltop",
     description:
-      "Global top Knife Cash balances — leaderboard of richest wallets (top 15, cash > 0)",
-    usage: ".baltop · .cashtop · .richest",
+      "Global top Knife Cash — richest by wallet + bank total (top 15); shows wallet, bank, and total per row",
+    usage: ".baltop · .cashtop · .richest · .topcash · .moneylb",
     tier: "free",
     style: "prefix",
-    aliases: ["cashtop", "richest", "leaderboardcash"],
+    aliases: ["cashtop", "richest", "leaderboardcash", "topcash", "moneylb"],
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
@@ -153,10 +153,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     name: "gamble",
     description:
       "Knife Cash — private in-channel disclaimer, then hub: shop, games (coinflip, dice, slots, blackjack, mines), stats, pay",
-    usage: ".gamble · .economy · .eco",
+    usage: ".gamble · .economy · .eco · .bet · .casino",
     tier: "free",
     style: "prefix",
-    aliases: ["economy", "eco"],
+    aliases: ["economy", "eco", "bet", "casino"],
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
@@ -164,9 +164,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "gcash",
+    aliases: ["ecoadmin", "cashadmin", "givecash", "setcash"],
     description:
       "Bot owner only — add, remove, or set a user’s global Knife Cash (logged)",
-    usage: ".gcash add @user <amount> · remove · set",
+    usage: ".gcash add @user <amount> · .givecash · remove · set",
     tier: "free",
     style: "prefix",
     developerOnly: true,
@@ -177,9 +178,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "luckydrop",
+    aliases: ["cashdrop", "randdrop", "ownerdrop"],
     description:
       "Bot owner only — pick a random member for a cash drop (confirm, reroll, cancel)",
-    usage: ".luckydrop <amount>",
+    usage: ".luckydrop <amount> · .cashdrop · .ownerdrop",
     tier: "free",
     style: "prefix",
     developerOnly: true,
@@ -204,9 +206,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "bank",
+    aliases: ["vault", "savings"],
     description:
       "View bank balance, tier cap, and lazy interest — or .bank upgrade for a higher cap",
-    usage: ".bank · .bank upgrade",
+    usage: ".bank · .vault · .bank upgrade",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -216,9 +219,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "beg",
+    aliases: ["panhandle", "sparechange"],
     description:
       "Beg for a tiny Knife Cash tip (short cooldown, often nothing)",
-    usage: ".beg",
+    usage: ".beg · .panhandle · .sparechange",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -228,9 +232,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "bounty",
+    aliases: ["hit", "contract"],
     description:
       "Post Knife Cash on someone's head — paid automatically if you successfully .rob them here (treasury holds escrow)",
-    usage: ".bounty @user <amount> · .bounty list · .bounty cancel",
+    usage: ".bounty @user <amount> · .hit · .bounty list · .bounty cancel",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -240,9 +245,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "business",
+    aliases: ["biz", "franchise"],
     description:
-      "Passive Knife Cash businesses — .business buy, .business collect, .business list",
-    usage: ".business buy <id> · .business collect · .business list",
+      "Passive Knife Cash businesses — menu, tracks (marketing/automation/staff/equipment), random events, collect",
+    usage: ".business · .biz · .business list · .business buy <id> · .business collect",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -252,9 +258,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "crime",
+    aliases: ["heist", "lawless"],
     description:
       "Risky Knife Cash job — negative EV; fines go to the treasury on failure",
-    usage: ".crime",
+    usage: ".crime · .heist",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -264,9 +271,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "deposit",
+    aliases: ["dep", "save"],
     description:
       "Move Knife Cash from wallet into the bank (lazy interest, tier cap)",
-    usage: ".deposit <amount>",
+    usage: ".deposit <amount> · .dep · .save",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -276,9 +284,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "duel",
+    aliases: ["pvp", "challenge"],
     description:
       "Challenge someone to a Knife Cash stake duel (guild only; opponent accepts with a button)",
-    usage: ".duel @user <amount>",
+    usage: ".duel @user <amount> · .pvp · .challenge",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -288,9 +297,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "fish",
+    aliases: ["fishing", "catch"],
     description:
-      "Knife Cash — gathering: fish for small payouts (separate cooldown from .mine)",
-    usage: ".fish",
+      "Knife Cash — fishing menu: rods, upgrades, and pole-specific catch minigames",
+    usage: ".fish · .fishing · .catch",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -300,9 +310,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "mine",
+    aliases: ["mining", "dig"],
     description:
-      "Knife Cash — gathering: mine ore (not the casino Mines game — use .gamble for that)",
-    usage: ".mine",
+      "Knife Cash — mining menu: pickaxes, upgrades, and pick-specific ore minigames (not casino Mines)",
+    usage: ".mine · .mining · .dig",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -312,10 +323,11 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "pet",
+    aliases: ["adopt", "mypet"],
     description:
-      "Buy, equip, feed, or inspect Knife Cash pets — .pet buy, .pet equip, .pet feed, .pet info (XP and happiness add a small .gamble bonus, capped)",
+      "Buy, equip, feed, name, or inspect Knife Cash pets — .pet buy, .pet equip, .pet feed, .pet name, .pet info (nickname for equipped pet; XP/happiness .gamble bonus)",
     usage:
-      ".pet buy <dog|cat|rabbit> · .pet equip <species> · .pet feed · .pet info",
+      ".pet buy <dog|cat|rabbit> · .adopt · .pet equip <species> · .pet feed · .pet name <name|clear> · .pet info",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -325,8 +337,22 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "pets",
+    aliases: ["petmenu", "mypets"],
     description: "Knife Cash pets — button menu (equip / feed)",
-    usage: ".pets",
+    usage: ".pets · .petmenu · .mypets",
+    tier: "free",
+    style: "prefix",
+    categoryId: "gambling",
+    categoryTitle: "Gambling & economy",
+    categoryDescription:
+      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+  },
+  {
+    name: "rebirth",
+    aliases: ["rb", "prestige"],
+    description:
+      "Rebirth menu (paginated) — soft reset for permanent coin %, gems, bank cap, gamble luck; .rebirth stats · .rebirth top",
+    usage: ".rebirth · .rb · .prestige · .rebirth stats · .rebirth top",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -336,9 +362,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "rob",
+    aliases: ["steal", "mug"],
     description:
       "Try to steal Knife Cash from another member (guild only, high fail rate)",
-    usage: ".rob @user",
+    usage: ".rob @user · .steal · .mug",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -348,9 +375,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "withdraw",
+    aliases: ["wd", "take"],
     description:
       "Move Knife Cash from bank to wallet (applies lazy interest first)",
-    usage: ".withdraw <amount>",
+    usage: ".withdraw <amount> · .wd · .take",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -360,9 +388,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "work",
+    aliases: ["job", "shift", "grind"],
     description:
-      "Work for a small Knife Cash payout (long cooldown, treasury skim)",
-    usage: ".work",
+      "Knife Cash — jobs menu: roles, promotions, shift minigames, treasury skim on pay",
+    usage: ".work · .job · .shift · .grind",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
@@ -433,9 +462,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "daily",
+    aliases: ["claim", "payday", "payout", "stipend"],
     description:
       "Claim 50 Knife Cash once every 24 hours (global wallet; same cooldown everywhere)",
-    usage: ".daily",
+    usage: ".daily · .claim · .payday · .payout",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",

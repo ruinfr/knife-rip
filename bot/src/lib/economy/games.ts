@@ -3,6 +3,10 @@ import type { Client, GuildMember } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
 import { resolvePayoutMultiplierDetails } from "./payout-multiplier";
 import { applyGambleOutcomeInTx } from "./gamble-outcome";
+import {
+  boostGambleWinPayout,
+  rebirthHouseWinBias,
+} from "./rebirth-mult";
 import { ecoM } from "./custom-emojis";
 import { formatCash, formatGambleNetLine } from "./money";
 
@@ -96,6 +100,8 @@ export async function runHouseGame(params: {
     });
     if (row.cash < bet) throw new Error("INSUFFICIENT_FUNDS");
 
+    const rbBias = rebirthHouseWinBias(row);
+
     let payout = 0n;
     let summary = "";
 
@@ -130,15 +136,21 @@ export async function runHouseGame(params: {
           ? `You **won**! Returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(net)}`
           : `You **lost**.\n${formatGambleNetLine(net)}`);
     } else if (game === "coinflip") {
-      const win = Math.random() < 0.5;
+      const win = Math.random() < Math.min(0.52, 0.5 + rbBias);
       payout = win ? (bet * 2n * mc) / 100n : 0n;
       const net = payout - bet;
       summary = win
         ? `${ecoM.coinflip} **Coinflip** — you **won**! Returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(net)}`
         : `${ecoM.coinflip} **Coinflip** — you **lost**.\n${formatGambleNetLine(net)}`;
     } else if (game === "dice") {
-      const you = 1 + Math.floor(Math.random() * 6);
+      let you = 1 + Math.floor(Math.random() * 6);
       const house = 1 + Math.floor(Math.random() * 6);
+      if (
+        you < house &&
+        Math.random() < Math.min(0.12, rbBias * 4 || 0)
+      ) {
+        you = 1 + Math.floor(Math.random() * 6);
+      }
       if (you > house) {
         payout = (bet * 2n * mc) / 100n;
         summary = `${ecoM.dice} You **${you}** vs house **${house}** — you **win**! Returned **${formatCash(payout)}** total.\n${petPayoutNote(petBonusAdd, payout)}${formatGambleNetLine(payout - bet)}`;
@@ -165,15 +177,27 @@ export async function runHouseGame(params: {
       }
     }
 
+    let finalPayout = payout;
+    if (payout > bet) {
+      finalPayout = boostGambleWinPayout(bet, payout, row, member);
+      if (finalPayout !== payout) {
+        summary = summary.replaceAll(formatCash(payout), formatCash(finalPayout));
+        summary = summary.replace(
+          formatGambleNetLine(payout - bet),
+          formatGambleNetLine(finalPayout - bet),
+        );
+      }
+    }
+
     const gameLog = game === "roulette" ? "roulette" : game;
     const { net } = await applyGambleOutcomeInTx(tx, row, {
       userId,
       bet,
-      payout,
+      payout: finalPayout,
       game: gameLog,
     });
 
-    const won = payout > bet;
+    const won = finalPayout > bet;
     return { summary, net, won };
   });
 }

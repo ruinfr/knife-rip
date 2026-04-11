@@ -1,36 +1,42 @@
-import { ecoM } from "../../lib/economy/custom-emojis";
-import { applyBankInterestIfAny } from "../../lib/economy/bank-touch";
-import { computeBusinessAccrued } from "../../lib/economy/business-accrual";
+import { businessKeyEmoji, ecoM } from "../../lib/economy/custom-emojis";
+import {
+  buildBusinessMenuEmbed,
+  buildBusinessMenuRows,
+  loadBusinessMenuContext,
+  runBusinessBuy,
+  runBusinessCollect,
+} from "../../lib/economy/business-flow";
+import { businessSlotRowToAccrualInput, computeBusinessHourlyRate } from "../../lib/economy/business-accrual";
 import {
   BUSINESS_BASE_PRICES,
+  BUSINESS_DISPLAY_NAME,
   BUSINESS_KEYS,
   BUSINESS_PURCHASE_TAX_PCT,
-  type BusinessKey,
+  BUSINESS_RATE_PER_HOUR,
+  parseBusinessKey,
 } from "../../lib/economy/economy-tuning";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { formatCash } from "../../lib/economy/money";
-import {
-  creditTreasuryInTx,
-  type LedgerReason,
-} from "../../lib/economy/wallet";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import type { KnifeCommand } from "../types";
 
-function isBusinessKey(s: string): s is BusinessKey {
-  return (BUSINESS_KEYS as readonly string[]).includes(s);
+function taxOnPurchaseBase(base: bigint): bigint {
+  return (base * BigInt(BUSINESS_PURCHASE_TAX_PCT) + 99n) / 100n;
 }
 
 export const businessCommand: KnifeCommand = {
   name: "business",
+  aliases: ["biz", "franchise"],
   description:
-    "Passive Knife Cash businesses — **`.business buy`**, **`.business collect`**, **`.business list`**",
+    "Passive Knife Cash businesses — **`.business`** menu, **`.business buy`**, **`.business collect`**, **`.business list`**",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".business buy <id> · .business collect · .business list",
+    usage:
+      ".business · .biz · .business list · .business buy <id> · .business collect",
     tier: "free",
     style: "prefix",
   },
@@ -51,24 +57,57 @@ export const businessCommand: KnifeCommand = {
     const now = Date.now();
     const sub = args[0]?.toLowerCase();
 
-    if (!sub || sub === "list") {
+    if (!sub || sub === "menu") {
+      try {
+        await prisma.economyUser.upsert({
+          where: { discordUserId: uid },
+          create: { discordUserId: uid },
+          update: {},
+        });
+        const ctx = await loadBusinessMenuContext(uid);
+        const embed = await buildBusinessMenuEmbed(ctx);
+        await message.reply({
+          content: `<@${uid}>`,
+          embeds: [embed],
+          components: buildBusinessMenuRows(ctx),
+          allowedMentions: { users: [uid] },
+        });
+      } catch {
+        await message.reply({
+          embeds: [
+            errorEmbed(
+              "Business menu could not load (database or migration). Ask an admin to run **Prisma migrations** and restart the bot.",
+              { title: "Can't open businesses" },
+            ),
+          ],
+        });
+      }
+      return;
+    }
+
+    if (sub === "list") {
       const slots = await prisma.economyBusinessSlot.findMany({
         where: { ownerId: uid },
       });
       const lines = BUSINESS_KEYS.map((k) => {
         const slot = slots.find((s) => s.businessKey === k);
         const base = BUSINESS_BASE_PRICES[k];
+        const tax = taxOnPurchaseBase(base);
+        const total = base + tax;
+        const rate = BUSINESS_RATE_PER_HOUR[k];
+        const name = BUSINESS_DISPLAY_NAME[k];
+        const em = businessKeyEmoji(k);
         return slot
-          ? `• **${k}** — tier **${slot.tier}** (last collected <t:${Math.floor(slot.lastCollectedAt.getTime() / 1000)}:R>)`
-          : `• **${k}** — _not owned_ (from **${formatCash(base)}**)`;
+          ? `${em} **${name}** — tier **${slot.tier}** · **${formatCash(computeBusinessHourlyRate(k, businessSlotRowToAccrualInput(slot)))}**/h (tracks) · collected <t:${Math.floor(slot.lastCollectedAt.getTime() / 1000)}:R>`
+          : `${em} **${name}** — _not owned_ · buy **${formatCash(base)}** + **${formatCash(tax)}** tax = **${formatCash(total)}** · **${formatCash(rate)}**/h @ tier 1`;
       });
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Knife Cash — businesses`,
+            title: `${ecoM.lemonade} ${ecoM.arcade} ${ecoM.diner} Knife Cash — business catalog`,
             description:
               lines.join("\n") +
-              `\n\nRates accrue up to **48h** per collect. Keys: **${BUSINESS_KEYS.join("**, **")}**.`,
+              `\n\n_Buy **in order** along the track. Run **\`.business\`** for the interactive menu. Accrues up to **48h** per collect._`,
           }),
         ],
       });
@@ -77,11 +116,16 @@ export const businessCommand: KnifeCommand = {
 
     if (sub === "buy") {
       const keyRaw = args[1]?.toLowerCase();
-      if (!keyRaw || !isBusinessKey(keyRaw)) {
+      const parsedKey = keyRaw ? parseBusinessKey(keyRaw) : null;
+      if (!parsedKey) {
         await message.reply({
           embeds: [
             errorEmbed(
-              `Specify a business: **${BUSINESS_KEYS.join("**, **")}**.`,
+              `Specify a business id:\n\n${BUSINESS_KEYS.map((k) => {
+                const base = BUSINESS_BASE_PRICES[k];
+                const tax = taxOnPurchaseBase(base);
+                return `\`${k}\` — ${businessKeyEmoji(k)} **${BUSINESS_DISPLAY_NAME[k]}** — **${formatCash(base + tax)}** total`;
+              }).join("\n")}\n\n_Use **\`.business\`** to see which one you can buy next._`,
             ),
           ],
         });
@@ -89,69 +133,30 @@ export const businessCommand: KnifeCommand = {
       }
 
       try {
-        const res = await prisma.$transaction(async (tx) => {
-          await applyBankInterestIfAny(tx, uid, now);
-          const existing = await tx.economyBusinessSlot.findUnique({
-            where: {
-              ownerId_businessKey: { ownerId: uid, businessKey: keyRaw },
-            },
-          });
-          if (existing) throw new Error("OWNED");
-          const tier = 1;
-          const price =
-            BUSINESS_BASE_PRICES[keyRaw] * BigInt(tier);
-          const tax =
-            (price * BigInt(BUSINESS_PURCHASE_TAX_PCT) + 99n) / 100n;
-          const total = price + tax;
-          const u = await tx.economyUser.findUnique({
-            where: { discordUserId: uid },
-          });
-          if (!u || u.cash < total) throw new Error("POOR");
-          const cashAfter = u.cash - total;
-          await tx.economyUser.update({
-            where: { discordUserId: uid },
-            data: { cash: cashAfter },
-          });
-          await tx.economyLedger.create({
-            data: {
-              discordUserId: uid,
-              delta: -total,
-              balanceAfter: cashAfter,
-              reason: "business" satisfies LedgerReason,
-              meta: { op: "buy", key: keyRaw, price: price.toString(), tax: tax.toString() },
-            },
-          });
-          if (tax > 0n) {
-            await creditTreasuryInTx(tx, {
-              delta: tax,
-              reason: "treasury_fee",
-              meta: { kind: "business_tax", userId: uid, key: keyRaw },
-              actorUserId: uid,
-            });
-          }
-          await tx.economyBusinessSlot.create({
-            data: {
-              ownerId: uid,
-              businessKey: keyRaw,
-              tier,
-              lastCollectedAt: new Date(now),
-            },
-          });
-          return { cashAfter, price, tax };
-        });
+        const res = await runBusinessBuy(uid, now, parsedKey);
 
         await message.reply({
           embeds: [
             minimalEmbed({
-              title: `${ecoM.cash} Business purchased`,
+              title: `${businessKeyEmoji(parsedKey)} ${BUSINESS_DISPLAY_NAME[parsedKey]} — purchased`,
               description:
-                `You bought **${keyRaw}** for **${formatCash(res.price)}** + **${formatCash(res.tax)}** tax.\n` +
-                `Balance: **${formatCash(res.cashAfter)}**.`,
+                `You bought **${BUSINESS_DISPLAY_NAME[parsedKey]}** for **${formatCash(res.price)}** + **${formatCash(res.tax)}** tax.\n` +
+                `**${formatCash(BUSINESS_RATE_PER_HOUR[parsedKey])}**/h at tier 1 · Balance: **${formatCash(res.cashAfter)}**.`,
             }),
           ],
         });
       } catch (e) {
         const msg = e instanceof Error ? e.message : "";
+        if (msg === "ORDER") {
+          await message.reply({
+            embeds: [
+              errorEmbed(
+                "Buy franchises **in order** — open **`.business`** for the next available site.",
+              ),
+            ],
+          });
+          return;
+        }
         if (msg === "OWNED") {
           await message.reply({
             embeds: [errorEmbed("You already own that business.")],
@@ -159,8 +164,14 @@ export const businessCommand: KnifeCommand = {
           return;
         }
         if (msg === "POOR") {
+          const base = BUSINESS_BASE_PRICES[parsedKey];
+          const tax = taxOnPurchaseBase(base);
           await message.reply({
-            embeds: [errorEmbed("Not enough cash (price + purchase tax).")],
+            embeds: [
+              errorEmbed(
+                `Need **${formatCash(base + tax)}** cash (${formatCash(base)} + ${formatCash(tax)} tax) for **${BUSINESS_DISPLAY_NAME[parsedKey]}**.`,
+              ),
+            ],
           });
           return;
         }
@@ -171,57 +182,15 @@ export const businessCommand: KnifeCommand = {
 
     if (sub === "collect") {
       try {
-        const { total, lines } = await prisma.$transaction(async (tx) => {
-          await applyBankInterestIfAny(tx, uid, now);
-          const slots = await tx.economyBusinessSlot.findMany({
-            where: { ownerId: uid },
-          });
-          let gain = 0n;
-          const lines: string[] = [];
-          const nowD = new Date(now);
-          for (const s of slots) {
-            if (!isBusinessKey(s.businessKey)) continue;
-            const acc = computeBusinessAccrued(
-              s.businessKey,
-              s.tier,
-              s.lastCollectedAt,
-              now,
-            );
-            if (acc > 0n) {
-              gain += acc;
-              lines.push(`**${s.businessKey}** +**${formatCash(acc)}**`);
-              await tx.economyBusinessSlot.update({
-                where: { id: s.id },
-                data: { lastCollectedAt: nowD },
-              });
-            }
-          }
-          if (gain <= 0n) return { total: 0n, lines: [] as string[] };
-          const u = await tx.economyUser.findUnique({
-            where: { discordUserId: uid },
-          });
-          if (!u) throw new Error("NOUSER");
-          const cashAfter = u.cash + gain;
-          await tx.economyUser.update({
-            where: { discordUserId: uid },
-            data: { cash: cashAfter },
-          });
-          await tx.economyLedger.create({
-            data: {
-              discordUserId: uid,
-              delta: gain,
-              balanceAfter: cashAfter,
-              reason: "business" satisfies LedgerReason,
-              meta: { op: "collect" },
-            },
-          });
-          return { total: gain, lines };
-        });
+        const member =
+          message.member ??
+          (await message.guild!.members.fetch(uid).catch(() => null));
+        const { total, lines } = await runBusinessCollect(uid, now, member);
 
         await message.reply({
           embeds: [
             minimalEmbed({
-              title: `${ecoM.cash} Business income`,
+              title: `${ecoM.diner} Business income`,
               description:
                 total > 0n
                   ? `Collected **${formatCash(total)}**.\n${lines.join("\n")}`
@@ -238,7 +207,7 @@ export const businessCommand: KnifeCommand = {
     await message.reply({
       embeds: [
         errorEmbed(
-          "Unknown subcommand. Use **`.business list`**, **`.business buy <id>`**, or **`.business collect`**.",
+          "Unknown subcommand. Use **`.business`**, **`.business list`**, **`.business buy <id>`**, or **`.business collect`**.",
         ),
       ],
     });

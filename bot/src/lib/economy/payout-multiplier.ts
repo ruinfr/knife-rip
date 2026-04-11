@@ -1,6 +1,7 @@
 import type { Client, GuildMember } from "discord.js";
 import { getBotPrisma } from "../db-prisma";
 import { economyPayoutMultiplier } from "./boost";
+import { rebirthGamblePetSlice } from "./rebirth-mult";
 import {
   GAMBLE_MULT_MAX,
   PET_GAMBLE_BONUS_MAX,
@@ -9,12 +10,18 @@ import {
   PET_GAMBLE_COMBINED_MAX,
   PET_HAPPY_GAMBLE_EXTRA,
   PET_HAPPY_GAMBLE_THRESHOLD,
+  petGambleTuningFor,
 } from "./economy-tuning";
 
 /**
- * Equipped-pet slice of the gamble payout multiplier: XP milestones + tiny happiness bonus, combined-capped.
+ * Equipped-pet slice of the gamble payout multiplier: XP milestones + tiny happiness bonus,
+ * plus a small breed flat / cap (Cat & Rabbit tier slightly above Dog).
  */
-export function computeEquippedPetGambleBonus(xp: number, happiness: number): {
+export function computeEquippedPetGambleBonus(
+  xp: number,
+  happiness: number,
+  speciesKey?: string,
+): {
   total: number;
   xpPart: number;
   happyPart: number;
@@ -25,13 +32,20 @@ export function computeEquippedPetGambleBonus(xp: number, happiness: number): {
   );
   const rawHappy =
     happiness >= PET_HAPPY_GAMBLE_THRESHOLD ? PET_HAPPY_GAMBLE_EXTRA : 0;
-  const total = Math.min(PET_GAMBLE_COMBINED_MAX, xpPart + rawHappy);
+  const { flat, cap } = speciesKey
+    ? petGambleTuningFor(speciesKey)
+    : { flat: 0, cap: PET_GAMBLE_COMBINED_MAX };
+  const total = Math.min(cap, xpPart + rawHappy + flat);
   const happyPart = Math.max(0, total - xpPart);
   return { total, xpPart, happyPart };
 }
 
-function petGambleBonusFromPet(xp: number, happiness: number): number {
-  return computeEquippedPetGambleBonus(xp, happiness).total;
+function petGambleBonusFromPet(
+  xp: number,
+  happiness: number,
+  speciesKey: string | undefined,
+): number {
+  return computeEquippedPetGambleBonus(xp, happiness, speciesKey).total;
 }
 
 /** One-line footer for `.pets` menu (Discord footer max 2048). */
@@ -60,13 +74,19 @@ export function describePetHappinessBonusLine(happiness: number): string {
 const PET_UI = "\u{1F4B0}";
 
 export function formatPetGambleFooterLine(
-  equipped: { xp: number; happiness: number } | null,
+  equipped: { xp: number; happiness: number; speciesKey?: string } | null,
 ): string {
   if (!equipped) {
     return `${PET_UI} Equip a pet for a small **.gamble** house-game bonus — \`.pet info\``;
   }
-  const { total } = computeEquippedPetGambleBonus(equipped.xp, equipped.happiness);
-  const capPct = (PET_GAMBLE_COMBINED_MAX * 100).toFixed(1);
+  const { total } = computeEquippedPetGambleBonus(
+    equipped.xp,
+    equipped.happiness,
+    equipped.speciesKey,
+  );
+  const capPct = (
+    petGambleTuningFor(equipped.speciesKey ?? "").cap * 100
+  ).toFixed(1);
   if (total <= 0) {
     return `${PET_UI} Equipped: gain XP (feed) for up to +${(PET_GAMBLE_BONUS_MAX * 100).toFixed(0)}% · happy ≥${PET_HAPPY_GAMBLE_THRESHOLD} adds +${(PET_HAPPY_GAMBLE_EXTRA * 100).toFixed(1)}% — \`.pet info\``;
   }
@@ -94,14 +114,28 @@ export async function resolvePayoutMultiplierDetails(params: {
   const baseMult = await economyPayoutMultiplier(member, userId, client);
 
   const prisma = getBotPrisma();
-  const equipped = await prisma.economyPet.findFirst({
-    where: { ownerId: userId, equipped: true },
-    select: { xp: true, happiness: true },
-  });
+  const [equipped, eco] = await Promise.all([
+    prisma.economyPet.findFirst({
+      where: { ownerId: userId, equipped: true },
+      select: { xp: true, happiness: true, speciesKey: true },
+    }),
+    prisma.economyUser.findUnique({
+      where: { discordUserId: userId },
+      select: { rebirthCount: true },
+    }),
+  ]);
   const petBonusAdd = equipped
-    ? petGambleBonusFromPet(equipped.xp, equipped.happiness)
+    ? petGambleBonusFromPet(
+        equipped.xp,
+        equipped.happiness,
+        equipped.speciesKey,
+      )
     : 0;
-  const mult = Math.min(GAMBLE_MULT_MAX, baseMult + petBonusAdd);
+  const rebirthSlice = eco ? rebirthGamblePetSlice(eco) : 0;
+  const mult = Math.min(
+    GAMBLE_MULT_MAX,
+    baseMult + petBonusAdd + rebirthSlice,
+  );
   return { mult, petBonusAdd, baseMult };
 }
 

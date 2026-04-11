@@ -1,26 +1,26 @@
-import { randomInt } from "crypto";
-import { ecoM } from "../../lib/economy/custom-emojis";
-import {
-  FISH_COOLDOWN_MS,
-  GATHER_MAX,
-  GATHER_MIN,
-} from "../../lib/economy/economy-tuning";
-import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
-import { formatCash } from "../../lib/economy/money";
-import type { LedgerReason } from "../../lib/economy/wallet";
 import { getBotPrisma } from "../../lib/db-prisma";
-import { errorEmbed, minimalEmbed } from "../../lib/embeds";
+import { FISH_COOLDOWN_MS } from "../../lib/economy/economy-tuning";
+import {
+  buildFishMenuEmbed,
+  buildFishMenuRows,
+  normalizeOwnedPoles,
+  parseFishingPoleKey,
+} from "../../lib/economy/fish-flow";
+import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
+import { errorEmbed } from "../../lib/embeds";
 import type { KnifeCommand } from "../types";
 
 export const fishCommand: KnifeCommand = {
   name: "fish",
-  description: "Knife Cash — gathering: fish for small payouts (separate cooldown from `.mine`)",
+  aliases: ["fishing", "catch"],
+  description:
+    "Knife Cash — fishing menu: rods, shop upgrades, and pole-specific catch minigames",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".fish",
+    usage: ".fish · .fishing · .catch",
     tier: "free",
     style: "prefix",
   },
@@ -36,67 +36,42 @@ export const fishCommand: KnifeCommand = {
 
     const uid = message.author.id;
     const prisma = getBotPrisma();
-    const now = Date.now();
 
     try {
-      const { newCash, gain } = await prisma.$transaction(async (tx) => {
-        const u = await tx.economyUser.upsert({
-          where: { discordUserId: uid },
-          create: { discordUserId: uid },
-          update: {},
-        });
-        if (u.lastFishAt) {
-          const elapsed = now - u.lastFishAt.getTime();
-          if (elapsed < FISH_COOLDOWN_MS) {
-            throw new Error(
-              `COOLDOWN:${u.lastFishAt.getTime() + FISH_COOLDOWN_MS}`,
-            );
-          }
-        }
-        const gain = BigInt(
-          randomInt(Number(GATHER_MIN), Number(GATHER_MAX) + 1),
-        );
-        const next = u.cash + gain;
-        await tx.economyUser.update({
-          where: { discordUserId: uid },
-          data: { cash: next, lastFishAt: new Date(now) },
-        });
-        await tx.economyLedger.create({
-          data: {
-            discordUserId: uid,
-            delta: gain,
-            balanceAfter: next,
-            reason: "gather" satisfies LedgerReason,
-            meta: { kind: "fish" },
-          },
-        });
-        return { newCash: next, gain };
+      const u = await prisma.economyUser.upsert({
+        where: { discordUserId: uid },
+        create: { discordUserId: uid },
+        update: {},
       });
-
+      const equipped =
+        parseFishingPoleKey(u.fishingPoleEquipped ?? "twig") ?? "twig";
+      const owned = normalizeOwnedPoles(u.fishingPolesOwned);
+      let cdEnd: number | null = null;
+      if (u.lastFishAt) {
+        cdEnd = u.lastFishAt.getTime() + FISH_COOLDOWN_MS;
+      }
+      const embed = await buildFishMenuEmbed({
+        userId: uid,
+        equipped,
+        owned,
+        cash: u.cash,
+        cooldownEndsAt: cdEnd,
+      });
+      await message.reply({
+        content: `<@${uid}>`,
+        embeds: [embed],
+        components: buildFishMenuRows({ userId: uid, equipped, owned }),
+        allowedMentions: { users: [uid] },
+      });
+    } catch {
       await message.reply({
         embeds: [
-          minimalEmbed({
-            title: `${ecoM.cash} Knife Cash — gathering (fish)`,
-            description:
-              `You caught fish worth **${formatCash(gain)}**.\n` +
-              `Balance: **${formatCash(newCash)}**.`,
-          }),
+          errorEmbed(
+            "Fishing menu could not load (database or migration). Ask an admin to run **Prisma migrations** and restart the bot.",
+            { title: "Can't open fishing" },
+          ),
         ],
       });
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "";
-      if (msg.startsWith("COOLDOWN:")) {
-        const nextAt = Math.floor(Number(msg.split(":")[1]!) / 1000);
-        await message.reply({
-          embeds: [
-            errorEmbed(
-              `Waters need a rest — <t:${nextAt}:R> (<t:${nextAt}:f>).`,
-            ),
-          ],
-        });
-        return;
-      }
-      throw e;
     }
   },
 };

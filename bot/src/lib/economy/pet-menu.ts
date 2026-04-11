@@ -9,15 +9,17 @@ import {
 import type { EconomyPet } from "@prisma/client";
 import { getBotPrisma } from "../db-prisma";
 import { ECON_INTERACTION_PREFIX } from "./config";
+import { ecoBtn, ecoM, petSpeciesEmoji } from "./custom-emojis";
 import {
-  PET_FEED_HAPPY_MAX,
-  PET_FEED_HAPPY_MIN,
+  PET_BUYABLE_SPECIES,
   PET_FEED_TREASURY_PCT,
-  PET_FEED_XP,
   PET_MAX_HAPPINESS,
   PET_SPECIES,
+  petFeedXpFor,
+  rollPetFeedHappyGain,
 } from "./economy-tuning";
 import { formatPetGambleFooterLine } from "./payout-multiplier";
+import { petFeedXpMultBps } from "./rebirth-mult";
 import { formatCash } from "./money";
 import {
   creditTreasuryInTx,
@@ -25,6 +27,23 @@ import {
 } from "./wallet";
 
 const PETS_PER_PAGE = 2;
+
+function clampPetListPage(page: number, total: number): number {
+  const maxPage = Math.max(0, Math.ceil(total / PETS_PER_PAGE) - 1);
+  return Math.max(0, Math.min(maxPage, page));
+}
+
+/** Shown in menus and replies: custom nickname + species, or species only. */
+export function formatPetCallName(p: {
+  nickname: string | null;
+  speciesKey: string;
+}): string {
+  const spec = PET_SPECIES[p.speciesKey];
+  const label = spec?.label ?? p.speciesKey;
+  const n = p.nickname?.trim();
+  if (n) return `"${n}" (${label})`;
+  return label;
+}
 
 /** Prev page — must differ from next (`pn`) so IDs stay unique when both target page 0. */
 export function petPrevPageButtonId(uid: string, targetPage: number): string {
@@ -72,7 +91,7 @@ export async function petMenuFooterNote(ownerId: string): Promise<string> {
   const prisma = getBotPrisma();
   const eq = await prisma.economyPet.findFirst({
     where: { ownerId, equipped: true },
-    select: { xp: true, happiness: true },
+    select: { xp: true, happiness: true, speciesKey: true },
   });
   return formatPetGambleFooterLine(eq);
 }
@@ -88,23 +107,29 @@ export function buildPetMenuEmbed(params: {
   const { page, total, pets, ownerId, footerNote } = params;
   const maxPage = Math.max(0, Math.ceil(total / PETS_PER_PAGE) - 1);
   if (pets.length === 0) {
+    const shop = PET_BUYABLE_SPECIES.map((s) => {
+      const sp = PET_SPECIES[s]!;
+      return `${petSpeciesEmoji(s)} **${sp.label}** — **${formatCash(sp.price)}** · ${ecoM.petfood} feed **${formatCash(sp.feedCost)}**`;
+    }).join("\n");
     return new EmbedBuilder()
       .setColor(0x5865f2)
-      .setTitle(`\u{1F4B0} Pets`)
+      .setTitle(`${ecoM.petfood} Pets`)
       .setDescription(
-        `<@${ownerId}> has no pets yet.\nBuy one with **\`.pet buy <dog|cat|rabbit>\`**.`,
+        `<@${ownerId}> has no pets yet.\n\n**Adoption fees**\n${shop}\n\nBuy with **\`.pet buy <dog|cat|rabbit>\`** or open **\`.pets\`** after adopting.\nName your equipped pet: **\`.pet name <name>\`**.`,
       )
       .setFooter({ text: footerNote.slice(0, 2048) });
   }
   const lines = pets.map((p) => {
     const spec = PET_SPECIES[p.speciesKey];
-    const label = spec?.label ?? p.speciesKey;
+    const feed = spec ? formatCash(spec.feedCost) : "—";
     const eq = p.equipped ? " _(equipped)_" : "";
-    return `**${label}**${eq} · XP **${p.xp}** · ❤️ **${p.happiness}** · \`${p.id.slice(0, 8)}…\``;
+    const ic = petSpeciesEmoji(p.speciesKey);
+    const call = formatPetCallName(p);
+    return `${ic} **${call}**${eq} · ${ecoM.xp} **${p.xp}** · ❤️ **${p.happiness}** · ${ecoM.petfood} **${feed}**/feed · \`${p.id.slice(0, 8)}…\``;
   });
   return new EmbedBuilder()
     .setColor(0x5865f2)
-    .setTitle(`\u{1F4B0} Pets — page ${page + 1}/${maxPage + 1}`)
+    .setTitle(`${ecoM.petfood} Pets — page ${page + 1}/${maxPage + 1}`)
     .setDescription(lines.join("\n\n"))
     .setFooter({ text: footerNote.slice(0, 2048) });
 }
@@ -134,6 +159,24 @@ export function buildPetMenuRows(params: {
     ),
   );
 
+  const speciesBtn = (key: string) => {
+    switch (key) {
+      case "dog":
+        return ecoBtn.dog;
+      case "cat":
+        return ecoBtn.cat;
+      case "rabbit":
+      case "fox":
+        return ecoBtn.bunny;
+      case "rat":
+        return ecoBtn.bunny;
+      case "crow":
+        return ecoBtn.cat;
+      default:
+        return ecoBtn.petfood;
+    }
+  };
+
   pets.forEach((p, slot) => {
     rows.push(
       new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
@@ -141,11 +184,13 @@ export function buildPetMenuRows(params: {
           .setCustomId(petEquipButtonId(ownerId, page, slot))
           .setLabel(p.equipped ? "Equipped" : "Equip")
           .setStyle(p.equipped ? ButtonStyle.Success : ButtonStyle.Primary)
-          .setDisabled(p.equipped),
+          .setDisabled(p.equipped)
+          .setEmoji(speciesBtn(p.speciesKey)),
         new ButtonBuilder()
           .setCustomId(petFeedButtonId(ownerId, page, slot))
           .setLabel("Feed")
-          .setStyle(ButtonStyle.Secondary),
+          .setStyle(ButtonStyle.Secondary)
+          .setEmoji(ecoBtn.petfood),
       ),
     );
   });
@@ -165,10 +210,13 @@ export async function handlePetMenuButton(params: {
     (tok[1] === "pp" || tok[1] === "pn" || tok[1] === "p") &&
     tok[2] !== undefined
   ) {
-    const page = parseInt(tok[2]!, 10);
-    if (!Number.isFinite(page) || page < 0) return true;
+    const rawPage = parseInt(tok[2]!, 10);
+    if (!Number.isFinite(rawPage) || rawPage < 0) return true;
     await interaction.deferUpdate();
-    const { pets, total } = await loadPetPage(uid, page);
+    const probe = await loadPetPage(uid, rawPage);
+    const page = clampPetListPage(rawPage, probe.total);
+    const { pets, total } =
+      page === rawPage ? probe : await loadPetPage(uid, page);
     const footerNote = await petMenuFooterNote(uid);
     await interaction.message.edit({
       embeds: [
@@ -180,13 +228,22 @@ export async function handlePetMenuButton(params: {
   }
 
   if (tok[1] === "e" && tok[2] !== undefined && tok[3] !== undefined) {
-    const page = parseInt(tok[2]!, 10);
+    const rawPage = parseInt(tok[2]!, 10);
     const slot = parseInt(tok[3]!, 10);
-    if (!Number.isFinite(page) || page < 0 || slot < 0 || slot >= PETS_PER_PAGE) {
+    if (
+      !Number.isFinite(rawPage) ||
+      rawPage < 0 ||
+      !Number.isFinite(slot) ||
+      slot < 0 ||
+      slot >= PETS_PER_PAGE
+    ) {
       return true;
     }
     await interaction.deferUpdate();
-    const { pets: pagePets } = await loadPetPage(uid, page);
+    const probeE = await loadPetPage(uid, rawPage);
+    const page = clampPetListPage(rawPage, probeE.total);
+    const { pets: pagePets } =
+      page === rawPage ? probeE : await loadPetPage(uid, page);
     const target = pagePets[slot];
     if (!target) {
       await interaction.followUp({
@@ -228,13 +285,22 @@ export async function handlePetMenuButton(params: {
   }
 
   if (tok[1] === "f" && tok[2] !== undefined && tok[3] !== undefined) {
-    const page = parseInt(tok[2]!, 10);
+    const rawPage = parseInt(tok[2]!, 10);
     const slot = parseInt(tok[3]!, 10);
-    if (!Number.isFinite(page) || page < 0 || slot < 0 || slot >= PETS_PER_PAGE) {
+    if (
+      !Number.isFinite(rawPage) ||
+      rawPage < 0 ||
+      !Number.isFinite(slot) ||
+      slot < 0 ||
+      slot >= PETS_PER_PAGE
+    ) {
       return true;
     }
     await interaction.deferUpdate();
-    const { pets: pagePetsF } = await loadPetPage(uid, page);
+    const probeF = await loadPetPage(uid, rawPage);
+    const page = clampPetListPage(rawPage, probeF.total);
+    const { pets: pagePetsF } =
+      page === rawPage ? probeF : await loadPetPage(uid, page);
     const targetPet = pagePetsF[slot];
     if (!targetPet) {
       await interaction.followUp({
@@ -256,14 +322,13 @@ export async function handlePetMenuButton(params: {
           where: { discordUserId: uid },
         });
         if (!u || u.cash < spec.feedCost) throw new Error("POOR");
-        const happyGain =
-          PET_FEED_HAPPY_MIN +
-          Math.floor(
-            Math.random() * (PET_FEED_HAPPY_MAX - PET_FEED_HAPPY_MIN + 1),
-          );
+        const happyGain = rollPetFeedHappyGain(pet.speciesKey);
         const newHappy = Math.min(
           PET_MAX_HAPPINESS,
           pet.happiness + happyGain,
+        );
+        const feedXp = Math.floor(
+          (petFeedXpFor(pet.speciesKey) * petFeedXpMultBps(u)) / 10000,
         );
         const cashAfter = u.cash - spec.feedCost;
         await tx.economyUser.update({
@@ -273,7 +338,7 @@ export async function handlePetMenuButton(params: {
         await tx.economyPet.update({
           where: { id: petId },
           data: {
-            xp: pet.xp + PET_FEED_XP,
+            xp: pet.xp + feedXp,
             happiness: newHappy,
           },
         });
@@ -377,14 +442,13 @@ export async function handlePetMenuButton(params: {
           where: { discordUserId: uid },
         });
         if (!u || u.cash < spec.feedCost) throw new Error("POOR");
-        const happyGain =
-          PET_FEED_HAPPY_MIN +
-          Math.floor(
-            Math.random() * (PET_FEED_HAPPY_MAX - PET_FEED_HAPPY_MIN + 1),
-          );
+        const happyGain = rollPetFeedHappyGain(pet.speciesKey);
         const newHappy = Math.min(
           PET_MAX_HAPPINESS,
           pet.happiness + happyGain,
+        );
+        const feedXp = Math.floor(
+          (petFeedXpFor(pet.speciesKey) * petFeedXpMultBps(u)) / 10000,
         );
         const cashAfter = u.cash - spec.feedCost;
         await tx.economyUser.update({
@@ -394,7 +458,7 @@ export async function handlePetMenuButton(params: {
         await tx.economyPet.update({
           where: { id: petId },
           data: {
-            xp: pet.xp + PET_FEED_XP,
+            xp: pet.xp + feedXp,
             happiness: newHappy,
           },
         });

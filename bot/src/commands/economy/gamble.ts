@@ -9,7 +9,7 @@ import type { KnifeCommand } from "../types";
 
 export const gambleCommand: KnifeCommand = {
   name: "gamble",
-  aliases: ["economy", "eco"],
+  aliases: ["economy", "eco", "bet", "casino"],
   description:
     "Knife Cash — private disclaimer in channel, then hub (shop, games, stats, pay)",
   site: {
@@ -17,7 +17,7 @@ export const gambleCommand: KnifeCommand = {
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".gamble · .economy · .eco",
+    usage: ".gamble · .economy · .eco · .bet · .casino",
     tier: "free",
     style: "prefix",
   },

@@ -13,6 +13,8 @@ import {
   VICTIM_DAILY_ROB_CAP,
   VICTIM_ROB_COOLDOWN_MS,
 } from "../../lib/economy/economy-tuning";
+import { rebirthBoostEarn } from "../../lib/economy/rebirth-income";
+import { effectiveRobWinChance } from "../../lib/economy/rebirth-mult";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { formatCash } from "../../lib/economy/money";
 import {
@@ -29,13 +31,14 @@ function utcYmd(d: Date): string {
 
 export const robCommand: KnifeCommand = {
   name: "rob",
+  aliases: ["steal", "mug"],
   description: "Try to steal Knife Cash from another member (guild only, high fail rate)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".rob @user",
+    usage: ".rob @user · .steal · .mug",
     tier: "free",
     style: "prefix",
   },
@@ -72,6 +75,9 @@ export const robCommand: KnifeCommand = {
     const prisma = getBotPrisma();
     const now = Date.now();
     const today = utcYmd(new Date(now));
+    const member =
+      message.member ??
+      (await message.guild!.members.fetch(robberId).catch(() => null));
 
     try {
       const out = await prisma.$transaction(async (tx) => {
@@ -149,7 +155,8 @@ export const robCommand: KnifeCommand = {
           actorUserId: robberId,
         });
 
-        const win = Math.random() < ROB_WIN_CHANCE;
+        const win =
+          Math.random() < effectiveRobWinChance(ROB_WIN_CHANCE, robber);
         if (!win) {
           return {
             ok: false as const,
@@ -171,7 +178,11 @@ export const robCommand: KnifeCommand = {
 
         const successFee =
           (steal * BigInt(ROB_SUCCESS_TREASURY_FEE_PCT) + 99n) / 100n;
-        const robberGain = steal - successFee;
+        const robberGain = rebirthBoostEarn(
+          robber,
+          member,
+          steal - successFee,
+        );
         const victimAfter = victim.cash - steal;
         if (victimAfter < 0n) throw new Error("VPOOR");
 

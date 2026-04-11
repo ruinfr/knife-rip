@@ -13,7 +13,7 @@ function parseNonNegativeBigInt(raw: string): bigint | null {
 
 export const gcashCommand: KnifeCommand = {
   name: "gcash",
-  aliases: ["ecoadmin", "cashadmin"],
+  aliases: ["ecoadmin", "cashadmin", "givecash", "setcash"],
   description:
     "Bot owner only — add, remove, or set a user’s global Knife Cash balance",
   site: {
@@ -21,7 +21,8 @@ export const gcashCommand: KnifeCommand = {
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".gcash add @user <amount> · .gcash remove … · .gcash set …",
+    usage:
+      ".gcash add @user <amount> · .givecash · .gcash remove … · .gcash set …",
     tier: "free",
     style: "prefix",
     developerOnly: true,

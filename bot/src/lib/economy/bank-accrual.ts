@@ -1,12 +1,13 @@
 import type { EconomyUser } from "@prisma/client";
 import {
-  BANK_ANNUAL_INTEREST_BPS,
   BANK_CAP_BY_TIER,
+  BANK_DAILY_INTEREST_BPS,
   BANK_MAX_ACCRUE_MS,
-  MS_PER_YEAR,
+  MS_PER_DAY,
 } from "./economy-tuning";
+import { rebirthBankCapFlatBonus } from "./rebirth-mult";
 
-const MS_PER_YEAR_BI = BigInt(Math.floor(MS_PER_YEAR));
+const MS_PER_DAY_BI = BigInt(Math.floor(MS_PER_DAY));
 
 export type BankAccrualResult = {
   interest: bigint;
@@ -19,7 +20,10 @@ export type BankAccrualResult = {
  * Lazy bank interest since `lastBankInterestAt` (or now if null). Does not write DB.
  */
 export function computeBankAccrual(
-  row: Pick<EconomyUser, "bankCash" | "bankTier" | "lastBankInterestAt">,
+  row: Pick<
+    EconomyUser,
+    "bankCash" | "bankTier" | "lastBankInterestAt" | "rebirthCount"
+  >,
   nowMs: number,
 ): BankAccrualResult {
   const now = new Date(nowMs);
@@ -32,12 +36,14 @@ export function computeBankAccrual(
   if (row.bankCash > 0n && elapsed > 0) {
     const elapsedBi = BigInt(elapsed);
     interest =
-      (row.bankCash * BigInt(BANK_ANNUAL_INTEREST_BPS) * elapsedBi) /
-      (10000n * MS_PER_YEAR_BI);
+      (row.bankCash * BigInt(BANK_DAILY_INTEREST_BPS) * elapsedBi) /
+      (10000n * MS_PER_DAY_BI);
   }
 
   const rawAfter = row.bankCash + interest;
-  const cap = BANK_CAP_BY_TIER[Math.min(row.bankTier, BANK_CAP_BY_TIER.length - 1)]!;
+  const tierCap =
+    BANK_CAP_BY_TIER[Math.min(row.bankTier, BANK_CAP_BY_TIER.length - 1)]!;
+  const cap = tierCap + rebirthBankCapFlatBonus(row.rebirthCount);
   const cappedToTier = rawAfter > cap ? cap : rawAfter;
   const finalInterest = cappedToTier - row.bankCash;
 

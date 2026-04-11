@@ -3,6 +3,10 @@ import {
   DAILY_COOLDOWN_MS,
   DAILY_REWARD_CASH,
 } from "../../lib/economy/config";
+import { rebirthBoostEarn } from "../../lib/economy/rebirth-income";
+import {
+  dailyRewardMultBps,
+} from "../../lib/economy/rebirth-mult";
 import { formatCash } from "../../lib/economy/money";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
@@ -10,7 +14,7 @@ import type { KnifeCommand } from "../types";
 
 export const dailyCommand: KnifeCommand = {
   name: "daily",
-  aliases: ["claim", "payday"],
+  aliases: ["claim", "payday", "payout", "stipend"],
   description:
     "Claim free Knife Cash once every 24 hours (50 cash per claim)",
   site: {
@@ -18,7 +22,7 @@ export const dailyCommand: KnifeCommand = {
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".daily",
+    usage: ".daily · .claim · .payday · .payout",
     tier: "free",
     style: "prefix",
   },
@@ -26,7 +30,11 @@ export const dailyCommand: KnifeCommand = {
     const uid = message.author.id;
     const prisma = getBotPrisma();
     const now = Date.now();
-    const reward = DAILY_REWARD_CASH;
+    const member =
+      message.member ??
+      (message.guild
+        ? await message.guild.members.fetch(uid).catch(() => null)
+        : null);
 
     const result = await prisma.$transaction(async (tx) => {
       const u = await tx.economyUser.upsert({
@@ -43,6 +51,9 @@ export const dailyCommand: KnifeCommand = {
           };
         }
       }
+      const baseReward =
+        (DAILY_REWARD_CASH * BigInt(dailyRewardMultBps(u))) / 10000n;
+      const reward = rebirthBoostEarn(u, member, baseReward);
       const newCash = u.cash + reward;
       await tx.economyUser.update({
         where: { discordUserId: uid },
@@ -59,7 +70,7 @@ export const dailyCommand: KnifeCommand = {
           reason: "daily",
         },
       });
-      return { ok: true as const, newCash };
+      return { ok: true as const, newCash, reward };
     });
 
     if (!result.ok) {
@@ -79,7 +90,7 @@ export const dailyCommand: KnifeCommand = {
         minimalEmbed({
           title: `${ecoM.cash} Daily reward`,
           description:
-            `You received **${formatCash(reward)}** cash. Balance: **${formatCash(result.newCash)}**.\n` +
+            `You received **${formatCash(result.reward)}** cash. Balance: **${formatCash(result.newCash)}**.\n` +
             `Come back in **24 hours** for the next claim.`,
         }),
       ],

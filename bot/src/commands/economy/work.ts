@@ -1,30 +1,26 @@
-import { randomInt } from "crypto";
-import { ecoM } from "../../lib/economy/custom-emojis";
-import {
-  WORK_COOLDOWN_MS,
-  WORK_MAX,
-  WORK_MIN,
-  WORK_TREASURY_FEE_PCT,
-} from "../../lib/economy/economy-tuning";
-import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
-import { formatCash } from "../../lib/economy/money";
-import {
-  creditTreasuryInTx,
-  type LedgerReason,
-} from "../../lib/economy/wallet";
 import { getBotPrisma } from "../../lib/db-prisma";
-import { errorEmbed, minimalEmbed } from "../../lib/embeds";
+import { WORK_COOLDOWN_MS } from "../../lib/economy/economy-tuning";
+import {
+  buildWorkMenuEmbed,
+  buildWorkMenuRows,
+  normalizeOwnedJobs,
+  parseWorkJobKey,
+} from "../../lib/economy/work-flow";
+import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
+import { errorEmbed } from "../../lib/embeds";
 import type { KnifeCommand } from "../types";
 
 export const workCommand: KnifeCommand = {
   name: "work",
-  description: "Work for a small Knife Cash payout (long cooldown, treasury skim)",
+  aliases: ["job", "shift", "grind"],
+  description:
+    "Knife Cash — jobs menu: roles, promotions, and job-specific shift minigames (treasury skim on pay)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
       "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
-    usage: ".work",
+    usage: ".work · .job · .shift · .grind",
     tier: "free",
     style: "prefix",
   },
@@ -40,79 +36,42 @@ export const workCommand: KnifeCommand = {
 
     const uid = message.author.id;
     const prisma = getBotPrisma();
-    const now = Date.now();
 
     try {
-      const gross = BigInt(
-        randomInt(Number(WORK_MIN), Number(WORK_MAX) + 1),
-      );
-      const fee =
-        (gross * BigInt(WORK_TREASURY_FEE_PCT) + 99n) / 100n;
-      const net = gross - fee;
-
-      const { newCash } = await prisma.$transaction(async (tx) => {
-        const u = await tx.economyUser.upsert({
-          where: { discordUserId: uid },
-          create: { discordUserId: uid },
-          update: {},
-        });
-        if (u.lastWorkAt) {
-          const elapsed = now - u.lastWorkAt.getTime();
-          if (elapsed < WORK_COOLDOWN_MS) {
-            throw new Error(
-              `COOLDOWN:${u.lastWorkAt.getTime() + WORK_COOLDOWN_MS}`,
-            );
-          }
-        }
-        const next = u.cash + net;
-        await tx.economyUser.update({
-          where: { discordUserId: uid },
-          data: { cash: next, lastWorkAt: new Date(now) },
-        });
-        await tx.economyLedger.create({
-          data: {
-            discordUserId: uid,
-            delta: net,
-            balanceAfter: next,
-            reason: "work" satisfies LedgerReason,
-            meta: { gross: gross.toString(), fee: fee.toString() },
-          },
-        });
-        if (fee > 0n) {
-          await creditTreasuryInTx(tx, {
-            delta: fee,
-            reason: "treasury_fee",
-            meta: { kind: "work_fee", userId: uid },
-            actorUserId: uid,
-          });
-        }
-        return { newCash: next };
+      const u = await prisma.economyUser.upsert({
+        where: { discordUserId: uid },
+        create: { discordUserId: uid },
+        update: {},
       });
-
+      const equipped =
+        parseWorkJobKey(u.workJobEquipped ?? "intern") ?? "intern";
+      const owned = normalizeOwnedJobs(u.workJobsOwned);
+      let cdEnd: number | null = null;
+      if (u.lastWorkAt) {
+        cdEnd = u.lastWorkAt.getTime() + WORK_COOLDOWN_MS;
+      }
+      const embed = await buildWorkMenuEmbed({
+        userId: uid,
+        equipped,
+        owned,
+        cash: u.cash,
+        cooldownEndsAt: cdEnd,
+      });
+      await message.reply({
+        content: `<@${uid}>`,
+        embeds: [embed],
+        components: buildWorkMenuRows({ userId: uid, equipped, owned }),
+        allowedMentions: { users: [uid] },
+      });
+    } catch {
       await message.reply({
         embeds: [
-          minimalEmbed({
-            title: `${ecoM.cash} Knife Cash — work`,
-            description:
-              `You earned **${formatCash(net)}** (gross **${formatCash(gross)}**, **${WORK_TREASURY_FEE_PCT}%** treasury fee).\n` +
-              `Balance: **${formatCash(newCash)}**.`,
-          }),
+          errorEmbed(
+            "Jobs menu could not load (database or migration). Ask an admin to run **Prisma migrations** and restart the bot.",
+            { title: "Can't open jobs" },
+          ),
         ],
       });
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "";
-      if (msg.startsWith("COOLDOWN:")) {
-        const nextAt = Math.floor(Number(msg.split(":")[1]!) / 1000);
-        await message.reply({
-          embeds: [
-            errorEmbed(
-              `You're still on break. Next shift <t:${nextAt}:R> (<t:${nextAt}:f>).`,
-            ),
-          ],
-        });
-        return;
-      }
-      throw e;
     }
   },
 };
