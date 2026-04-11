@@ -1,5 +1,6 @@
 "use client";
 
+import { BankTransferPanel } from "@/components/knife-cash/bank-transfer-panel";
 import { CasinoFloor } from "@/components/knife-cash/casino-floor";
 import { GamesCasinoPanel } from "@/components/knife-cash/games-casino-panel";
 import { RecentWinsTicker } from "@/components/knife-cash/recent-wins-ticker";
@@ -11,6 +12,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 type MeJson = {
+  cash: string;
+  bankCash: string;
   cashFormatted: string;
   bankCashFormatted: string;
   totalFormatted: string;
@@ -113,7 +116,9 @@ export function KnifeCashClient() {
   const m = reduce ? {} : sectionMotion;
 
   return (
-    <main className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6 sm:py-10 lg:max-w-3xl">
+    <main className="relative mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+      <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:items-start lg:gap-10">
+        <div className="flex min-w-0 flex-col gap-8">
       <motion.header
         className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"
         {...m}
@@ -230,10 +235,6 @@ export function KnifeCashClient() {
             <RecentWinsTicker />
             <GamesCasinoPanel onBalancesUpdated={refreshAll} />
           </CasinoFloor>
-
-          <p className="text-center text-xs text-muted">
-            Blackjack, mines, and roulette are coming to match Discord.
-          </p>
         </>
       )}
 
@@ -352,6 +353,20 @@ export function KnifeCashClient() {
           )}
         </Card>
       </motion.section>
+        </div>
+
+        {me ? (
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <BankTransferPanel
+              cash={me.cash}
+              bankCash={me.bankCash}
+              cashFormatted={me.cashFormatted}
+              bankCashFormatted={me.bankCashFormatted}
+              onTransferred={refreshAll}
+            />
+          </aside>
+        ) : null}
+      </div>
     </main>
   );
 }
