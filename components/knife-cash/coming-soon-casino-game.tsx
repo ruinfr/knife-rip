@@ -4,14 +4,7 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/cn";
 import { motion, useReducedMotion } from "framer-motion";
 
-const COPY: Record<
-  "blackjack" | "mines" | "roulette",
-  { blurb: string; accent: string }
-> = {
-  blackjack: {
-    blurb: "Full hand flow like the Discord hub — hit, stand, double, split.",
-    accent: "from-rose-950/50 via-zinc-950/90 to-black",
-  },
+const COPY: Record<"mines" | "roulette", { blurb: string; accent: string }> = {
   mines: {
     blurb: "Rainbet-style grid — same bomb math and multipliers as Discord.",
     accent: "from-slate-900/80 via-emerald-950/40 to-black",
@@ -26,7 +19,7 @@ export function ComingSoonCasinoGame({
   variant,
   title,
 }: {
-  variant: "blackjack" | "mines" | "roulette";
+  variant: "mines" | "roulette";
   title: string;
 }) {
   const reduce = useReducedMotion();
@@ -81,25 +74,6 @@ export function ComingSoonCasinoGame({
           </motion.span>
         ))}
       </div>
-
-      {variant === "blackjack" ? (
-        <motion.div
-          className="relative mb-6 mt-5 flex justify-center gap-2"
-          animate={
-            reduce ? undefined : { y: [0, -3, 0] }
-          }
-          transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <div className="h-24 w-[4.25rem] rounded-lg border-2 border-white/20 bg-gradient-to-b from-white to-zinc-300 shadow-xl [transform:rotate(-8deg)]">
-            <span className="flex h-full items-center justify-center text-2xl font-bold text-red-700">
-              A
-            </span>
-          </div>
-          <div className="h-24 w-[4.25rem] rounded-lg border-2 border-white/20 bg-gradient-to-b from-white to-zinc-300 shadow-xl [transform:rotate(6deg)] translate-y-2">
-            <span className="flex h-full items-center justify-center text-2xl">♠</span>
-          </div>
-        </motion.div>
-      ) : null}
 
       {variant === "mines" ? (
         <div className="relative mb-6 mt-5 grid grid-cols-5 gap-1.5 sm:mx-auto sm:max-w-xs">

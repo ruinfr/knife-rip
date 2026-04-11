@@ -289,6 +289,8 @@ model EconomyUser {
   lastRebirthAt      DateTime?
   /// JSON: { coin?: number, daily?: number, rob?: number, petXp?: number } — shop levels 0–5.
   rebirthShop        Json?
+  /// In-progress Knife Cash web blackjack hand (server-side). Cleared when the hand ends or expires.
+  webBlackjackState  Json?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 

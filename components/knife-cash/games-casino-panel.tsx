@@ -1,5 +1,6 @@
 "use client";
 
+import { BlackjackGame } from "@/components/knife-cash/blackjack-game";
 import { CoinFlipGame } from "@/components/knife-cash/coin-flip-game";
 import { ComingSoonCasinoGame } from "@/components/knife-cash/coming-soon-casino-game";
 import { DiceDuelGame } from "@/components/knife-cash/dice-duel-game";
@@ -18,7 +19,7 @@ const TABS = [
     id: "blackjack" as const,
     label: "Blackjack",
     icon: "mdi:cards-playing-outline",
-    live: false,
+    live: true,
   },
   { id: "mines" as const, label: "Mines", icon: "mdi:grid", live: false },
   {
@@ -112,7 +113,9 @@ export function GamesCasinoPanel({
             </div>
           ) : null}
           {tab === "blackjack" ? (
-            <ComingSoonCasinoGame variant="blackjack" title="Blackjack" />
+            <div className="rounded-2xl border border-emerald-500/15 bg-gradient-to-b from-emerald-950/20 to-transparent p-1 shadow-[0_0_40px_-18px_rgba(16,185,129,0.18)]">
+              <BlackjackGame onBalancesUpdated={onBalancesUpdated} />
+            </div>
           ) : null}
           {tab === "mines" ? (
             <ComingSoonCasinoGame variant="mines" title="Mines" />
