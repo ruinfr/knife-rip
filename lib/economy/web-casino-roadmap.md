@@ -10,9 +10,9 @@ Typical in-house lineup (names vary by region): **Blackjack**, **Mines**, **Dice
 
 | Game | `EconomyGambleLog.game` / notes | Bot implementation | Web status |
 |------|----------------------------------|--------------------|------------|
-| Coin flip | `coinflip` (hub) / `web_coinflip` (site) | [`bot/src/lib/economy/games.ts`](../../bot/src/lib/economy/games.ts) hub bias + boosts; site API fair 50/50 | **Live** on `/knife-cash` |
-| Dice | `dice` | `runHouseGame` in `games.ts` | Roadmap |
-| Slots | `slots` | `runHouseGame` + emoji reels | Roadmap |
+| Coin flip | `coinflip` (hub) / `web_coinflip` (site) | Hub in `games.ts`; web uses same rebirth house edge as hub via `web-casino-odds.ts` | **Live** on `/knife-cash` |
+| Dice | `dice` (hub) / `web_dice` (site) | `runHouseGame` in `games.ts`; web mirrors rules in `web-house-settle.ts` | **Live** on `/knife-cash` |
+| Slots | `slots` (hub) / `web_slots` (site) | Same symbols + payouts as hub | **Live** on `/knife-cash` |
 | Roulette | `roulette` | American wheel (0, 00, 1–36), red/black/green in `games.ts` + hub in [`interaction-handler.ts`](../../bot/src/lib/economy/interaction-handler.ts) | Roadmap |
 | Blackjack | `blackjack` | [`blackjack-flow.ts`](../../bot/src/lib/economy/blackjack-flow.ts) | Roadmap — highest Rainbet overlap |
 | Mines | `mines` | [`mines-flow.ts`](../../bot/src/lib/economy/mines-flow.ts) | Roadmap — strong Rainbet overlap |
@@ -30,3 +30,7 @@ Shared settlement for house games: [`applyGambleOutcomeInTx`](./gamble-outcome-t
 ## URLs
 
 Canonical: **`/knife-cash`**. Aliases (308): **`/gamble`**, **`/cash`**, **`/economy`**.
+
+## Site cooldown
+
+Web routes use a **minimal per-game gap** (`WEB_GAMBLE_COOLDOWN_MS` in `knife-cash-recent-wins.ts`, currently a few hundred ms) so double-clicks don’t double-settle. Discord hub keeps its own longer `GAME_COOLDOWN_MS`.

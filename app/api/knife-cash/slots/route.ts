@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { applyGambleOutcomeInTx } from "@/lib/economy/gamble-outcome-tx";
 import {
-  WEB_COINFLIP_GAME_KEY,
+  WEB_SLOTS_GAME_KEY,
 } from "@/lib/economy/knife-cash-web";
 import { formatCash, parsePositiveBigInt } from "@/lib/economy/money";
 import {
@@ -10,7 +10,10 @@ import {
   upsertEconomyUserInTx,
 } from "@/lib/economy/web-gamble-precheck";
 import { nextResponseForWebGambleError } from "@/lib/economy/web-gamble-http";
-import { webCoinflipWin } from "@/lib/economy/web-casino-odds";
+import {
+  rollWebSlotSymbols,
+  webSlotsPayout,
+} from "@/lib/economy/web-house-settle";
 import { db } from "@/lib/db";
 import { getDiscordAccountIdForUserId } from "@/lib/knife-cash-session";
 import { NextRequest, NextResponse } from "next/server";
@@ -58,17 +61,16 @@ export async function POST(req: NextRequest) {
     const result = await db.$transaction(async (tx) => {
       const row = await upsertEconomyUserInTx(tx, discordId);
       assertWebGambleAllowed(row, bet);
-      await assertWebGambleCooldown(tx, discordId, WEB_COINFLIP_GAME_KEY);
+      await assertWebGambleCooldown(tx, discordId, WEB_SLOTS_GAME_KEY);
 
-      const won = webCoinflipWin(row.rebirthCount);
-      const payout = won ? bet * BigInt(2) : BigInt(0);
-      const face = won ? "heads" : "tails";
+      const [a, b, c] = rollWebSlotSymbols();
+      const { payout, tier } = webSlotsPayout(a, b, c, bet);
 
       const { net, newCash } = await applyGambleOutcomeInTx(tx, row, {
         userId: discordId,
         bet,
         payout,
-        game: WEB_COINFLIP_GAME_KEY,
+        game: WEB_SLOTS_GAME_KEY,
       });
 
       const bankRow = await tx.economyUser.findUnique({
@@ -79,8 +81,8 @@ export async function POST(req: NextRequest) {
       const total = newCash + bankCash;
 
       return {
-        won,
-        face,
+        reels: [a, b, c] as [string, string, string],
+        tier,
         net,
         newCash,
         bankCash,
@@ -91,8 +93,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      won: result.won,
-      face: result.face,
+      reels: result.reels,
+      tier: result.tier,
       net: result.net.toString(),
       payout: result.payout.toString(),
       cash: result.newCash.toString(),
@@ -103,6 +105,6 @@ export async function POST(req: NextRequest) {
       totalFormatted: formatCash(result.total),
     });
   } catch (e) {
-    return nextResponseForWebGambleError(e, "[knife-cash/coinflip]");
+    return nextResponseForWebGambleError(e, "[knife-cash/slots]");
   }
 }
