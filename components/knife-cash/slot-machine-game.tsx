@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
-import { WEB_SLOT_SYMBOLS } from "@/lib/economy/web-house-settle";
+import { WEB_SLOT_SYMBOLS } from "@/lib/economy/web-slot-symbols";
 import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useState } from "react";
 

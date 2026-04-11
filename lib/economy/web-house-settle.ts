@@ -1,9 +1,10 @@
 import { randomInt } from "node:crypto";
+import {
+  WEB_SLOT_SYMBOLS,
+  type WebSlotSymbol,
+} from "./web-slot-symbols";
 
-/** Same reel symbols as Discord hub slots (`games.ts`). */
-export const WEB_SLOT_SYMBOLS = ["🍒", "🍋", "🍇", "⭐", "💎", "7️⃣"] as const;
-
-export type WebSlotSymbol = (typeof WEB_SLOT_SYMBOLS)[number];
+export type { WebSlotSymbol };
 
 export function rollWebSlotSymbols(): [WebSlotSymbol, WebSlotSymbol, WebSlotSymbol] {
   return [
