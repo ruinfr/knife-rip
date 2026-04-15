@@ -50,7 +50,7 @@ export const botinfoCommand: KnifeCommand = {
     await message.reply({
       embeds: [
         minimalEmbed({
-          title: "Knife — bot info",
+          title: "Arivix — bot info",
           description: lines.join("\n"),
           footerText: hub,
         }),

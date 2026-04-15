@@ -134,7 +134,7 @@ export function KnifeCashClient() {
             </div>
             <div>
               <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground">
-                Knife Cash
+                Arivix Cash
               </h1>
               <p className="text-sm text-muted">
                 One wallet with Discord · wallet cash only

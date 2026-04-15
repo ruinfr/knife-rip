@@ -20,12 +20,12 @@ export const rebirthCommand: KnifeCommand = {
   name: "rebirth",
   aliases: ["rb", "prestige"],
   description:
-    "Knife Cash rebirth menu — soft reset for permanent bonuses, **`.rebirth stats`**, **`.rebirth top`**",
+    "Arivix Cash rebirth menu — soft reset for permanent bonuses, **`.rebirth stats`**, **`.rebirth top`**",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".rebirth · .rb · .prestige · .rebirth stats · .rebirth top",
     tier: "free",
     style: "prefix",

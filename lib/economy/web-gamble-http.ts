@@ -13,7 +13,7 @@ export function nextResponseForWebGambleError(
   }
   if (msg === "DISCLAIMER") {
     return NextResponse.json(
-      { error: "Accept the Knife Cash disclaimer first" },
+      { error: "Accept the Arivix Cash disclaimer first" },
       { status: 403 },
     );
   }

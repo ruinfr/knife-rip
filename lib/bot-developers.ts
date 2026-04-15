@@ -2,7 +2,7 @@ import { BOT_OWNER_DISCORD_IDS } from "./bot-owners";
 
 /**
  * **Developers** — main controllers: **.handout** owner for anyone, full bypass (same as owners:
- * no command cooldown, **Administrator** + **Knife Pro** checks skipped on `.say`, etc.).
+ * no command cooldown, **Administrator** + **Arivix Pro** checks skipped on `.say`, etc.).
  *
  * Add more snowflakes to the array when you promote additional developers.
  * Also merged: **`DEVELOPER_DISCORD_IDS`** in `.env` (comma‑separated).

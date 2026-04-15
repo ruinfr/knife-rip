@@ -5,7 +5,7 @@ import type { KnifeCommand } from "../types";
 export const dashboardCommand: KnifeCommand = {
   name: "dashboard",
   aliases: ["dash"],
-  description: "Open the web dashboard to manage Knife (sign in with Discord)",
+  description: "Open the web dashboard to manage Arivix (sign in with Discord)",
   site: {
     categoryId: "core",
     categoryTitle: "Core",

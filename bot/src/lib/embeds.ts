@@ -4,7 +4,7 @@ import { EmbedBuilder } from "discord.js";
 export const DOCS_PERMISSIONS_URL = `${(
   process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") ||
   process.env.PUBLIC_SITE_ORIGIN?.trim().replace(/\/$/, "") ||
-  "https://knife.rip"
+  "https://arivix.org"
 )}/docs/permissions`;
 
 /** Neutral embeds — no strong brand colors. */
@@ -69,7 +69,7 @@ export function missingPermissionEmbed(
   const body =
     subject === "you"
       ? `**Missing:** ${permissionLabel}\nGive this permission to your role in this channel or server.`
-      : `**I need:** ${permissionLabel}\nRaise Knife's role if Discord is blocking the action.`;
+      : `**I need:** ${permissionLabel}\nRaise Arivix's role if Discord is blocking the action.`;
   return actionableErrorEmbed({
     body,
     title: subject === "you" ? "Permission needed" : "Bot permission needed",

@@ -5,7 +5,7 @@ import type { KnifeCommand } from "../types";
 export const donateCommand: KnifeCommand = {
   name: "donate",
   aliases: ["support", "tip"],
-  description: "Support Knife hosting — link to pricing and status",
+  description: "Support Arivix hosting — link to pricing and status",
   site: {
     categoryId: "core",
     categoryTitle: "Core",
@@ -21,11 +21,11 @@ export const donateCommand: KnifeCommand = {
     await message.reply({
       embeds: [
         minimalEmbed({
-          title: "Support Knife",
+          title: "Support Arivix",
           description:
             `**Pricing / Pro:** [${pricing.replace(/^https?:\/\//, "")}](${pricing})\n` +
-            `**Status:** [knife.rip/status](${statusUrl})\n` +
-            `**Hub:** use **.knife** for the public Discord invite.`,
+            `**Status:** [arivix.org/status](${statusUrl})\n` +
+            `**Hub:** use **.arivix** for the public Discord invite.`,
         }),
       ],
     });

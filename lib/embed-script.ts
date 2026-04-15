@@ -1,5 +1,5 @@
 /**
- * Knife embed script — shared by the site builder and the bot.
+ * Arivix embed script — shared by the site builder and the bot.
  *
  * Format: optional message text, then `{embed}$v` then repeated `{key: value}` blocks.
  * In values, `$v` inserts a newline; `\` escapes the next character (e.g. `\}`).
@@ -196,7 +196,7 @@ export const KNIFE_EMBED_DEMO_CONTEXT: KnifeEmbedPlaceholderContext = {
   },
   guild: {
     id: "1490477452726894693",
-    name: "Knife Lounge",
+    name: "Arivix Lounge",
     iconUrl:
       "https://cdn.discordapp.com/embed/avatars/3.png",
     memberCount: 12847,

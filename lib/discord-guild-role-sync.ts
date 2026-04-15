@@ -1,6 +1,6 @@
 const DISCORD_API = "https://discord.com/api/v10";
 
-/** knife.rip hub — override with `KNIFE_RIP_*_ROLE_ID` if roles are recreated. */
+/** arivix.org hub — override with `KNIFE_RIP_*_ROLE_ID` if roles are recreated. */
 export const KNIFE_RIP_DEFAULT_PREMIUM_ROLE_ID = "1490510690429964379";
 export const KNIFE_RIP_DEFAULT_OWNER_ROLE_ID = "1490510979380023446";
 export const KNIFE_RIP_DEFAULT_DEVELOPER_ROLE_ID = "1490510979157594243";
@@ -21,8 +21,8 @@ function snowflakeOrDefault(
 }
 
 /**
- * knife.rip community: sync Discord roles with site entitlement.
- * Set **KNIFE_RIP_GUILD_ID** (server id). Role IDs default to the live knife.rip roles unless overridden.
+ * arivix.org community: sync Discord roles with site entitlement.
+ * Set **KNIFE_RIP_GUILD_ID** (server id). Role IDs default to the live arivix.org roles unless overridden.
  * Bot role must sit above these roles in the hierarchy.
  */
 export function getKnifeRipPrivilegeSyncEnv(): KnifeRipPrivilegeSyncEnv | null {

@@ -9,6 +9,8 @@ export const WEB_BLACKJACK_GAME_KEY = "web_blackjack";
 
 export const WEB_MINES_GAME_KEY = "web_mines";
 
+export const WEB_ROULETTE_GAME_KEY = "web_roulette";
+
 /**
  * Re-export: tiny per-game gap so double-clicks don’t double-settle.
  * Real rate limits stay server-side (DB + auth).

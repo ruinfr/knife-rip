@@ -9,12 +9,12 @@ export const baltopCommand: KnifeCommand = {
   name: "baltop",
   aliases: ["cashtop", "richest", "leaderboardcash", "topcash", "moneylb"],
   description:
-    "Global top Knife Cash — wallet + bank + total (top 15 by total wealth)",
+    "Global top Arivix Cash — wallet + bank + total (top 15 by total wealth)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".baltop · .cashtop · .richest · .topcash · .moneylb",
     tier: "free",
     style: "prefix",
@@ -54,7 +54,7 @@ export const baltopCommand: KnifeCommand = {
         minimalEmbed({
           title: "Balance leaderboard",
           description:
-            "_Global Knife Cash — top **15** by **wallet + bank** (total > 0)._\n\n" +
+            "_Global Arivix Cash — top **15** by **wallet + bank** (total > 0)._\n\n" +
             lines.join("\n"),
         }),
       ],

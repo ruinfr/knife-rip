@@ -1,8 +1,8 @@
 {
-  "name": "knife-discord-bot",
+  "name": "arivix-discord-bot",
   "version": "0.1.0",
   "private": true,
-  "description": "Knife Discord bot — prefix commands; pairs with the knife.rip site",
+  "description": "Arivix Discord bot — prefix commands; pairs with arivix.org",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",

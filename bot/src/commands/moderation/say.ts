@@ -11,7 +11,7 @@ export const sayCommand: KnifeCommand = {
   name: "say",
   aliases: ["botsay", "botpost"],
   description:
-    "Post as the bot in a channel — text or Knife **{embed}$v** script from the site builder (Knife Pro + Administrator; owners skip both)",
+    "Post as the bot in a channel — text or Arivix **{embed}$v** script from the site builder (Arivix Pro + Administrator; owners skip both)",
   site: {
     categoryId: "moderation",
     categoryTitle: "Moderation",
@@ -32,7 +32,7 @@ export const sayCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           errorEmbed(
-            "Usage: **.say** `<#channel>` `message…` — optional **`{embed}$v{title: …}`** script (see **knife.rip/tools/embed**)",
+            "Usage: **.say** `<#channel>` `message…` — optional **`{embed}$v{title: …}`** script (see **arivix.org/tools/embed**)",
           ),
         ],
       });

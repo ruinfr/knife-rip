@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/cn";
 
 type BrandMarkProps = {
@@ -5,32 +6,17 @@ type BrandMarkProps = {
   "aria-hidden"?: boolean;
 };
 
-const LOGO = "/brand/knife-logo.png";
-
 /**
- * Knife wordmark silhouette — PNG mask so `text-*` / `bg-current` tints the logo.
+ * Shield mark — matches favicon / Arivix brand.
  */
 export function BrandMark({
   className,
   "aria-hidden": ariaHidden = true,
 }: BrandMarkProps) {
   return (
-    <span
-      className={cn(
-        "inline-block shrink-0 bg-current",
-        "h-7 w-7 sm:h-8 sm:w-8",
-        className,
-      )}
-      style={{
-        maskImage: `url(${LOGO})`,
-        WebkitMaskImage: `url(${LOGO})`,
-        maskSize: "contain",
-        WebkitMaskSize: "contain",
-        maskRepeat: "no-repeat",
-        WebkitMaskRepeat: "no-repeat",
-        maskPosition: "center",
-        WebkitMaskPosition: "center",
-      }}
+    <Icon
+      icon="mdi:shield"
+      className={cn("inline-block shrink-0 text-edge", className)}
       aria-hidden={ariaHidden}
     />
   );

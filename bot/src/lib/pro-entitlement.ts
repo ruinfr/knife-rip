@@ -3,9 +3,9 @@ import { getBotInternalSecret } from "../config";
 import { isCommandOwnerBypass } from "./owner-bypass";
 import { fetchEntitlementFromSite } from "./site-client";
 
-const PRICING_URL = "https://knife.rip/pricing";
+const PRICING_URL = "https://arivix.org/pricing";
 
-/** Knife Pro site entitlement check (shared by .remind, .vanity, etc.). */
+/** Arivix Pro site entitlement check (shared by .remind, .vanity, etc.). */
 export async function userCanUseKnifeProFeatures(
   userId: string,
   options?: { commandLabel?: string },
@@ -20,7 +20,7 @@ export async function userCanUseKnifeProFeatures(
     return {
       ok: false,
       reason:
-        "Knife Pro isn’t linked on this bot (**BOT_INTERNAL_SECRET** missing).",
+        "Arivix Pro isn’t linked on this bot (**BOT_INTERNAL_SECRET** missing).",
     };
   }
 
@@ -30,7 +30,7 @@ export async function userCanUseKnifeProFeatures(
     const label = options?.commandLabel ?? "This command";
     return {
       ok: false,
-      reason: `**${label}** is **Knife Pro** only.\n**[Pricing](${PRICING_URL})**`,
+      reason: `**${label}** is **Arivix Pro** only.\n**[Pricing](${PRICING_URL})**`,
     };
   } catch {
     return {

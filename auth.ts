@@ -24,7 +24,7 @@ if (isProd || onVercel) {
     process.env.AUTH_URL?.trim() || process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (!origin) {
     console.warn(
-      "[auth] AUTH_URL and NEXT_PUBLIC_SITE_URL are both unset — set one to your public origin (e.g. https://knife.rip) for reliable OAuth cookies.",
+      "[auth] AUTH_URL and NEXT_PUBLIC_SITE_URL are both unset — set one to your public origin (e.g. https://arivix.org) for reliable OAuth cookies.",
     );
   }
 }

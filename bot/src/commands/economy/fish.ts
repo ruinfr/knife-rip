@@ -14,12 +14,12 @@ export const fishCommand: KnifeCommand = {
   name: "fish",
   aliases: ["fishing", "catch"],
   description:
-    "Knife Cash — fishing menu: rods, shop upgrades, and pole-specific catch minigames",
+    "Arivix Cash — fishing menu: rods, shop upgrades, and pole-specific catch minigames",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".fish · .fishing · .catch",
     tier: "free",
     style: "prefix",

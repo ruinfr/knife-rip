@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { KnifeCashClient } from "./knife-cash-client";
 
 export const metadata: Metadata = {
-  title: "Knife Cash",
+  title: "Arivix Cash",
   description:
-    "Knife Cash on the web — same global wallet and leaderboards as Discord. Also reachable at /gamble, /cash, and /economy.",
+    "Arivix Cash on the web — same global wallet and leaderboards as Discord. Also reachable at /gamble, /cash, and /economy.",
   alternates: {
     canonical: "/knife-cash",
   },

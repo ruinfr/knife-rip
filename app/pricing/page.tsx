@@ -17,7 +17,7 @@ const communityHubInvite = resolveCommunityDiscordInviteUrl();
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Knife Pro — $10 lifetime. One payment, no subscription.",
+  description: "Arivix Pro — $10 lifetime. One payment, no subscription.",
 };
 
 const freeBullets = [
@@ -65,7 +65,7 @@ export default function PricingPage() {
           Simple pricing
         </h1>
         <p className="mt-4 text-base leading-relaxed text-muted sm:text-lg">
-          Knife Pro is a <strong className="text-foreground">one-time $10</strong>{" "}
+          Arivix Pro is a <strong className="text-foreground">one-time $10</strong>{" "}
           purchase on your Discord account — no monthly fee, no renewal. Use
           Pro everywhere you run the bot.
         </p>
@@ -103,12 +103,12 @@ export default function PricingPage() {
           <p className="mt-2 leading-relaxed">
             Check back soon or email{" "}
             <a
-              href="mailto:support@knife.rip"
+              href="mailto:support@arivix.org"
               className="font-medium text-edge underline-offset-4 hover:underline"
             >
-              support@knife.rip
+              support@arivix.org
             </a>{" "}
-            if you need Knife Pro.
+            if you need Arivix Pro.
           </p>
         </ScrollReveal>
       ) : null}
@@ -164,7 +164,7 @@ export default function PricingPage() {
             </span>
             <div className="mb-4 h-px w-10 rounded-full bg-gradient-to-r from-edge/50 to-transparent" />
             <h2 className="font-display pr-20 text-xl font-bold text-accent-strong">
-              Knife Pro
+              Arivix Pro
             </h2>
             <div className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="font-display text-5xl font-bold tabular-nums text-accent-strong sm:text-6xl">
@@ -206,7 +206,7 @@ export default function PricingPage() {
 
       <ScrollReveal
         as="section"
-        className="grid gap-4 border-t border-red-950/30 pt-12 sm:grid-cols-2"
+        className="grid gap-4 border-t border-blue-950/30 pt-12 sm:grid-cols-2"
         delay={0.08}
         aria-labelledby="pricing-more-heading"
       >

@@ -237,7 +237,7 @@ export const commandConfigCommand: KnifeCommand = {
     if (NON_CONFIGURABLE_COMMAND_KEYS.has(cmdKey)) {
       await message.reply({
         embeds: [
-          errorEmbed(`**${cmdKey}** can't be disabled (needed to configure Knife).`),
+          errorEmbed(`**${cmdKey}** can't be disabled (needed to configure Arivix).`),
         ],
       });
       return;

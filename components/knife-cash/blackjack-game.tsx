@@ -374,7 +374,7 @@ export function BlackjackGame({
               className={cn(
                 "rounded-xl border px-4 py-3 text-center",
                 done.outcome === "lose" || done.outcome === "bust" || done.outcome === "dealer_blackjack"
-                  ? "border-red-500/30 bg-red-950/35 text-red-100"
+                  ? "border-blue-500/30 bg-blue-950/35 text-red-100"
                   : done.outcome === "push" || done.outcome === "push_blackjack"
                     ? "border-amber-400/25 bg-amber-950/25 text-amber-100"
                     : "border-emerald-400/30 bg-emerald-950/35 text-emerald-50",

@@ -11,12 +11,12 @@ import type { KnifeCommand } from "../types";
 export const petsCommand: KnifeCommand = {
   name: "pets",
   aliases: ["petmenu", "mypets"],
-  description: "Knife Cash pets — button menu (equip / feed)",
+  description: "Arivix Cash pets — button menu (equip / feed)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".pets · .petmenu · .mypets",
     tier: "free",
     style: "prefix",

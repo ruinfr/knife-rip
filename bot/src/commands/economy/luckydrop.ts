@@ -14,12 +14,12 @@ export const luckydropCommand: KnifeCommand = {
   name: "luckydrop",
   aliases: ["cashdrop", "randdrop", "ownerdrop"],
   description:
-    "Bot owner only — random member wins a lump of Knife Cash (confirm / reroll / cancel)",
+    "Bot owner only — random member wins a lump of Arivix Cash (confirm / reroll / cancel)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".luckydrop <amount> · .cashdrop · .ownerdrop",
     tier: "free",
     style: "prefix",

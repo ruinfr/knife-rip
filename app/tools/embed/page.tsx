@@ -9,11 +9,11 @@ const base = siteMetadataBase();
 export const metadata: Metadata = {
   title: "Embed builder",
   description:
-    "Build Knife {embed}$v scripts for .say and .createembed — variables, preview, and copy-ready output.",
+    "Build Arivix {embed}$v scripts for .say and .createembed — variables, preview, and copy-ready output.",
   openGraph: {
-    title: "Embed builder · Knife",
+    title: "Embed builder · Arivix",
     description:
-      "Build Knife {embed}$v scripts for Discord — variables and live preview.",
+      "Build Arivix {embed}$v scripts for Discord — variables and live preview.",
     url: `${base.origin}/tools/embed`,
   },
 };
@@ -23,7 +23,7 @@ export default function EmbedBuilderPage() {
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-4 py-10 sm:gap-10 sm:px-6 sm:py-14 lg:px-8">
       <ScrollReveal
         as="header"
-        className="border-b border-red-950/30 pb-6 sm:pb-7"
+        className="border-b border-blue-950/30 pb-6 sm:pb-7"
         amount={0.12}
       >
         <span

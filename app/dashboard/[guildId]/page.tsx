@@ -109,12 +109,12 @@ export default async function GuildDashboardPage({ params }: PageProps) {
             {guild.name}
           </h1>
           <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted">
-            Dashboard for this server. Knife Pro is tied to your Discord
+            Dashboard for this server. Arivix Pro is tied to your Discord
             account — billing and receipts are on the main dashboard.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <span className="inline-flex items-center rounded-full border border-white/[0.08] bg-surface/60 px-3 py-1 text-xs font-medium text-edge/90">
-              Knife connected
+              Arivix connected
             </span>
             {isDeveloper ? (
               <span className="inline-flex items-center rounded-full border border-violet-500/45 bg-violet-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-violet-200">
@@ -130,7 +130,7 @@ export default async function GuildDashboardPage({ params }: PageProps) {
                 {user?.lifetimePremiumAt
                   ? "Lifetime Pro"
                   : bypassPro
-                    ? "Knife Pro"
+                    ? "Arivix Pro"
                     : "Pro active"}
               </span>
             ) : (
@@ -159,7 +159,7 @@ export default async function GuildDashboardPage({ params }: PageProps) {
             </p>
           ) : usageBreakdown.totalAttempts === 0 ? (
             <p className="mt-3 text-sm text-muted">
-              No commands logged for this server this month yet. Knife records a
+              No commands logged for this server this month yet. Arivix records a
               short audit row when someone runs a prefix command (no message
               text stored).
             </p>

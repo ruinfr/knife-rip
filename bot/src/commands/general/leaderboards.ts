@@ -18,7 +18,7 @@ export const lbCommand: KnifeCommand = {
   name: "lb",
   aliases: ["leaderboard", "textleaderboard", "textlb"],
   description:
-    "Top members by messages sent in this server (every message counts while Knife is online)",
+    "Top members by messages sent in this server (every message counts while Arivix is online)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",
@@ -47,7 +47,7 @@ export const lbCommand: KnifeCommand = {
           minimalEmbed({
             title: "Text leaderboard",
             description:
-              "No message stats yet — counts start as soon as members send messages here while Knife is online.",
+              "No message stats yet — counts start as soon as members send messages here while Arivix is online.",
           }),
         ],
       });
@@ -78,7 +78,7 @@ export const vlbCommand: KnifeCommand = {
   name: "vlb",
   aliases: ["vcleaderboard", "voiceleaderboard", "voicelb"],
   description:
-    "Top members by time in voice channels (AFK excluded; counts while Knife is online)",
+    "Top members by time in voice channels (AFK excluded; counts while Arivix is online)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",
@@ -107,7 +107,7 @@ export const vlbCommand: KnifeCommand = {
           minimalEmbed({
             title: "Voice leaderboard",
             description:
-              "No voice time yet — VC time accumulates when members are in voice (not AFK) while Knife is online.",
+              "No voice time yet — VC time accumulates when members are in voice (not AFK) while Arivix is online.",
           }),
         ],
       });

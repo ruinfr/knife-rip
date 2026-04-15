@@ -6,7 +6,7 @@ export const creditsCommand: KnifeCommand = {
   name: "credits",
   aliases: ["team"],
   description:
-    "Team and contributors — link to the hidden credits page on the Knife site",
+    "Team and contributors — link to the hidden credits page on the Arivix site",
   site: {
     categoryId: "core",
     categoryTitle: "Core",
@@ -23,7 +23,7 @@ export const creditsCommand: KnifeCommand = {
         minimalEmbed({
           title: "Credits",
           description:
-            `People behind **Knife** — thanks for using the bot.\n\n` +
+            `People behind **Arivix** — thanks for using the bot.\n\n` +
             `**[Team & contributors](${creditsUrl})**\n\n` +
             `_This page isn’t linked in the site navigation — share it if you like._`,
         }),

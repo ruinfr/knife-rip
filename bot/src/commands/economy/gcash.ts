@@ -15,12 +15,12 @@ export const gcashCommand: KnifeCommand = {
   name: "gcash",
   aliases: ["ecoadmin", "cashadmin", "givecash", "setcash"],
   description:
-    "Bot owner only — add, remove, or set a user’s global Knife Cash balance",
+    "Bot owner only — add, remove, or set a user’s global Arivix Cash balance",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage:
       ".gcash add @user <amount> · .givecash · .gcash remove … · .gcash set …",
     tier: "free",

@@ -166,7 +166,7 @@ export function assertBotHierarchy(
   target: GuildMember,
 ): string | null {
   if (target.roles.highest.position >= botMember.roles.highest.position) {
-    return "Move **Knife’s** role **above** the member’s top role.";
+    return "Move **Arivix’s** role **above** the member’s top role.";
   }
   return null;
 }

@@ -66,7 +66,7 @@ async function ensureJailRoleAssignable(
     (await guild.roles.fetch(jailRoleId).catch(() => null));
   if (!jailRole || jailRole.position >= me.roles.highest.position) {
     return errorEmbed(
-      "Move **Knife’s** role **above** the **Jailed** role in Server Settings → Roles.",
+      "Move **Arivix’s** role **above** the **Jailed** role in Server Settings → Roles.",
     );
   }
   return null;
@@ -159,7 +159,7 @@ export const jailCommand: KnifeCommand = {
     }
     const reasonBase = reasonParts.join(" ").trim().slice(0, 450);
     const reason = reasonBase || `Jailed by ${message.author.tag}`;
-    const auditReason = `Knife jail: ${reason}`.slice(0, 480);
+    const auditReason = `Arivix jail: ${reason}`.slice(0, 480);
 
     const failedRemovals: string[] = [];
     for (const roleId of toRemove) {
@@ -305,7 +305,7 @@ export const unjailCommand: KnifeCommand = {
     }
 
     const reasonBase = tailArgs.join(" ").trim().slice(0, 450);
-    const auditReason = `Knife unjail: ${reasonBase || message.author.tag}`.slice(0, 480);
+    const auditReason = `Arivix unjail: ${reasonBase || message.author.tag}`.slice(0, 480);
 
     const removedIds = parseStoredRoleIds(row.removedRoleIds);
     const botTop = me.roles.highest.position;

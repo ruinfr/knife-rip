@@ -41,7 +41,7 @@ export function PageShell({
       {prelude ? (
         <div className="-mb-2 text-sm text-muted">{prelude}</div>
       ) : null}
-      <header className="space-y-3 border-b border-red-950/35 pb-8">
+      <header className="space-y-3 border-b border-blue-950/35 pb-8">
         <div className="flex flex-col gap-2">
           <span
             className="h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/30 to-transparent"

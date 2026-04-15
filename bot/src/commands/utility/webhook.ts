@@ -69,7 +69,7 @@ function parseMessageOrEmbedPayload(
       }
     }
   } catch {
-    /* plain text or Knife script */
+    /* plain text or Arivix embed script */
   }
   if (/\{embed\}\s*\$v/i.test(t)) {
     const expanded = applyKnifeEmbedPlaceholders(t, {});
@@ -159,10 +159,10 @@ function helpEmbed(): EmbedBuilder {
       "Set up webhooks in your server.\n\n" +
       "`.webhook create` `name` — create in this channel (Manage Webhooks)\n" +
       "`.webhook list` — webhooks in this server (no member perm)\n" +
-      "`.webhook send` `id|name|#` `message…` — JSON embeds **or** Knife `{embed}$v…` scripts\n" +
+      "`.webhook send` `id|name|#` `message…` — JSON embeds **or** Arivix `{embed}$v…` scripts\n" +
       "`.webhook edit` `messageLink` `message…` — edit a webhook-owned message\n" +
       "`.webhook delete` `id|name|#` — remove webhook\n" +
-      "`.webhook lock` `id|name|#` — only you (and admins) use it via Knife\n" +
+      "`.webhook lock` `id|name|#` — only you (and admins) use it via Arivix\n" +
       "`.webhook unlock` `id|name|#` — remove lock (locker or admin)",
   });
 }
@@ -314,7 +314,7 @@ export const webhookCommand: KnifeCommand = {
           });
           return;
         }
-        const w = await ch.createWebhook({ name, reason: `Knife: ${message.author.tag}` });
+        const w = await ch.createWebhook({ name, reason: `Arivix: ${message.author.tag}` });
         await message.reply({
           embeds: [
             minimalEmbed({
@@ -340,7 +340,7 @@ export const webhookCommand: KnifeCommand = {
           return;
         }
         await assertWebhookLockAllows(message, w.id, guild.id);
-        await w.delete(`Knife: ${message.author.tag}`);
+        await w.delete(`Arivix: ${message.author.tag}`);
         await prisma.botGuildWebhookLock.deleteMany({ where: { webhookId: w.id } });
         await message.reply({
           embeds: [
@@ -379,7 +379,7 @@ export const webhookCommand: KnifeCommand = {
           embeds: [
             minimalEmbed({
               title: "Webhook locked",
-              description: `Only you (and **Administrators**) can use Knife to send, edit, or delete **${w.name}** now.`,
+              description: `Only you (and **Administrators**) can use Arivix to send, edit, or delete **${w.name}** now.`,
             }),
           ],
         });
@@ -422,7 +422,7 @@ export const webhookCommand: KnifeCommand = {
           embeds: [
             minimalEmbed({
               title: "Webhook unlocked",
-              description: `**${w.name}** — anyone with **Manage Webhooks** can use Knife webhook commands again.`,
+              description: `**${w.name}** — anyone with **Manage Webhooks** can use Arivix webhook commands again.`,
             }),
           ],
         });

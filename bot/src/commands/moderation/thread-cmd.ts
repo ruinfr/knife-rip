@@ -162,7 +162,7 @@ export const threadCommand: KnifeCommand = {
         embeds: [
           minimalEmbed({
             title: "Watch",
-            description: "_Tip: add the bot to private threads via **thread add @Knife**._",
+            description: "_Tip: add the bot to private threads via **thread add @Arivix**._",
           }),
         ],
       });

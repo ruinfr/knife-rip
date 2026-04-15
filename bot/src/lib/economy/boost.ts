@@ -48,7 +48,7 @@ async function hasNitroBoostBonus(
 
 /**
  * Payout multiplier for milestones and gambling wins (1 or ~1.2).
- * Counts once: Nitro boost in partner servers (server1/server2/…) OR Knife Pro / owner / developer.
+ * Counts once: Nitro boost in partner servers (server1/server2/…) OR Arivix Pro / owner / developer.
  */
 export async function economyPayoutMultiplier(
   member: GuildMember | null,

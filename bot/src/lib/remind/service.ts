@@ -113,7 +113,7 @@ async function fireReminder(
     const user = await client.users.fetch(userId);
     const body =
       `⏰ **Reminder**\n\n${text}\n\n` +
-      `_Scheduled with Knife · you can set more with **.remind** (Pro)._`;
+      `_Scheduled with Arivix · you can set more with **.remind** (Pro)._`;
     await user.send({ content: body.slice(0, 2000) });
   } catch {
     /* DMs closed or blocked */

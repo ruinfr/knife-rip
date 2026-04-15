@@ -12,12 +12,12 @@ import type { KnifeCommand } from "../types";
 export const withdrawCommand: KnifeCommand = {
   name: "withdraw",
   aliases: ["wd", "take"],
-  description: "Move Knife Cash from bank to wallet (applies lazy interest first)",
+  description: "Move Arivix Cash from bank to wallet (applies lazy interest first)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".withdraw <amount> · .wd · .take",
     tier: "free",
     style: "prefix",

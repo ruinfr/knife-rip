@@ -14,7 +14,7 @@ function applicationIdFromBotToken(token: string): string | null {
 
 /**
  * Overwrites global slash commands with none — removes stale entries (e.g. retired /vanities)
- * after Knife moved to prefix-only for that feature.
+ * after Arivix moved to prefix-only for that feature.
  */
 export async function clearGlobalApplicationCommands(): Promise<void> {
   let appId = process.env.DISCORD_CLIENT_ID?.trim() ?? null;
@@ -31,7 +31,7 @@ export async function clearGlobalApplicationCommands(): Promise<void> {
   const rest = new REST({ version: "10" }).setToken(getDiscordToken());
   try {
     await rest.put(Routes.applicationCommands(appId), { body: [] });
-    console.log("Global slash commands cleared (Knife is prefix-first).");
+    console.log("Global slash commands cleared (Arivix is prefix-first).");
   } catch (e) {
     console.warn("Global slash command cleanup failed:", e);
   }

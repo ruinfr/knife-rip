@@ -24,7 +24,7 @@ export function ShowcaseTile({ s, interactive = true }: Props) {
 
   const avatar = (
     <div
-      className="motion-safe:transition relative h-[3.35rem] w-[3.35rem] shrink-0 overflow-hidden rounded-full border border-white/[0.08] bg-gradient-to-br from-red-950/40 to-surface/80 shadow-[0_0_28px_-10px_rgba(220,38,38,0.28)] ring-1 ring-inset ring-white/[0.05] group-hover:-translate-y-0.5 group-hover:border-white/[0.12] group-hover:shadow-[0_0_40px_-10px_rgba(220,38,38,0.38)]"
+      className="motion-safe:transition relative h-[3.35rem] w-[3.35rem] shrink-0 overflow-hidden rounded-full border border-white/[0.08] bg-gradient-to-br from-blue-950/40 to-surface/80 shadow-[0_0_28px_-10px_rgba(37,99,235,0.28)] ring-1 ring-inset ring-white/[0.05] group-hover:-translate-y-0.5 group-hover:border-white/[0.12] group-hover:shadow-[0_0_40px_-10px_rgba(37,99,235,0.38)]"
       aria-hidden
     >
       {s.image ? (

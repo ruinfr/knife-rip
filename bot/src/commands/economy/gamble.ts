@@ -11,12 +11,12 @@ export const gambleCommand: KnifeCommand = {
   name: "gamble",
   aliases: ["economy", "eco", "bet", "casino"],
   description:
-    "Knife Cash — private disclaimer in channel, then hub (shop, games, stats, pay)",
+    "Arivix Cash — private disclaimer in channel, then hub (shop, games, stats, pay)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".gamble · .economy · .eco · .bet · .casino",
     tier: "free",
     style: "prefix",

@@ -38,7 +38,7 @@ async function handlePollEnd(message: Message, args: string[]): Promise<void> {
     await message.reply({
       embeds: [
         errorEmbed(
-          "Unknown poll — wrong server or that message isn’t an active Knife poll.",
+          "Unknown poll — wrong server or that message isn’t an active Arivix poll.",
         ),
       ],
     });

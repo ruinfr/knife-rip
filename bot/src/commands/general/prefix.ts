@@ -16,7 +16,7 @@ export const prefixCommand: KnifeCommand = {
   name: "prefix",
   aliases: ["setprefix"],
   description:
-    "View or change Knife’s command prefix (Manage Server only; allow-listed symbols)",
+    "View or change Arivix’s command prefix (Manage Server only; allow-listed symbols)",
   site: {
     categoryId: "core",
     categoryTitle: "Core",

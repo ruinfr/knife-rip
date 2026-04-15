@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Manage",
-  description: "Redirect to your Knife dashboard for billing and servers.",
+  description: "Redirect to your Arivix dashboard for billing and servers.",
   robots: { index: false, follow: false },
 };
 

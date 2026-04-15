@@ -57,12 +57,12 @@ export const petCommand: KnifeCommand = {
   name: "pet",
   aliases: ["adopt", "mypet"],
   description:
-    "Buy, equip, feed, or inspect Knife Cash pets — **`.pet buy`** · **`.pet equip`** · **`.pet feed`** · **`.pet info`**",
+    "Buy, equip, feed, or inspect Arivix Cash pets — **`.pet buy`** · **`.pet equip`** · **`.pet feed`** · **`.pet info`**",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage:
       ".pet buy <dog|cat|rabbit> · .adopt · .pet equip <species> · .pet feed · .pet name <name|clear> · .pet info",
     tier: "free",

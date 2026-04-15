@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Status",
-  description: "knife.rip and Knife bot service status.",
+  description: "arivix.org and Arivix bot service status.",
 };
 
 export const revalidate = 900;
@@ -43,7 +43,7 @@ export default async function StatusPage() {
 
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 py-10 sm:gap-12 sm:px-6 sm:py-14 lg:px-8">
-      <header className="flex flex-col gap-6 border-b border-red-950/30 pb-7 sm:flex-row sm:items-end sm:justify-between sm:pb-8">
+      <header className="flex flex-col gap-6 border-b border-blue-950/30 pb-7 sm:flex-row sm:items-end sm:justify-between sm:pb-8">
         <div>
           <span
             className="mb-3 block h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/30 to-transparent"
@@ -54,7 +54,7 @@ export default async function StatusPage() {
             Status
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-            Knife service health and shard status. For command behavior, check Discord or{" "}
+            Arivix service health and shard status. For command behavior, check Discord or{" "}
             <Link href="/commands" className="font-semibold text-edge hover:underline">
               /commands
             </Link>
@@ -225,7 +225,7 @@ export default async function StatusPage() {
           Community insights
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Anonymized successful command runs across Knife (UTC calendar month:{" "}
+          Anonymized successful command runs across Arivix (UTC calendar month:{" "}
           <span className="text-foreground/90">{monthLabel}</span>). Server names are never shown — command names and counts only.
         </p>
         {topCommands && topCommands.length > 0 ? (

@@ -14,7 +14,7 @@ export type KnifeRipDiscordRoleSyncReport =
   | { state: "error"; detail: string };
 
 /**
- * After entitlement changes on the site (Stripe, handout API), align knife.rip Discord roles.
+ * After entitlement changes on the site (Stripe, handout API), align arivix.org Discord roles.
  * No-op if guild/role env or bot token is missing.
  * **Await** this in serverless routes so work finishes before the invocation ends.
  */

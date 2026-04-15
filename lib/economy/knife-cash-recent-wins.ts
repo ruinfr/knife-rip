@@ -16,6 +16,7 @@ const GAME_LABELS: Record<string, string> = {
   web_slots: "Slots",
   web_blackjack: "Blackjack",
   web_mines: "Mines",
+  web_roulette: "Roulette",
   coinflip: "Coin flip",
   dice: "Dice",
   slots: "Slots",

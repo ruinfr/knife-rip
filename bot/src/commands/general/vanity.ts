@@ -19,11 +19,11 @@ export const vanityCommand: KnifeCommand = {
   name: "vanity",
   aliases: ["vanities"],
   description:
-    "Knife Pro — look up a discord.gg slug or browse recently released dictionary codes (from background scans)",
+    "Arivix Pro — look up a discord.gg slug or browse recently released dictionary codes (from background scans)",
   site: {
     categoryId: "pro",
     categoryTitle: "Pro",
-    categoryDescription: "Knife Pro billing and perks.",
+    categoryDescription: "Arivix Pro billing and perks.",
     usage: ".vanity search <code> · .vanity drop · .vanities",
     tier: "pro",
     style: "prefix",
@@ -34,7 +34,7 @@ export const vanityCommand: KnifeCommand = {
     });
     if (!access.ok) {
       await message.reply({
-        embeds: [errorEmbed(access.reason ?? "Knife Pro required.")],
+        embeds: [errorEmbed(access.reason ?? "Arivix Pro required.")],
       });
       return;
     }
@@ -83,7 +83,7 @@ export const vanityCommand: KnifeCommand = {
         minimalEmbed({
           title: "Vanity",
           description:
-            "**Knife Pro** — track dictionary slugs against Discord invites.\n\n" +
+            "**Arivix Pro** — track dictionary slugs against Discord invites.\n\n" +
             "• **.vanity search** `code` — one slug lookup\n" +
             "• **.vanity drop** — recent releases (paginate with buttons)\n" +
             "• **.vanities** — same as **drop** (recent list)\n\n" +

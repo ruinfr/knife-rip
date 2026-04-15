@@ -4,22 +4,22 @@ import { minimalEmbed } from "../../lib/embeds";
 import { getGuildCommandPrefix } from "../../lib/guild-prefix";
 import type { KnifeCommand } from "../types";
 
-const SITE = "https://knife.rip";
+const SITE = "https://arivix.org";
 const COMMANDS = `${SITE}/commands`;
 const CHANGELOG = `${SITE}/changelog`;
 const PRICING = `${SITE}/pricing`;
 
 const hubInvite = resolveCommunityDiscordInviteUrl();
 
-export const knifeCommand: KnifeCommand = {
-  name: "knife",
-  aliases: ["about", "knifeinfo"],
-  description: "About Knife — site links, prefix, and gateway latency",
+export const arivixCommand: KnifeCommand = {
+  name: "arivix",
+  aliases: ["knife", "about", "knifeinfo"],
+  description: "About Arivix — site links, prefix, and gateway latency",
   site: {
     categoryId: "core",
     categoryTitle: "Core",
     categoryDescription: "Essential prefix commands.",
-    usage: ".knife",
+    usage: ".arivix",
     tier: "free",
     style: "prefix",
   },
@@ -31,11 +31,11 @@ export const knifeCommand: KnifeCommand = {
         ? `**Prefix:** \`${PREFIX}\` (default) — **\`${PREFIX}prefix\`** to customize in servers`
         : `**Prefix:** \`${prefix}\` in this server (default is \`${PREFIX}\`)`;
     const lines = [
-      `**Site:** [knife.rip](${SITE})`,
-      `**Commands:** [knife.rip/commands](${COMMANDS})`,
-      `**What's new:** [knife.rip/changelog](${CHANGELOG}) — **\`${prefix === PREFIX ? PREFIX : prefix}news\`** for the latest line`,
-      `**Pro:** [knife.rip/pricing](${PRICING})`,
-      `**Hub:** [knife.rip Discord](${hubInvite}) — join for **Pro/owner role sync** and support`,
+      `**Site:** [arivix.org](${SITE})`,
+      `**Commands:** [arivix.org/commands](${COMMANDS})`,
+      `**What's new:** [arivix.org/changelog](${CHANGELOG}) — **\`${prefix === PREFIX ? PREFIX : prefix}news\`** for the latest line`,
+      `**Pro:** [arivix.org/pricing](${PRICING})`,
+      `**Hub:** [Arivix Discord](${hubInvite}) — join for **Pro/owner role sync** and support`,
       prefixLine,
       `**Gateway ping:** **${ws}** ms`,
     ];
@@ -43,7 +43,7 @@ export const knifeCommand: KnifeCommand = {
     await message.reply({
       embeds: [
         minimalEmbed({
-          title: "Knife",
+          title: "Arivix",
           description: lines.join("\n"),
           footerText: `${hubInvite}`,
         }),

@@ -20,13 +20,13 @@ function parsePositiveInt(raw: string): number | null {
 export const messagedropCommand: KnifeCommand = {
   name: "messagedrop",
   description:
-    "Bot owner only — grant Knife Cash to every user with at least N lifetime tracked messages",
+    "Bot owner only — grant Arivix Cash to every user with at least N lifetime tracked messages",
   aliases: ["msgdrop", "drop"],
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".messagedrop <min_messages> <amount>",
     tier: "free",
     style: "prefix",
@@ -49,7 +49,7 @@ export const messagedropCommand: KnifeCommand = {
         embeds: [
           errorEmbed(
             "Usage: **`.messagedrop`** `min_messages` `amount`\n" +
-              "Everyone with **at least** that many **lifetime** tracked messages (all servers, not DMs) gets **amount** Knife Cash.\n" +
+              "Everyone with **at least** that many **lifetime** tracked messages (all servers, not DMs) gets **amount** Arivix Cash.\n" +
               "Example: **`.messagedrop 5000 250`**",
           ),
         ],

@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "What's new",
   description:
-    "Knife changelog — short release notes tied to bot and site updates.",
+    "Arivix changelog — short release notes tied to bot and site updates.",
 };
 
 export const revalidate = 3600;
@@ -22,7 +22,7 @@ export default function ChangelogPage() {
   return (
     <PageShell
       title="What's new"
-      description={`Release notes for Knife (command catalog v${COMMAND_CATALOG_VERSION}). Newest first.`}
+      description={`Release notes for Arivix (command catalog v${COMMAND_CATALOG_VERSION}). Newest first.`}
       maxWidth="wide"
     >
       <ul className="!mt-0 list-none space-y-6 p-0">

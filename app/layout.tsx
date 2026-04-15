@@ -36,17 +36,17 @@ const metadataBase = siteMetadataBase();
 export const metadata: Metadata = {
   metadataBase,
   title: {
-    default: "Knife",
-    template: "%s · Knife",
+    default: "Arivix",
+    template: "%s · Arivix",
   },
   description:
-    "Knife — Discord bot for moderation, utilities, and community tools. Prefix commands, dashboard, and optional lifetime Pro.",
+    "Arivix — Discord bot for moderation, utilities, and community tools. Prefix commands, dashboard, and optional lifetime Pro.",
   openGraph: {
-    title: "Knife",
+    title: "Arivix",
     description:
-      "Discord bot for moderation, utilities, and community tools — knife.rip",
+      "Discord bot for moderation, utilities, and community tools — arivix.org",
     url: metadataBase,
-    siteName: "Knife",
+    siteName: "Arivix",
     locale: "en_US",
     type: "website",
     images: [
@@ -54,15 +54,15 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Knife — knife.rip",
+        alt: "Arivix — arivix.org",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Knife",
+    title: "Arivix",
     description:
-      "Discord bot for moderation, utilities, and community tools — knife.rip",
+      "Discord bot for moderation, utilities, and community tools — arivix.org",
     images: ["/twitter-image"],
   },
 };

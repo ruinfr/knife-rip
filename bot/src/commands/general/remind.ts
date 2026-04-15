@@ -25,11 +25,11 @@ export const remindCommand: KnifeCommand = {
   name: "remind",
   aliases: ["reminder", "remindme"],
   description:
-    "Knife Pro — schedule a personal reminder (DM); rate-limited; max 7 days ahead",
+    "Arivix Pro — schedule a personal reminder (DM); rate-limited; max 7 days ahead",
   site: {
     categoryId: "pro",
     categoryTitle: "Pro",
-    categoryDescription: "Knife Pro billing and perks.",
+    categoryDescription: "Arivix Pro billing and perks.",
     usage:
       ".remind 15m text · .remind list · .remind cancel [id|all]",
     tier: "pro",
@@ -39,7 +39,7 @@ export const remindCommand: KnifeCommand = {
     const access = await userCanUseRemind(message.author.id);
     if (!access.ok) {
       await message.reply({
-        embeds: [errorEmbed(access.reason ?? "Knife Pro required.")],
+        embeds: [errorEmbed(access.reason ?? "Arivix Pro required.")],
       });
       return;
     }
@@ -163,7 +163,7 @@ export const remindCommand: KnifeCommand = {
       try {
         await message.author.send({
           content:
-            "🔔 **Knife reminders** will arrive here. You can delete this message.",
+            "🔔 **Arivix reminders** will arrive here. You can delete this message.",
         });
         dmReachable.add(message.author.id);
       } catch {

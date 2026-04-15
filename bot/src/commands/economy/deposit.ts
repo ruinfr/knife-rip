@@ -13,12 +13,12 @@ import type { KnifeCommand } from "../types";
 export const depositCommand: KnifeCommand = {
   name: "deposit",
   aliases: ["dep", "save"],
-  description: "Move Knife Cash from wallet into the bank (lazy interest, tier cap)",
+  description: "Move Arivix Cash from wallet into the bank (lazy interest, tier cap)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".deposit <amount> · .dep · .save",
     tier: "free",
     style: "prefix",

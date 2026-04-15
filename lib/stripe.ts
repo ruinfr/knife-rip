@@ -20,5 +20,5 @@ export function siteOrigin(): string {
   if (explicit) return explicit;
   const v = process.env.VERCEL_URL?.trim();
   if (v) return `https://${v.replace(/\/$/, "")}`;
-  return "https://knife.rip";
+  return "https://arivix.org";
 }

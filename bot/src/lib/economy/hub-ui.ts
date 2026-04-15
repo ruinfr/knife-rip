@@ -70,7 +70,7 @@ export function buildGambleDisclaimerPayload(params: {
   const { userId, guild, originChannelId } = params;
   const embed = new EmbedBuilder()
     .setColor(0xf0b232)
-    .setTitle(`${ecoM.games} Knife Cash`)
+    .setTitle(`${ecoM.games} Arivix Cash`)
     .setDescription(
       "_Quick read — a few short sections below._\n\n" +
         `${ecoM.tablerinfosquarefilled} When you’re ready, press **I understand** at the bottom.`,
@@ -79,7 +79,7 @@ export function buildGambleDisclaimerPayload(params: {
       {
         name: "What this is",
         value:
-          "Knife Cash is **not real money**.\n" +
+          "Arivix Cash is **not real money**.\n" +
           "It’s pretend balance for fun — **no cash-out**, no real-world value.",
         inline: false,
       },
@@ -95,13 +95,13 @@ export function buildGambleDisclaimerPayload(params: {
         name: "Bonuses",
         value:
           "• **.daily** — **50** cash, once every **24 hours**.\n\n" +
-          "• Server boosters and **Knife Pro** (and owners) get **+20%** on eligible payouts.",
+          "• Server boosters and **Arivix Pro** (and owners) get **+20%** on eligible payouts.",
         inline: false,
       },
       {
         name: "Message milestones",
         value:
-          "_Every normal message you send in a **server** counts (while Knife is there). DMs do not._\n\n" +
+          "_Every normal message you send in a **server** counts (while Arivix is there). DMs do not._\n\n" +
           MILESTONE_HELP_LINES.map((line) => `• ${line}`).join("\n\n"),
         inline: false,
       },
@@ -259,7 +259,7 @@ export async function buildGambleHubPayload(params: {
     );
   } else if (p === 2) {
     description +=
-      `${ecoM.stats} **Stats** — your global Knife Cash profile.\n\n` +
+      `${ecoM.stats} **Stats** — your global Arivix Cash profile.\n\n` +
       `${ecoM.rankInStatsMenu} Leaderboards & profile — ${ecoM.topgambler} **Top gamblers** is net profit.`;
     rows.push(
       new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(

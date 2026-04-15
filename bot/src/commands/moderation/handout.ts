@@ -49,7 +49,7 @@ function roleSyncFootnote(rs: HandoutRoleSync | undefined): string {
   if (!rs) return "";
   switch (rs.state) {
     case "applied":
-      return "\n\n**Discord:** Roles updated for the knife.rip server.";
+      return "\n\n**Discord:** Roles updated for the arivix.org server.";
     case "no_change":
       return "\n\n**Discord:** Roles already matched entitlement.";
     case "not_member":
@@ -252,7 +252,7 @@ export const handoutCommand: KnifeCommand = {
     invalidateEntitlementCache(targetId);
 
     const label =
-      kind === "OWNER" ? "bot owner" : "complimentary Knife Pro";
+      kind === "OWNER" ? "bot owner" : "complimentary Arivix Pro";
     const who =
       target.id === actorId ? "You" : `**${target.username}** (${targetId})`;
 

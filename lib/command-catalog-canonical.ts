@@ -23,7 +23,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "access",
     description:
-      "Bot owner only — allow or deny Knife in a server by guild id (stored in DB)",
+      "Bot owner only — allow or deny Arivix in a server by guild id (stored in DB)",
     usage: ".access yes <guildId> · .access no <guildId>",
     tier: "free",
     style: "prefix",
@@ -109,7 +109,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     style: "prefix",
     categoryId: "pro",
     categoryTitle: "Pro",
-    categoryDescription: "Knife Pro billing and perks.",
+    categoryDescription: "Arivix Pro billing and perks.",
   },
   {
     name: "botinfo",
@@ -126,7 +126,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "baltop",
     description:
-      "Global top Knife Cash — richest by wallet + bank total (top 15); shows wallet, bank, and total per row",
+      "Global top Arivix Cash — richest by wallet + bank total (top 15); shows wallet, bank, and total per row",
     usage: ".baltop · .cashtop · .richest · .topcash · .moneylb",
     tier: "free",
     style: "prefix",
@@ -134,12 +134,12 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "cash",
     description:
-      "Show your global Knife Cash balance (or another user’s); shows payout multiplier when boost, Pro, or an equipped pet applies (capped)",
+      "Show your global Arivix Cash balance (or another user’s); shows payout multiplier when boost, Pro, or an equipped pet applies (capped)",
     usage: ".cash · .bal · .balance · .wallet [@user | ID]",
     tier: "free",
     style: "prefix",
@@ -147,12 +147,12 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "gamble",
     description:
-      "Knife Cash — private in-channel disclaimer, then hub: shop, games (coinflip, dice, slots, blackjack, mines), stats, pay",
+      "Arivix Cash — private in-channel disclaimer, then hub: shop, games (coinflip, dice, slots, blackjack, mines), stats, pay",
     usage: ".gamble · .economy · .eco · .bet · .casino",
     tier: "free",
     style: "prefix",
@@ -160,13 +160,13 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "gcash",
     aliases: ["ecoadmin", "cashadmin", "givecash", "setcash"],
     description:
-      "Bot owner only — add, remove, or set a user’s global Knife Cash (logged)",
+      "Bot owner only — add, remove, or set a user’s global Arivix Cash (logged)",
     usage: ".gcash add @user <amount> · .givecash · remove · set",
     tier: "free",
     style: "prefix",
@@ -174,7 +174,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "luckydrop",
@@ -188,12 +188,12 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "messagedrop",
     description:
-      "Bot owner only — pay everyone with at least N lifetime tracked messages a lump of Knife Cash",
+      "Bot owner only — pay everyone with at least N lifetime tracked messages a lump of Arivix Cash",
     usage: ".messagedrop <min_messages> <amount> · .msgdrop · .drop",
     tier: "free",
     style: "prefix",
@@ -202,7 +202,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "bank",
@@ -215,117 +215,117 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "beg",
     aliases: ["panhandle", "sparechange"],
     description:
-      "Beg for a tiny Knife Cash tip (short cooldown, often nothing)",
+      "Beg for a tiny Arivix Cash tip (short cooldown, often nothing)",
     usage: ".beg · .panhandle · .sparechange",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "bounty",
     aliases: ["hit", "contract"],
     description:
-      "Post Knife Cash on someone's head — paid automatically if you successfully .rob them here (treasury holds escrow)",
+      "Post Arivix Cash on someone's head — paid automatically if you successfully .rob them here (treasury holds escrow)",
     usage: ".bounty @user <amount> · .hit · .bounty list · .bounty cancel",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "business",
     aliases: ["biz", "franchise"],
     description:
-      "Passive Knife Cash businesses — menu, tracks (marketing/automation/staff/equipment), random events, collect",
+      "Passive Arivix Cash businesses — menu, tracks (marketing/automation/staff/equipment), random events, collect",
     usage: ".business · .biz · .business list · .business buy <id> · .business collect",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "crime",
     aliases: ["heist", "lawless"],
     description:
-      "Risky Knife Cash job — negative EV; fines go to the treasury on failure",
+      "Risky Arivix Cash job — negative EV; fines go to the treasury on failure",
     usage: ".crime · .heist",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "deposit",
     aliases: ["dep", "save"],
     description:
-      "Move Knife Cash from wallet into the bank (lazy interest, tier cap)",
+      "Move Arivix Cash from wallet into the bank (lazy interest, tier cap)",
     usage: ".deposit <amount> · .dep · .save",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "duel",
     aliases: ["pvp", "challenge"],
     description:
-      "Challenge someone to a Knife Cash stake duel (guild only; opponent accepts with a button)",
+      "Challenge someone to a Arivix Cash stake duel (guild only; opponent accepts with a button)",
     usage: ".duel @user <amount> · .pvp · .challenge",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "fish",
     aliases: ["fishing", "catch"],
     description:
-      "Knife Cash — fishing menu: rods, upgrades, and pole-specific catch minigames",
+      "Arivix Cash — fishing menu: rods, upgrades, and pole-specific catch minigames",
     usage: ".fish · .fishing · .catch",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "mine",
     aliases: ["mining", "dig"],
     description:
-      "Knife Cash — mining menu: pickaxes, upgrades, and pick-specific ore minigames (not casino Mines)",
+      "Arivix Cash — mining menu: pickaxes, upgrades, and pick-specific ore minigames (not casino Mines)",
     usage: ".mine · .mining · .dig",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "pet",
     aliases: ["adopt", "mypet"],
     description:
-      "Buy, equip, feed, name, or inspect Knife Cash pets — .pet buy, .pet equip, .pet feed, .pet name, .pet info (nickname for equipped pet; XP/happiness .gamble bonus)",
+      "Buy, equip, feed, name, or inspect Arivix Cash pets — .pet buy, .pet equip, .pet feed, .pet name, .pet info (nickname for equipped pet; XP/happiness .gamble bonus)",
     usage:
       ".pet buy <dog|cat|rabbit> · .adopt · .pet equip <species> · .pet feed · .pet name <name|clear> · .pet info",
     tier: "free",
@@ -333,19 +333,19 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "pets",
     aliases: ["petmenu", "mypets"],
-    description: "Knife Cash pets — button menu (equip / feed)",
+    description: "Arivix Cash pets — button menu (equip / feed)",
     usage: ".pets · .petmenu · .mypets",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "rebirth",
@@ -358,46 +358,46 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "rob",
     aliases: ["steal", "mug"],
     description:
-      "Try to steal Knife Cash from another member (guild only, high fail rate)",
+      "Try to steal Arivix Cash from another member (guild only, high fail rate)",
     usage: ".rob @user · .steal · .mug",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "withdraw",
     aliases: ["wd", "take"],
     description:
-      "Move Knife Cash from bank to wallet (applies lazy interest first)",
+      "Move Arivix Cash from bank to wallet (applies lazy interest first)",
     usage: ".withdraw <amount> · .wd · .take",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "work",
     aliases: ["job", "shift", "grind"],
     description:
-      "Knife Cash — jobs menu: roles, promotions, shift minigames, treasury skim on pay",
+      "Arivix Cash — jobs menu: roles, promotions, shift minigames, treasury skim on pay",
     usage: ".work · .job · .shift · .grind",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "handout",
@@ -427,7 +427,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "createembed",
     description:
-      "Post an embed built from a Knife **{embed}$v** script (same rules as **.say**; use the site embed builder)",
+      "Post an embed built from a Arivix **{embed}$v** script (same rules as **.say**; use the site embed builder)",
     usage:
       ".createembed #channel {embed}$v{title: …} — /tools/embed · .ce · .postembed · .embedsend",
     tier: "pro",
@@ -440,7 +440,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "credits",
     description:
-      "Team and contributors — link to the hidden credits page on the Knife site",
+      "Team and contributors — link to the hidden credits page on the Arivix site",
     usage: ".credits · .team",
     tier: "free",
     style: "prefix",
@@ -451,7 +451,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "dashboard",
-    description: "Open the web dashboard to manage Knife (sign in with Discord)",
+    description: "Open the web dashboard to manage Arivix (sign in with Discord)",
     usage: ".dashboard · .dash",
     tier: "free",
     style: "prefix",
@@ -464,14 +464,14 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     name: "daily",
     aliases: ["claim", "payday", "payout", "stipend"],
     description:
-      "Claim 50 Knife Cash once every 24 hours (global wallet; same cooldown everywhere)",
+      "Claim 50 Arivix Cash once every 24 hours (global wallet; same cooldown everywhere)",
     usage: ".daily · .claim · .payday · .payout",
     tier: "free",
     style: "prefix",
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
   },
   {
     name: "emoji",
@@ -498,7 +498,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "help",
-    description: "Link to the full command list on the Knife site",
+    description: "Link to the full command list on the Arivix site",
     usage: ".help",
     tier: "free",
     style: "prefix",
@@ -510,7 +510,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "invite",
     description:
-      "Add Knife to your server and open the web dashboard to manage it",
+      "Add Arivix to your server and open the web dashboard to manage it",
     usage: ".invite · .inv",
     tier: "free",
     style: "prefix",
@@ -531,11 +531,12 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     categoryDescription: "Server staff tools.",
   },
   {
-    name: "knife",
-    description: "About Knife — site links, prefix, and gateway latency",
-    usage: ".knife",
+    name: "arivix",
+    description: "About Arivix — site links, prefix, and gateway latency",
+    usage: ".arivix · .knife",
     tier: "free",
     style: "prefix",
+    aliases: ["knife", "about", "knifeinfo"],
     categoryId: "core",
     categoryTitle: "Core",
     categoryDescription: "Essential prefix commands.",
@@ -543,7 +544,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "lb",
     description:
-      "Text leaderboard — top members by messages sent (every message while Knife is in the server)",
+      "Text leaderboard — top members by messages sent (every message while Arivix is in the server)",
     usage: ".lb · .leaderboard · .textlb",
     tier: "free",
     style: "prefix",
@@ -555,7 +556,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "nickname",
     description:
-      "Change Knife's nickname in this server (empty text clears it). Needs Manage Nicknames + bot role with Change Nickname — no owner bypass.",
+      "Change Arivix's nickname in this server (empty text clears it). Needs Manage Nicknames + bot role with Change Nickname — no owner bypass.",
     usage: ".nickname <text|empty>",
     tier: "free",
     style: "prefix",
@@ -567,7 +568,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "news",
     description:
-      "Latest What's new line from knife.rip/changelog + link (fetches site API)",
+      "Latest What's new line from arivix.org/changelog + link (fetches site API)",
     usage: ".news · .whatsnew · .updates",
     tier: "free",
     style: "prefix",
@@ -636,26 +637,26 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   },
   {
     name: "premium",
-    description: "Knife Pro — one-time lifetime unlock and your status",
+    description: "Arivix Pro — one-time lifetime unlock and your status",
     usage: ".premium",
     tier: "free",
     style: "prefix",
     aliases: ["pro", "prem"],
     categoryId: "pro",
     categoryTitle: "Pro",
-    categoryDescription: "Knife Pro billing and perks.",
+    categoryDescription: "Arivix Pro billing and perks.",
   },
   {
     name: "remind",
     description:
-      "Knife Pro — schedule a personal reminder (DM); rate-limited; up to 7 days ahead",
+      "Arivix Pro — schedule a personal reminder (DM); rate-limited; up to 7 days ahead",
     usage: ".remind 15m note · .remind list · .remind cancel [id|all]",
     tier: "pro",
     style: "prefix",
     aliases: ["reminder", "remindme"],
     categoryId: "pro",
     categoryTitle: "Pro",
-    categoryDescription: "Knife Pro billing and perks.",
+    categoryDescription: "Arivix Pro billing and perks.",
   },
   {
     name: "reminders",
@@ -666,7 +667,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
     style: "prefix",
     categoryId: "pro",
     categoryTitle: "Pro",
-    categoryDescription: "Knife Pro billing and perks.",
+    categoryDescription: "Arivix Pro billing and perks.",
   },
   {
     name: "roleinfo",
@@ -705,7 +706,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "say",
     description:
-      "Post as the bot — plain text or **{embed}$v** script from **knife.rip/tools/embed** (Knife Pro + Administrator; owners skip both)",
+      "Post as the bot — plain text or **{embed}$v** script from **arivix.org/tools/embed** (Arivix Pro + Administrator; owners skip both)",
     usage:
       ".say #channel hello · .say #channel {embed}$v… · .botsay · .botpost",
     tier: "pro",
@@ -841,7 +842,7 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "vlb",
     description:
-      "Voice leaderboard — top members by time in VC (AFK excluded; while Knife is online)",
+      "Voice leaderboard — top members by time in VC (AFK excluded; while Arivix is online)",
     usage: ".vlb · .vcleaderboard · .voicelb",
     tier: "free",
     style: "prefix",

@@ -24,12 +24,12 @@ import type { KnifeCommand } from "../types";
 export const crimeCommand: KnifeCommand = {
   name: "crime",
   aliases: ["heist", "lawless"],
-  description: "Risky Knife Cash job — negative EV; fines go to the treasury on failure",
+  description: "Risky Arivix Cash job — negative EV; fines go to the treasury on failure",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".crime · .heist",
     tier: "free",
     style: "prefix",
@@ -126,7 +126,7 @@ export const crimeCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Knife Cash — crime`,
+            title: `${ecoM.cash} Arivix Cash — crime`,
             description: `${outcome.summary}\nBalance: **${formatCash(outcome.next)}**.`,
           }),
         ],

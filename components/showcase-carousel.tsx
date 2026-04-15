@@ -68,7 +68,7 @@ export function ShowcaseCarousel({
     <div
       className="showcase-marquee-wrap relative max-w-full shrink-0 overflow-hidden"
       role="region"
-      aria-label="Featured Knife communities, auto-scrolling"
+      aria-label="Featured Arivix communities, auto-scrolling"
       style={{ width: viewportWidth }}
     >
       <div

@@ -308,7 +308,7 @@ export async function buildBusinessMenuEmbed(
 
   return new EmbedBuilder()
     .setColor(0xf1c40f)
-    .setTitle(`${ecoM.cash} Knife Cash — businesses`)
+    .setTitle(`${ecoM.cash} Arivix Cash — businesses`)
     .setDescription(
       banner +
         `**Quick guide**\n` +

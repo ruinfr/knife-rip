@@ -28,7 +28,7 @@ export async function getCash(discordUserId: string): Promise<bigint> {
   return u.cash;
 }
 
-/** Persist that the user finished the Knife Cash disclaimer (hub unlock). */
+/** Persist that the user finished the Arivix Cash disclaimer (hub unlock). */
 export async function recordGambleDisclaimerAccepted(
   discordUserId: string,
 ): Promise<void> {

@@ -220,7 +220,7 @@ export async function fetchTopShowcaseCommunities(
 }
 
 export type DashboardGuildSummary = {
-  /** Manage Server (or owner/admin) and Knife is in the guild */
+  /** Manage Server (or owner/admin) and Arivix is in the guild */
   knifeGuilds: DiscordGuild[];
   /** You can manage these, but the bot is not installed */
   inviteCandidates: DiscordGuild[];

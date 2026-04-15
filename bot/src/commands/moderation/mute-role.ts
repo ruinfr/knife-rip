@@ -102,7 +102,7 @@ export const setupmuteCommand: KnifeCommand = {
       const role = await g.roles.create({
         name: "Muted",
         color: Colors.Grey,
-        reason: `Knife setupmute — ${message.author.tag}`,
+        reason: `Arivix setupmute — ${message.author.tag}`,
       });
       await getBotPrisma().botGuildMuteConfig.create({
         data: { guildId: g.id, mutedRoleId: role.id },
@@ -192,7 +192,7 @@ async function roleMuteRun(
   const muteRole = message.guild!.roles.cache.get(mutedId) ?? (await message.guild!.roles.fetch(mutedId).catch(() => null));
   if (!muteRole || muteRole.position >= me.roles.highest.position) {
     await message.reply({
-      embeds: [errorEmbed("Move **Knife** above the **Muted** role.")],
+      embeds: [errorEmbed("Move **Arivix** above the **Muted** role.")],
     });
     return;
   }

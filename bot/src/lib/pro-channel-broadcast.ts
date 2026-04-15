@@ -6,7 +6,7 @@ import { resolveChannelMessagePayload } from "./knife-message-payload";
 import { isCommandOwnerBypass } from "./owner-bypass";
 import { fetchPremiumFromSite } from "./site-client";
 
-const PRICING_URL = "https://knife.rip/pricing";
+const PRICING_URL = "https://arivix.org/pricing";
 /** Allow long scripts (embed + pairs); individual parts are capped in resolver. */
 export const BROADCAST_MAX_INPUT = 12_000;
 
@@ -56,7 +56,7 @@ export async function gateProAdminBroadcast(
       await message.reply({
         embeds: [
           errorEmbed(
-            `${label} needs Knife Pro verification, but this bot is not linked to the site (**BOT_INTERNAL_SECRET**).`,
+            `${label} needs Arivix Pro verification, but this bot is not linked to the site (**BOT_INTERNAL_SECRET**).`,
           ),
         ],
       });
@@ -71,7 +71,7 @@ export async function gateProAdminBroadcast(
         await message.reply({
           embeds: [
             errorEmbed(
-              "Could not verify Knife Pro right now. Try again in a moment.",
+              "Could not verify Arivix Pro right now. Try again in a moment.",
             ),
           ],
         });
@@ -83,7 +83,7 @@ export async function gateProAdminBroadcast(
       await message.reply({
         embeds: [
           errorEmbed(
-            `${label} is **Knife Pro** only. Link the Discord account you use here after purchase.\n\n**[Pricing](${PRICING_URL})**`,
+            `${label} is **Arivix Pro** only. Link the Discord account you use here after purchase.\n\n**[Pricing](${PRICING_URL})**`,
           ),
         ],
       });

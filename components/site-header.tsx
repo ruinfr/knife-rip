@@ -48,7 +48,7 @@ export function SiteHeader({ locale, header }: Props) {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-red-950/35 bg-background/80 backdrop-blur-xl backdrop-saturate-150">
+    <header className="sticky top-0 z-50 border-b border-blue-950/35 bg-background/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="relative mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:h-16 sm:gap-5 sm:px-6 lg:px-8">
         <Link
           href="/"
@@ -56,7 +56,7 @@ export function SiteHeader({ locale, header }: Props) {
         >
           <BrandMark className="h-7 w-7 text-edge sm:h-8 sm:w-8" />
           <span className="font-display text-lg font-bold tracking-tight">
-            Knife
+            Arivix
           </span>
         </Link>
 
@@ -64,7 +64,7 @@ export function SiteHeader({ locale, header }: Props) {
           className="pointer-events-none absolute left-1/2 top-1/2 hidden w-max max-w-[calc(100%-13rem)] -translate-x-1/2 -translate-y-1/2 justify-center px-2 md:flex lg:max-w-[calc(100%-24rem)] xl:max-w-[calc(100%-28rem)]"
           aria-label={header.mainNavAria}
         >
-          <div className="nav-pill-sheen pointer-events-auto inline-flex max-w-full items-center gap-px overflow-x-auto rounded-full border border-white/[0.07] bg-surface/45 px-1 py-1 shadow-[0_0_40px_-18px_rgba(220,38,38,0.18)] backdrop-blur-md scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="nav-pill-sheen pointer-events-auto inline-flex max-w-full items-center gap-px overflow-x-auto rounded-full border border-white/[0.07] bg-surface/45 px-1 py-1 shadow-[0_0_40px_-18px_rgba(37,99,235,0.18)] backdrop-blur-md scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {NAV.map((item) => (
               <Link
                 key={item.href}
@@ -107,9 +107,9 @@ export function SiteHeader({ locale, header }: Props) {
                 <Link
                   href="/dashboard"
                   className={cn(
-                    "motion-safe:transition inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-red-500/25 bg-red-950/35 px-3 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(220,38,38,0.45)] hover:border-red-400/35 hover:bg-red-950/50 lg:gap-2 lg:px-4",
+                    "motion-safe:transition inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-blue-500/25 bg-blue-950/35 px-3 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(37,99,235,0.45)] hover:border-blue-400/35 hover:bg-blue-950/50 lg:gap-2 lg:px-4",
                     linkActive(pathname, "/dashboard") &&
-                      "border-red-400/40 bg-red-950/55",
+                      "border-red-400/40 bg-blue-950/55",
                   )}
                 >
                   <Icon
@@ -132,7 +132,7 @@ export function SiteHeader({ locale, header }: Props) {
               <button
                 type="button"
                 onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}
-                className="motion-safe:transition inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-red-500/25 bg-red-950/35 px-3 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(220,38,38,0.45)] hover:border-red-400/35 hover:bg-red-950/50 lg:gap-2 lg:px-4"
+                className="motion-safe:transition inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-blue-500/25 bg-blue-950/35 px-3 py-2 text-sm font-semibold text-foreground shadow-[0_0_28px_-10px_rgba(37,99,235,0.45)] hover:border-blue-400/35 hover:bg-blue-950/50 lg:gap-2 lg:px-4"
               >
                 <Icon icon="mdi:login" className="size-4 shrink-0" aria-hidden />
                 {header.signIn}
@@ -142,7 +142,7 @@ export function SiteHeader({ locale, header }: Props) {
 
           <button
             type="button"
-            className="motion-safe:transition flex h-10 w-10 items-center justify-center rounded-full border border-surface-border bg-surface/80 text-foreground hover:border-red-500/20 hover:bg-surface-elevated md:hidden"
+            className="motion-safe:transition flex h-10 w-10 items-center justify-center rounded-full border border-surface-border bg-surface/80 text-foreground hover:border-blue-500/20 hover:bg-surface-elevated md:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             aria-label={menuOpen ? header.menuClose : header.menuOpen}
@@ -163,7 +163,7 @@ export function SiteHeader({ locale, header }: Props) {
           "mobile-nav-panel overflow-hidden border-t bg-background/95 md:hidden",
           "transition-[max-height,opacity] duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
           menuOpen
-            ? "max-h-[min(80vh,32rem)] border-red-950/40 opacity-100"
+            ? "max-h-[min(80vh,32rem)] border-blue-950/40 opacity-100"
             : "pointer-events-none max-h-0 border-transparent opacity-0",
         )}
         aria-hidden={!menuOpen}
@@ -181,7 +181,7 @@ export function SiteHeader({ locale, header }: Props) {
               className={cn(
                 "motion-safe:transition flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium",
                 linkActive(pathname, item.href)
-                  ? "bg-surface-elevated text-foreground ring-1 ring-red-500/15"
+                  ? "bg-surface-elevated text-foreground ring-1 ring-blue-500/15"
                   : "text-muted hover:bg-surface hover:text-foreground",
               )}
             >
@@ -206,7 +206,7 @@ export function SiteHeader({ locale, header }: Props) {
                 className={cn(
                   "motion-safe:transition flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold",
                   linkActive(pathname, "/dashboard")
-                    ? "bg-red-950/40 text-foreground"
+                    ? "bg-blue-950/40 text-foreground"
                     : "text-muted hover:bg-surface hover:text-foreground",
                 )}
               >

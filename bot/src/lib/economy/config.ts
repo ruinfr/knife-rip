@@ -12,7 +12,7 @@ export const MILESTONE_STACK_100_EXTRA_CASH = 50;
 export const MILESTONE_HIGH_THRESHOLDS = [500, 1000, 3000] as const;
 export const MILESTONE_HIGH_REWARDS = [500, 2500, 8000] as const;
 
-/** Human-readable lines for Knife Cash disclaimer — message cash stack + high tiers. */
+/** Human-readable lines for Arivix Cash disclaimer — message cash stack + high tiers. */
 export const MILESTONE_HELP_LINES: readonly string[] = [
   `Every **50** msgs → **+${MILESTONE_STACK_50_CASH}** (stacks at **50, 100, 150…**)`,
   `Every **100** msgs → **+${MILESTONE_STACK_100_EXTRA_CASH}** extra (**100, 200…**)`,
@@ -32,7 +32,7 @@ export const PAY_COOLDOWN_MS = 45_000;
 export const DAILY_REWARD_CASH = 50n;
 export const DAILY_COOLDOWN_MS = 86_400_000;
 
-/** +20% on payouts when user boosts a configured partner server (server1/server2/…) or Knife Pro / owner. */
+/** +20% on payouts when user boosts a configured partner server (server1/server2/…) or Arivix Pro / owner. */
 export const ECONOMY_BONUS_MULT = 1.2;
 
 export const HUB_PAGE_COUNT = 4 as const;

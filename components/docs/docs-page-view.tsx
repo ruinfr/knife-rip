@@ -5,7 +5,7 @@ import type { DocPageDefinition } from "@/lib/docs/types";
 export function DocsPageView({ doc }: { doc: DocPageDefinition }) {
   return (
     <>
-      <header className="mb-10 space-y-3 border-b border-red-950/30 pb-8">
+      <header className="mb-10 space-y-3 border-b border-blue-950/30 pb-8">
         <span
           className="block h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/35 to-transparent"
           aria-hidden

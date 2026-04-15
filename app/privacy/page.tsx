@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How Knife collects and uses personal data.",
+  description: "How Arivix collects and uses personal data.",
 };
 
 export default function PrivacyPage() {
@@ -14,19 +14,19 @@ export default function PrivacyPage() {
       description="Last updated: April 4, 2026"
     >
       <p>
-        This Privacy Policy explains how Knife (&quot;we&quot;, &quot;us&quot;)
+        This Privacy Policy explains how Arivix (&quot;we&quot;, &quot;us&quot;)
         collects, uses, shares, and protects information when you visit
-        knife.rip, use our Discord bot or related integrations, or otherwise
+        arivix.org, use our Discord bot or related integrations, or otherwise
         interact with our services (the &quot;Service&quot;). By using the
         Service, you acknowledge the practices described here.
       </p>
 
       <h2>1. Who we are</h2>
       <p>
-        The Service is operated in connection with the Knife project and the
-        knife.rip website. For privacy requests, contact{" "}
-        <a href="mailto:support@knife.rip" className="text-foreground underline">
-          support@knife.rip
+        The Service is operated in connection with the Arivix Project and the
+        arivix.org website. For privacy requests, contact{" "}
+        <a href="mailto:support@arivix.org" className="text-foreground underline">
+          support@arivix.org
         </a>
         . If you need a formal legal entity name, registered address, or EU/UK
         representative for compliance, confirm those details with counsel and
@@ -52,7 +52,7 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong className="text-foreground">Billing data:</strong> If you
-          purchase Knife Pro, Stripe processes payment details. We store Stripe
+          purchase Arivix Pro, Stripe processes payment details. We store Stripe
           customer identifiers and purchase-related status—not full payment card
           numbers (Stripe holds those).
         </li>

@@ -13,7 +13,7 @@ async function resolveBillingLabel(discordUserId: string): Promise<string> {
       : "**Bot owner** — full Pro + bypass.";
   }
   if (isKnifePremium(discordUserId)) {
-    return "**Knife Pro** on this Discord account (complimentary).";
+    return "**Arivix Pro** on this Discord account (complimentary).";
   }
   if (getBotInternalSecret()) {
     try {
@@ -25,7 +25,7 @@ async function resolveBillingLabel(discordUserId: string): Promise<string> {
         return "**Owner handout** — Pro-tier access.";
       }
       if (e.premium) {
-        return "**Knife Pro** — active on this Discord account.";
+        return "**Arivix Pro** — active on this Discord account.";
       }
       return "**Free** — upgrade anytime (one-time lifetime).";
     } catch {
@@ -43,7 +43,7 @@ export const billingCommand: KnifeCommand = {
   site: {
     categoryId: "pro",
     categoryTitle: "Pro",
-    categoryDescription: "Knife Pro billing and perks.",
+    categoryDescription: "Arivix Pro billing and perks.",
     usage: ".billing",
     tier: "free",
     style: "prefix",

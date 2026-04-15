@@ -17,12 +17,12 @@ import type { KnifeCommand } from "../types";
 export const begCommand: KnifeCommand = {
   name: "beg",
   aliases: ["panhandle", "sparechange"],
-  description: "Beg for a tiny Knife Cash tip (short cooldown, often nothing)",
+  description: "Beg for a tiny Arivix Cash tip (short cooldown, often nothing)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".beg · .panhandle · .sparechange",
     tier: "free",
     style: "prefix",
@@ -89,7 +89,7 @@ export const begCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.cash} Knife Cash — beg`,
+            title: `${ecoM.cash} Arivix Cash — beg`,
             description:
               got > 0n
                 ? `Someone dropped **${formatCash(got)}**. Balance: **${formatCash(newCash)}**.`

@@ -24,7 +24,7 @@ export function getDocPage(slug: string): DocPageDefinition | undefined {
 export const DOCS_OVERVIEW: DocPageDefinition = {
   title: "Documentation",
   description:
-    "Guides for Knife — moderation, utilities, automation, and premium workflows.",
+    "Guides for Arivix — moderation, utilities, automation, and premium workflows.",
   sections: [
     {
       id: "introduction",
@@ -32,9 +32,9 @@ export const DOCS_OVERVIEW: DocPageDefinition = {
       content: (
         <>
           <p>
-            Welcome to Knife&apos;s documentation. These guides mirror the product you run
-            today: prefix commands, the web dashboard, and Knife Pro
-            entitlements tied to <a href="https://knife.rip">knife.rip</a>.
+            Welcome to Arivix&apos;s documentation. These guides mirror the product you run
+            today: prefix commands, the web dashboard, and Arivix Pro
+            entitlements tied to <a href="https://arivix.org">arivix.org</a>.
           </p>
           <p>
             Start with <a href="/docs/getting-started">Getting started</a>, skim{" "}

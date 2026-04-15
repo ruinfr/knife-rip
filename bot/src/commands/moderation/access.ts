@@ -37,7 +37,7 @@ export const accessCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           errorEmbed(
-            "Usage: **`.access yes`** `<guildId>` — allow Knife in that server again.\n" +
+            "Usage: **`.access yes`** `<guildId>` — allow Arivix in that server again.\n" +
               "**`.access no`** `<guildId>` — ignore that server (commands, panels, VoiceMaster).\n\n" +
               "Run from **DM** or another server if that guild is already blocked.",
           ),
@@ -64,7 +64,7 @@ export const accessCommand: KnifeCommand = {
             minimalEmbed({
               title: "Guild blocked",
               description:
-                `Knife will **ignore** guild \`${guildId}\` (messages, interactions, voice events).\n` +
+                `Arivix will **ignore** guild \`${guildId}\` (messages, interactions, voice events).\n` +
                 `Unblock with **\`.access yes ${guildId}\`** from DM or another server.`,
             }),
           ],
@@ -92,7 +92,7 @@ export const accessCommand: KnifeCommand = {
         embeds: [
           minimalEmbed({
             title: "Guild allowed",
-            description: `Knife will work in \`${guildId}\` again (subject to Discord / invites).`,
+            description: `Arivix will work in \`${guildId}\` again (subject to Discord / invites).`,
           }),
         ],
       });

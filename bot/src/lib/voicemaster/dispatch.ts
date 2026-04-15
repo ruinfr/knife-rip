@@ -246,7 +246,7 @@ export async function dispatchVoicemaster(
           title: "VoiceMaster — how to start",
           description:
             `1. Join the hub voice channel: ${hubPart}\n` +
-            `2. Knife will create **your** channel and move you into it.\n` +
+            `2. Arivix will create **your** channel and move you into it.\n` +
             `3. Use **\`.voicemaster\`** (or **\`.vm\`**) for rename, lock, ghost, etc.\n` +
             `4. When everyone leaves your temp channel, it is deleted automatically.`,
         }),

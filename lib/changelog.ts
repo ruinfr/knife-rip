@@ -67,14 +67,14 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     date: "2026-04-10",
     title: "Pets: dog, cat, rabbit",
     summary:
-      "Knife Cash pet shop species are now dog, cat, and rabbit (command catalog v43). Older pet types in the database still work for feed and equip.",
+      "Arivix Cash pet shop species are now dog, cat, and rabbit (command catalog v43). Older pet types in the database still work for feed and equip.",
     bullets: [],
   },
   {
     id: "2026-04-08-v42-economy-expansion",
     catalogVersion: 42,
     date: "2026-04-08",
-    title: "Knife Cash expansion: work, bank, pets, PvP",
+    title: "Arivix Cash expansion: work, bank, pets, PvP",
     summary:
       "Major economy layer: work, crime, beg, mine and fish gathering, bank deposit or withdraw with lazy interest and tiers, passive businesses, pets with a button menu and small gamble multipliers, guild-only rob, stake duels with treasury rake, and bounties paid on successful robberies. Fees route to a configurable treasury user. Command catalog v42; migration 20260416150000_economy_expansion_v2.",
     bullets: [],
@@ -94,7 +94,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     date: "2026-04-08",
     title: "Documentation hub refresh",
     summary:
-      "The docs section is now a full guide hub with sidebar navigation, Command+K search, mobile drawer, sticky table of contents, and themed motion. Articles cover Knife features honestly (including not-yet features) with deep links across commands, embed builder, and dashboard.",
+      "The docs section is now a full guide hub with sidebar navigation, Command+K search, mobile drawer, sticky table of contents, and themed motion. Articles cover Arivix features honestly (including not-yet features) with deep links across commands, embed builder, and dashboard.",
     bullets: [],
   },
   {
@@ -103,14 +103,14 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     date: "2026-04-08",
     title: "Vanity scanner (prefix)",
     summary:
-      "Knife Pro vanity scanning uses prefix .vanity search, .vanity drop, and .vanities (recent drops with buttons). Background scans use VANITY_SCANNER_ENABLED=1.",
+      "Arivix Pro vanity scanning uses prefix .vanity search, .vanity drop, and .vanities (recent drops with buttons). Background scans use VANITY_SCANNER_ENABLED=1.",
     bullets: [],
   },
   {
     id: "2026-04-08-v39-vanity-pro",
     catalogVersion: 39,
     date: "2026-04-08",
-    title: "Knife Pro: vanity slug search and recent drops",
+    title: "Arivix Pro: vanity slug search and recent drops",
     summary:
       "Prefix .vanity search looks up a discord.gg slug via Discord. .vanity drop or .vanities lists recent dictionary-driven invite releases with pagination like other vanity bots. A background scanner runs when VANITY_SCANNER_ENABLED=1; apply migration 20260408160000_vanity_invite_observation.",
     bullets: [],
@@ -130,9 +130,9 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     date: "2026-04-18",
     title: "Site: command category tabs + embed builder",
     summary:
-      "The commands page has horizontal category filters with counts. New /tools/embed builder outputs Knife {embed}$v scripts; .say and .createembed accept those scripts (plus variable substitution from the invoker context). .webhook send/edit also accepts the script after JSON parsing fails.",
+      "The commands page has horizontal category filters with counts. New /tools/embed builder outputs Arivix {embed}$v scripts; .say and .createembed accept those scripts (plus variable substitution from the invoker context). .webhook send/edit also accepts the script after JSON parsing fails.",
     bullets: [
-      "createembed is Knife Pro plus Administrator, same gates as say, and expects an embed script.",
+      "createembed is Arivix Pro plus Administrator, same gates as say, and expects an embed script.",
     ],
   },
   {
@@ -194,7 +194,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     id: "2026-04-05-v31-roulette",
     catalogVersion: 31,
     date: "2026-04-05",
-    title: "Knife Cash roulette",
+    title: "Arivix Cash roulette",
     summary:
       "American roulette in the gamble hub: set your bet, then choose Red, Black, or Green on the wheel.",
     bullets: [
@@ -205,7 +205,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     id: "2026-04-05-v30-coinflip-pvp",
     catalogVersion: 30,
     date: "2026-04-05",
-    title: "Coinflip PVP in Knife Cash",
+    title: "Coinflip PVP in Arivix Cash",
     summary:
       "Challenge another member to a fair 50/50 coinflip with matching stakes: they accept or decline, then balances settle in one step with no house rake.",
     bullets: [
@@ -218,7 +218,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     date: "2026-04-05",
     title: ".baltop leaderboard",
     summary:
-      "New prefix command for the global top Knife Cash balances (aliases .cashtop and .richest).",
+      "New prefix command for the global top Arivix Cash balances (aliases .cashtop and .richest).",
     bullets: ["Same economy database as .cash and the gambling hub stats menu."],
   },
   {
@@ -227,7 +227,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     date: "2026-04-05",
     title: "Message threshold cash drop",
     summary:
-      "Bot owners can run .messagedrop to pay Knife Cash to every user who has at least a chosen lifetime message count.",
+      "Bot owners can run .messagedrop to pay Arivix Cash to every user who has at least a chosen lifetime message count.",
     bullets: [
       "Aliases: .msgdrop and .drop. Capped at 10,000 recipients per run; economy log records the payout.",
     ],
@@ -238,7 +238,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     date: "2026-04-08",
     title: "Daily reward and public gamble results",
     summary:
-      ".daily grants 50 Knife Cash every 24 hours. Coinflip, dice, slots, blackjack, and mines replies from the hub are visible in the channel so others can see wins and losses.",
+      ".daily grants 50 Arivix Cash every 24 hours. Coinflip, dice, slots, blackjack, and mines replies from the hub are visible in the channel so others can see wins and losses.",
     bullets: [
       "Disclaimer mentions .daily and that game messages post in the channel.",
       "Database: lastDailyAt on economy users; run prisma migrate for new columns.",
@@ -253,7 +253,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
       "Prefix webhook tools: create, list, send, edit, delete, lock, and unlock. List needs no member permission; other subcommands need Manage Webhooks.",
     bullets: [
       "Send and edit support plain text or JSON embed payloads; edit targets a Discord message link for webhook-owned messages.",
-      "Optional lock stores in the database so only the locker (plus Administrators) can use Knife to act on that webhook.",
+      "Optional lock stores in the database so only the locker (plus Administrators) can use Arivix to act on that webhook.",
     ],
   },
   {
@@ -272,7 +272,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     id: "2026-04-05-v24-gambling",
     catalogVersion: 24,
     date: "2026-04-05",
-    title: "Knife Cash hub",
+    title: "Arivix Cash hub",
     summary:
       "Gambling menu with shop, games, stats, and transfers. Cash command for balances; owner tools for grants and lucky drops.",
     bullets: [

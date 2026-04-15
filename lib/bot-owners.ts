@@ -11,8 +11,8 @@
  *
  * Owners get:
  * - **Bot:** No prefix cooldown; on admin-gated commands (e.g. `.say`) skip **Discord Administrator**
- *   and **Knife Pro** checks — works even if your member isn’t cached or you have no staff perms.
- * - **Site:** Treated as Knife Pro (`/api/internal/entitlement`, dashboard).
+ *   and **Arivix Pro** checks — works even if your member isn’t cached or you have no staff perms.
+ * - **Site:** Treated as Arivix Pro (`/api/internal/entitlement`, dashboard).
  */
 /** Single bootstrap owner; promote anyone else with `.handout` (DB). */
 export const BOT_OWNER_DISCORD_IDS: readonly string[] = [

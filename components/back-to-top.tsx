@@ -83,7 +83,7 @@ export function BackToTop() {
             "flex size-12 items-center justify-center rounded-full",
             "border border-white/[0.12] bg-[#121212] text-accent-strong shadow-[0_4px_24px_-4px_rgba(0,0,0,0.75)]",
             "motion-safe:transition motion-safe:duration-200",
-            "hover:border-edge/35 hover:bg-surface-elevated hover:text-foreground hover:shadow-[0_0_28px_-6px_rgba(220,38,38,0.35)]",
+            "hover:border-edge/35 hover:bg-surface-elevated hover:text-foreground hover:shadow-[0_0_28px_-6px_rgba(37,99,235,0.35)]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-edge/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           )}
           aria-label="Back to top"

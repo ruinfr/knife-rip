@@ -133,7 +133,7 @@ export const jailsetupCommand: KnifeCommand = {
         name: "Jailed",
         color: 0x546e7a,
         mentionable: false,
-        reason: "Knife jail setup",
+        reason: "Arivix jail setup",
       });
 
       const jailChannel = await guild.channels.create({
@@ -229,8 +229,8 @@ export const jailsetupCommand: KnifeCommand = {
               `Use **\`.jail\`** @user to jail, **\`.unjail\`** to release, **\`.jaillist\`** to list.\n` +
               (staffAccessRoleId
                 ? `_Your top role can see these channels._\n`
-                : `_Give yourself a role under Knife, then re-invite mods or adjust overwrites so staff can see logs._\n`) +
-              `_Move **Knife’s** role **above** **Jailed** in Server Settings → Roles._`,
+                : `_Give yourself a role under Arivix, then re-invite mods or adjust overwrites so staff can see logs._\n`) +
+              `_Move **Arivix’s** role **above** **Jailed** in Server Settings → Roles._`,
           }),
         ],
       });

@@ -147,7 +147,7 @@ const HUB_PAGE_TITLE: readonly string[] = [
 
 export function economyHubPageTitle(page: number): string {
   const p = Math.max(0, Math.min(HUB_PAGE_TITLE.length - 1, page));
-  return `${HUB_PAGE_TITLE[p]!} · Knife Cash`;
+  return `${HUB_PAGE_TITLE[p]!} · Arivix Cash`;
 }
 
 /** Custom emoji for a pet species key (buyable + legacy). */

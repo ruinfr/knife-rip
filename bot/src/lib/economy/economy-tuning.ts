@@ -1,4 +1,4 @@
-/** Central tuning for Knife Cash expansion (work/crime/bank/business/pvp/pets). */
+/** Central tuning for Arivix Cash expansion (work/crime/bank/business/pvp/pets). */
 
 import { ECONOMY_BONUS_MULT } from "./config";
 

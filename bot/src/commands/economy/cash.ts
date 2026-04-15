@@ -9,12 +9,12 @@ import type { KnifeCommand } from "../types";
 export const cashCommand: KnifeCommand = {
   name: "cash",
   aliases: ["bal", "balance", "wallet"],
-  description: "Show Knife Cash balance for you or another user (global wallet)",
+  description: "Show Arivix Cash balance for you or another user (global wallet)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".cash · .bal [@user | ID]",
     tier: "free",
     style: "prefix",
@@ -43,7 +43,7 @@ export const cashCommand: KnifeCommand = {
             `${ecoM.wallet} **Balance:** **${formatCash(bal)}** cash\n` +
             (bonus
               ? `${ecoM.booster} **×${mult.toFixed(2)}** payout on wins & milestones (boost / Pro / equipped pet, capped).`
-              : `${ecoM.tablerinfosquarefilled} Boost, **Knife Pro**, or an equipped **pet** raise payouts (capped).`),
+              : `${ecoM.tablerinfosquarefilled} Boost, **Arivix Pro**, or an equipped **pet** raise payouts (capped).`),
         }),
       ],
     });

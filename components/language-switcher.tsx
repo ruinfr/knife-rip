@@ -110,7 +110,7 @@ export function LanguageSwitcher({
           aria-label={selectLanguageLabel}
         >
           {saveFailed ? (
-            <p className="mx-3 mb-1 rounded-lg border border-red-500/25 bg-red-950/35 px-2.5 py-2 text-[11px] leading-snug text-muted">
+            <p className="mx-3 mb-1 rounded-lg border border-blue-500/25 bg-blue-950/35 px-2.5 py-2 text-[11px] leading-snug text-muted">
               Couldn&apos;t save language. Check your connection and try again.
             </p>
           ) : null}

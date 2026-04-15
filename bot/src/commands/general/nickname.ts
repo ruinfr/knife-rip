@@ -20,7 +20,7 @@ export const nicknameCommand: KnifeCommand = {
   name: "nickname",
   aliases: ["nick"],
   description:
-    "Set or clear Knife’s nickname in this server (Manage Nicknames + bot needs Change Nickname)",
+    "Set or clear Arivix’s nickname in this server (Manage Nicknames + bot needs Change Nickname)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",
@@ -74,7 +74,7 @@ export const nicknameCommand: KnifeCommand = {
         embeds: [
           actionableErrorEmbed({
             title: "Nickname failed",
-            body: "Discord blocked the change — raise Knife's role (still below the owner), and confirm **Change Nickname** + nickname length.",
+            body: "Discord blocked the change — raise Arivix's role (still below the owner), and confirm **Change Nickname** + nickname length.",
             linkPermissionsDoc: true,
           }),
         ],

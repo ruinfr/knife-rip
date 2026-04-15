@@ -50,7 +50,7 @@ import { highlightCommand } from "./general/highlight";
 import { inviteCommand } from "./general/invite";
 import { inviteinfoCommand } from "./general/inviteinfo";
 import { invertCommand } from "./general/invert";
-import { knifeCommand } from "./general/knife";
+import { arivixCommand } from "./general/arivix";
 import { lbCommand, vlbCommand } from "./general/leaderboards";
 import { membercountCommand } from "./general/membercount";
 import { membersCommand } from "./general/members-in-role";
@@ -216,7 +216,7 @@ export const commandDefinitions: KnifeCommand[] = [
   jailsetupCommand,
   kickCommand,
   lockdownCommand,
-  knifeCommand,
+  arivixCommand,
   lbCommand,
   lockCommand,
   luckydropCommand,

@@ -17,10 +17,10 @@ export function DocsLayoutClient({ children }: { children: ReactNode }) {
   useDocsSearchShortcut(setSearchOpen);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,rgba(220,38,38,0.09),transparent_52%)]">
+    <div className="min-h-[calc(100vh-4rem)] bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,rgba(37,99,235,0.09),transparent_52%)]">
       <div
         className={cn(
-          "sticky top-14 z-[70] border-b border-red-950/25 bg-background/75 backdrop-blur-xl sm:top-16",
+          "sticky top-14 z-[70] border-b border-blue-950/25 bg-background/75 backdrop-blur-xl sm:top-16",
         )}
       >
         <div className="mx-auto flex max-w-[100rem] items-center gap-3 px-3 py-2.5 sm:px-4 lg:px-6">

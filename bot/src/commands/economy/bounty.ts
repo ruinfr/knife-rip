@@ -18,12 +18,12 @@ export const bountyCommand: KnifeCommand = {
   name: "bounty",
   aliases: ["hit", "contract"],
   description:
-    "Post Knife Cash on someone's head — paid automatically if you **successfully `.rob`** them here (treasury holds escrow)",
+    "Post Arivix Cash on someone's head — paid automatically if you **successfully `.rob`** them here (treasury holds escrow)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage:
       ".bounty @user <amount> · .hit · .bounty list · .bounty cancel",
     tier: "free",

@@ -14,12 +14,12 @@ export const mineCommand: KnifeCommand = {
   name: "mine",
   aliases: ["mining", "dig"],
   description:
-    "Knife Cash — mining menu: pickaxes, upgrades, and pick-specific ore minigames (not casino Mines)",
+    "Arivix Cash — mining menu: pickaxes, upgrades, and pick-specific ore minigames (not casino Mines)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".mine · .mining · .dig",
     tier: "free",
     style: "prefix",

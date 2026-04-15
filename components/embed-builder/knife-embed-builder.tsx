@@ -256,7 +256,7 @@ export function KnifeEmbedBuilder() {
       <div className="min-w-0 xl:col-span-7 2xl:col-span-8">
         <Card
           padding="lg"
-          className="border-white/[0.08] bg-surface/50 shadow-[0_0_48px_-20px_rgba(220,38,38,0.2)] motion-safe:transition-shadow motion-safe:hover:shadow-[0_0_56px_-18px_rgba(220,38,38,0.25)]"
+          className="border-white/[0.08] bg-surface/50 shadow-[0_0_48px_-20px_rgba(37,99,235,0.2)] motion-safe:transition-shadow motion-safe:hover:shadow-[0_0_56px_-18px_rgba(37,99,235,0.25)]"
         >
           <div className="flex flex-col gap-4 border-b border-white/[0.06] pb-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
@@ -289,7 +289,7 @@ export function KnifeEmbedBuilder() {
                   onClick={() => void copyText("script", generated)}
                   className={cn(
                     actionBtn,
-                    "border border-red-500/30 bg-red-950/35 text-foreground shadow-[0_0_24px_-12px_rgba(220,38,38,0.5)] hover:border-red-400/40",
+                    "border border-blue-500/30 bg-blue-950/35 text-foreground shadow-[0_0_24px_-12px_rgba(37,99,235,0.5)] hover:border-blue-400/40",
                   )}
                 >
                   <Icon icon="mdi:content-copy" className="size-4" aria-hidden />
@@ -351,7 +351,7 @@ export function KnifeEmbedBuilder() {
                     {tab === t ? (
                       <motion.span
                         layoutId="embed-tab-highlight"
-                        className="absolute inset-0 rounded-xl bg-red-950/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ring-1 ring-edge/35"
+                        className="absolute inset-0 rounded-xl bg-blue-950/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ring-1 ring-edge/35"
                         transition={{
                           type: "spring",
                           stiffness: 400,
@@ -830,7 +830,7 @@ export function KnifeEmbedBuilder() {
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold motion-safe:transition",
                     varCat === c.id
-                      ? "bg-red-950/55 text-foreground ring-1 ring-edge/35"
+                      ? "bg-blue-950/55 text-foreground ring-1 ring-edge/35"
                       : "border border-white/[0.08] text-muted hover:border-white/[0.14] hover:text-foreground",
                   )}
                 >

@@ -12,13 +12,13 @@ export const createembedCommand: KnifeCommand = {
   name: "createembed",
   aliases: ["ce", "embedcreate", "sendembed", "postembed", "embedsend"],
   description:
-    "Post an embed from a **{embed}$v** script (same as **.say** — build on the site; Knife Pro + Administrator)",
+    "Post an embed from a **{embed}$v** script (same as **.say** — build on the site; Arivix Pro + Administrator)",
   site: {
     categoryId: "moderation",
     categoryTitle: "Moderation",
     categoryDescription: "Server staff tools.",
     usage:
-      ".createembed #channel {embed}$v{title: …}{description: …} — https://knife.rip/tools/embed",
+      ".createembed #channel {embed}$v{title: …}{description: …} — https://arivix.org/tools/embed",
     tier: "pro",
     style: "prefix",
   },
@@ -45,7 +45,7 @@ export const createembedCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           errorEmbed(
-            "Include a **`{embed}$v`** script (use the **Embed builder** on the Knife site).",
+            "Include a **`{embed}$v`** script (use the **Embed builder** on the Arivix site).",
           ),
         ],
       });

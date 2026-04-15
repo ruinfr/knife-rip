@@ -80,7 +80,7 @@ warnOnDuplicateCommandTriggers();
 const PRIVILEGE_RECONCILE_MS = 20 * 60 * 1000;
 
 client.once(Events.ClientReady, async (c) => {
-  console.log(`Knife ready as ${c.user.tag} — prefix "${PREFIX}"`);
+  console.log(`Arivix ready as ${c.user.tag} — prefix "${PREFIX}"`);
   void clearGlobalApplicationCommands();
   try {
     await loadEconomyGuildEnvConfig();
@@ -95,7 +95,7 @@ client.once(Events.ClientReady, async (c) => {
     );
   } else {
     console.log(
-      "Privilege Discord sync: off — set KNIFE_RIP_GUILD_ID (Pro/Owner/Dev role IDs default to knife.rip hub)",
+      "Privilege Discord sync: off — set KNIFE_RIP_GUILD_ID (Pro/Owner/Dev role IDs default to arivix.org hub)",
     );
   }
   try {
@@ -339,7 +339,7 @@ client.login(token).catch((e: unknown) => {
   const msg = e instanceof Error ? e.message : String(e);
   if (msg.includes("disallowed intents")) {
     console.error(
-      "\nKnife needs **Message Content** + **Server Members** (Privileged Gateway Intents), and **Guild Message Reactions** for `.rsnipe`.\n" +
+      "\nArivix needs **Message Content** + **Server Members** (Privileged Gateway Intents), and **Guild Message Reactions** for `.rsnipe`.\n" +
         "Discord Developer Portal → your app → Bot → enable intents, save, retry.\n",
     );
   }

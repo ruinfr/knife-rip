@@ -236,7 +236,7 @@ export const reactionhistoryCommand: KnifeCommand = {
   name: "reactionhistory",
   aliases: ["rh", "reacthistory", "reactionlog"],
   description:
-    "Recent reaction **add/remove** events Knife logged for a message (in-memory, same window as snipes)",
+    "Recent reaction **add/remove** events Arivix logged for a message (in-memory, same window as snipes)",
   site: {
     categoryId: "utility",
     categoryTitle: "Utility",

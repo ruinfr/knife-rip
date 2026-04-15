@@ -20,7 +20,7 @@ export function CasinoFloor({ children }: { children: ReactNode }) {
           id="knife-cash-tables-heading"
           className="mt-1 font-display text-lg font-semibold tracking-tight text-foreground sm:text-xl"
         >
-          Knife Cash floor
+          Arivix Cash floor
         </h2>
         <p className="mt-1 max-w-lg text-sm text-muted">
           Server-side outcomes · wallet cash only · play responsibly

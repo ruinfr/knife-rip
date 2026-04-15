@@ -35,7 +35,7 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="motion-safe:transition rounded-full border border-red-500/30 bg-red-950/40 px-5 py-2.5 text-sm font-semibold text-foreground hover:border-red-400/40"
+          className="motion-safe:transition rounded-full border border-blue-500/30 bg-blue-950/40 px-5 py-2.5 text-sm font-semibold text-foreground hover:border-blue-400/40"
         >
           Try again
         </button>

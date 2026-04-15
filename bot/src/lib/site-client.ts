@@ -44,7 +44,7 @@ function siteUnreachableMessage(): string {
   const base = getSiteApiBase();
   return (
     `The bot could not reach **${base}** (connection failed — often **localhost** with no site running).\n\n` +
-    `**Fix:** In the bot’s \`.env\` set **SITE_API_BASE_URL** to your **live** site (e.g. \`https://knife.rip\`) — same URL as production. ` +
+    `**Fix:** In the bot’s \`.env\` set **SITE_API_BASE_URL** to your **live** site (e.g. \`https://arivix.org\`) — same URL as production. ` +
     `**BOT_INTERNAL_SECRET** must match the site. **.handout** calls the Next.js API; it won’t work until the site is reachable.`
   );
 }

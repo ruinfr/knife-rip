@@ -13,12 +13,12 @@ export const duelCommand: KnifeCommand = {
   name: "duel",
   aliases: ["pvp", "challenge"],
   description:
-    "Challenge someone to a Knife Cash stake duel (guild only; opponent accepts with a button)",
+    "Challenge someone to a Arivix Cash stake duel (guild only; opponent accepts with a button)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".duel @user <amount> · .pvp · .challenge",
     tier: "free",
     style: "prefix",

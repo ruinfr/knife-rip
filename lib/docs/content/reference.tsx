@@ -3,7 +3,7 @@ import type { DocPageDefinition } from "../types";
 export const referencePages: Record<string, DocPageDefinition> = {
   resources: {
     title: "Resources",
-    description: "Quick links across Knife properties.",
+    description: "Quick links across Arivix Properties.",
     sections: [
       {
         id: "site",
@@ -18,7 +18,7 @@ export const referencePages: Record<string, DocPageDefinition> = {
                 <a href="/tools/embed">Embed builder</a> — script output for Pro broadcasts
               </li>
               <li>
-                <a href="/pricing">Pricing</a> — Knife Pro checkout
+                <a href="/pricing">Pricing</a> — Arivix Pro checkout
               </li>
               <li>
                 <a href="/status">Status</a> — bot presence snapshot
@@ -36,9 +36,9 @@ export const referencePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p id="community">
-              Join the official Knife hub for support, Pro role sync, and patch notes. Use{" "}
-              <a href="/">the home page</a> Discord invite or run <code>.knife</code> inside a
-              server where Knife is present for the canonical jump link.
+              Join the official Arivix hub for support, Pro role sync, and patch notes. Use{" "}
+              <a href="/">the home page</a> Discord invite or run <code>.arivix</code> inside a
+              server where Arivix is present for the canonical jump link.
             </p>
           </>
         ),
@@ -47,7 +47,7 @@ export const referencePages: Record<string, DocPageDefinition> = {
   },
   scripting: {
     title: "Scripting",
-    description: "Knife embed scripts and variable substitution.",
+    description: "Arivix embed scripts and variable substitution.",
     sections: [
       {
         id: "format",
@@ -80,7 +80,7 @@ export const referencePages: Record<string, DocPageDefinition> = {
   },
   permissions: {
     title: "Permissions",
-    description: "Discord scopes Knife commonly expects.",
+    description: "Discord scopes Arivix commonly expects.",
     sections: [
       {
         id: "baseline",
@@ -101,7 +101,7 @@ export const referencePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife Pro commands may call the site entitlement API. Ensure{" "}
+              Arivix Pro commands may call the site entitlement API. Ensure{" "}
               <code>BOT_INTERNAL_SECRET</code> matches between Vercel and the bot host so
               premium gates behave consistently.
             </p>
@@ -112,7 +112,7 @@ export const referencePages: Record<string, DocPageDefinition> = {
   },
   billing: {
     title: "Billing & premium",
-    description: "Knife Pro lifetime access and account linking.",
+    description: "Arivix Pro lifetime access and account linking.",
     sections: [
       {
         id: "purchase",
@@ -132,7 +132,7 @@ export const referencePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Join the Knife hub so automatic role sync can mirror Pro, Owner, or Developer
+              Join the Arivix hub so automatic role sync can mirror Pro, Owner, or Developer
               tiers onto your account when configured by the operators.
             </p>
           </>

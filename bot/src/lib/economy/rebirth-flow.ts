@@ -112,7 +112,7 @@ export function buildRebirthEmbed(
         `${ecoM.cash} Rebirth — overview (${p + 1}/${REBIRTH_MENU_PAGE_COUNT})`,
       )
       .setDescription(
-        `**Soft reset** your Knife Cash progress for **permanent** bonuses that **never** wipe on rebirth.\n\n` +
+        `**Soft reset** your Arivix Cash progress for **permanent** bonuses that **never** wipe on rebirth.\n\n` +
           `**Your rebirths:** **${ctx.rebirthCount}**\n` +
           `**Rebirth gems:** **${formatCash(ctx.gems)}** _(gem shop: page **${REBIRTH_SHOP_PAGE_HUMAN}**/${REBIRTH_MENU_PAGE_COUNT})_\n` +
           `**Wallet:** **${formatCash(ctx.cash)}** · **Lifetime msgs:** **${ctx.lifetimeMessages.toLocaleString()}**\n\n` +

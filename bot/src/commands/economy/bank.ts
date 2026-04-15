@@ -24,7 +24,7 @@ export const bankCommand: KnifeCommand = {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".bank · .vault · .bank upgrade",
     tier: "free",
     style: "prefix",
@@ -133,7 +133,7 @@ export const bankCommand: KnifeCommand = {
     await message.reply({
       embeds: [
         minimalEmbed({
-          title: `${ecoM.bank} Knife Cash — bank`,
+          title: `${ecoM.bank} Arivix Cash — bank`,
           description:
             `**Wallet:** **${formatCash(row.cash)}**\n` +
             `**Bank:** **${formatCash(row.bankCash)}** / **${formatCash(cap)}** (tier **${row.bankTier + 1}**)\n` +

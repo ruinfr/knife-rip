@@ -41,7 +41,7 @@ export function buildDuelChallengeEmbed(params: {
   );
   return new EmbedBuilder()
     .setColor(HUB_COLOR)
-    .setTitle(`${ecoM.coinflippvp} Knife Cash — duel`)
+    .setTitle(`${ecoM.coinflippvp} Arivix Cash — duel`)
     .setDescription(
       `<@${challengerId}> duels <@${opponentId}> for **${formatCash(stake)}** each.\n\n` +
         `Winner takes the pot minus a **small house rake** to the treasury.\n\n` +

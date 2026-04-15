@@ -32,12 +32,12 @@ function utcYmd(d: Date): string {
 export const robCommand: KnifeCommand = {
   name: "rob",
   aliases: ["steal", "mug"],
-  description: "Try to steal Knife Cash from another member (guild only, high fail rate)",
+  description: "Try to steal Arivix Cash from another member (guild only, high fail rate)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".rob @user · .steal · .mug",
     tier: "free",
     style: "prefix",
@@ -301,7 +301,7 @@ export const robCommand: KnifeCommand = {
                 "That user is **too new** to rob as a target.",
                 "",
                 "They count as established only if **either**:",
-                `• **≥ ${ROB_VICTIM_MIN_LIFETIME_MSGS.toLocaleString()}** lifetime messages tracked in Knife Cash, **or**`,
+                `• **≥ ${ROB_VICTIM_MIN_LIFETIME_MSGS.toLocaleString()}** lifetime messages tracked in Arivix Cash, **or**`,
                 `• **≥ ${formatCash(ROB_VICTIM_ALT_FLOOR_CASH)}** cash on hand.`,
                 "",
                 `(They must still have at least **${formatCash(ROB_MIN_VICTIM_CASH)}** cash to be robbable at all.)`,

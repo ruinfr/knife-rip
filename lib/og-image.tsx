@@ -9,7 +9,7 @@ export function OgImageMarkup() {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        background: "#060404",
+        background: "#050a12",
         padding: 72,
         justifyContent: "center",
         position: "relative",
@@ -23,7 +23,7 @@ export function OgImageMarkup() {
           width: 520,
           height: 520,
           background:
-            "radial-gradient(circle at 60% 40%, rgba(220, 38, 38, 0.22), transparent 58%)",
+            "radial-gradient(circle at 60% 40%, rgba(37, 99, 235, 0.22), transparent 58%)",
         }}
       />
       <div
@@ -34,35 +34,36 @@ export function OgImageMarkup() {
           width: 440,
           height: 440,
           background:
-            "radial-gradient(circle at 40% 60%, rgba(127, 29, 29, 0.35), transparent 55%)",
+            "radial-gradient(circle at 40% 60%, rgba(30, 58, 138, 0.35), transparent 55%)",
         }}
       />
       <div
         style={{
           fontSize: 108,
           fontWeight: 800,
-          color: "#f4eded",
+          color: "#eef2ff",
           letterSpacing: "-0.04em",
           lineHeight: 1,
         }}
       >
-        Knife
+        Arivix
       </div>
       <div
         style={{
           fontSize: 34,
-          color: "#9a8f90",
+          color: "#8f96a8",
           marginTop: 16,
           fontWeight: 500,
         }}
       >
-        knife.rip
+        arivix.org
       </div>
       <div
         style={{
           width: 100,
           height: 4,
-          background: "linear-gradient(90deg, #f87171, rgba(248, 113, 113, 0.2))",
+          background:
+            "linear-gradient(90deg, #60a5fa, rgba(96, 165, 250, 0.2))",
           marginTop: 40,
           borderRadius: 2,
         }}
@@ -70,7 +71,7 @@ export function OgImageMarkup() {
       <div
         style={{
           fontSize: 28,
-          color: "#c4b8b9",
+          color: "#b8c0d4",
           marginTop: 36,
           maxWidth: 820,
           lineHeight: 1.45,

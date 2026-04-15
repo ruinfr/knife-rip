@@ -42,7 +42,7 @@ export function DocsSidebar({
               className={cn(
                 "flex items-center gap-2 rounded-xl px-2.5 py-2 text-sm motion-safe:transition",
                 active
-                  ? "bg-red-950/45 text-foreground ring-1 ring-edge/25"
+                  ? "bg-blue-950/45 text-foreground ring-1 ring-edge/25"
                   : "text-muted hover:bg-white/[0.04] hover:text-foreground",
               )}
             >
@@ -70,7 +70,7 @@ export function DocsSidebar({
                     className={cn(
                       "flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-[13px] leading-snug motion-safe:transition",
                       active
-                        ? "bg-red-950/40 text-foreground ring-1 ring-edge/20"
+                        ? "bg-blue-950/40 text-foreground ring-1 ring-edge/20"
                         : "text-muted hover:bg-white/[0.04] hover:text-foreground",
                     )}
                   >
@@ -94,7 +94,7 @@ export function DocsSidebar({
     <>
       <aside
         id="docs-sidebar"
-        className="hidden w-[17.5rem] shrink-0 border-r border-red-950/25 bg-surface/40 lg:sticky lg:top-16 lg:flex lg:h-[calc(100vh-4rem)] lg:flex-col"
+        className="hidden w-[17.5rem] shrink-0 border-r border-blue-950/25 bg-surface/40 lg:sticky lg:top-16 lg:flex lg:h-[calc(100vh-4rem)] lg:flex-col"
       >
         {inner}
       </aside>
@@ -112,7 +112,7 @@ export function DocsSidebar({
               onClick={onCloseMobile}
             />
             <motion.aside
-              className="fixed inset-y-0 left-0 z-[81] flex w-[min(20rem,88vw)] flex-col border-r border-red-950/30 bg-surface-elevated shadow-2xl lg:hidden"
+              className="fixed inset-y-0 left-0 z-[81] flex w-[min(20rem,88vw)] flex-col border-r border-blue-950/30 bg-surface-elevated shadow-2xl lg:hidden"
               initial={reduce ? false : { x: "-100%" }}
               animate={{ x: 0 }}
               exit={reduce ? undefined : { x: "-100%" }}

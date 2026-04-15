@@ -14,12 +14,12 @@ export const workCommand: KnifeCommand = {
   name: "work",
   aliases: ["job", "shift", "grind"],
   description:
-    "Knife Cash — jobs menu: roles, promotions, and job-specific shift minigames (treasury skim on pay)",
+    "Arivix Cash — jobs menu: roles, promotions, and job-specific shift minigames (treasury skim on pay)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".work · .job · .shift · .grind",
     tier: "free",
     style: "prefix",

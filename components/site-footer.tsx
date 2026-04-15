@@ -33,7 +33,7 @@ export function SiteFooter({ footer }: Props) {
   }[] = [
     { href: "/status", label: footer.status, icon: "mdi:heart-pulse" },
     {
-      href: "mailto:support@knife.rip",
+      href: "mailto:support@arivix.org",
       label: footer.support,
       icon: "mdi:email-outline",
       external: true,
@@ -41,18 +41,18 @@ export function SiteFooter({ footer }: Props) {
   ];
 
   return (
-    <footer className="relative z-[1] mt-auto border-t border-red-950/45 bg-[#0a0505]/75 backdrop-blur-sm">
+    <footer className="relative z-[1] mt-auto border-t border-blue-950/45 bg-[#0a0e14]/75 backdrop-blur-sm">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:px-8 md:grid-cols-2 lg:grid-cols-4">
         <div className="md:col-span-2 lg:col-span-1">
           <p className="flex items-center gap-2 font-display text-sm font-bold text-accent-strong">
             <Icon
-              icon="mdi:sword-cross"
+              icon="mdi:shield"
               className="size-5 shrink-0 text-edge"
               aria-hidden
             />
-            Knife
+            Arivix
           </p>
-          <p className="mt-2 text-sm text-muted">knife.rip</p>
+          <p className="mt-2 text-sm text-muted">arivix.org</p>
           <p className="mt-3 max-w-xs text-xs leading-relaxed text-muted">
             {footer.tagline}
           </p>
@@ -155,10 +155,10 @@ export function SiteFooter({ footer }: Props) {
           </ul>
         </div>
       </div>
-      <div className="flex items-center justify-center gap-2 border-t border-red-950/35 py-4 text-xs text-muted">
+      <div className="flex items-center justify-center gap-2 border-t border-blue-950/35 py-4 text-xs text-muted">
         <Icon icon="mdi:copyright" className="size-3.5 opacity-80" aria-hidden />
         <span>
-          {new Date().getFullYear()} Knife
+          {new Date().getFullYear()} Arivix
         </span>
       </div>
     </footer>

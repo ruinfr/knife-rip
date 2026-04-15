@@ -230,7 +230,7 @@ export function EmbedBuilderLivePreview({
           className="flex gap-3"
         >
           <div
-            className="relative mt-0.5 size-10 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-red-600 to-red-950 ring-2 ring-black/30"
+            className="relative mt-0.5 size-10 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-blue-600 to-blue-950 ring-2 ring-black/30"
             aria-hidden
           >
             <div className="absolute inset-0 flex items-center justify-center text-xs font-black text-white/95">
@@ -246,7 +246,7 @@ export function EmbedBuilderLivePreview({
                   className="size-4 opacity-80"
                   aria-hidden
                 />
-                Knife
+                Arivix
               </span>
               <span className="inline-flex items-center gap-0.5 rounded bg-[#5865f2] px-1 py-px text-[10px] font-bold uppercase leading-none text-white">
                 <Icon

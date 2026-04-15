@@ -16,12 +16,12 @@ export const dailyCommand: KnifeCommand = {
   name: "daily",
   aliases: ["claim", "payday", "payout", "stipend"],
   description:
-    "Claim free Knife Cash once every 24 hours (50 cash per claim)",
+    "Claim free Arivix Cash once every 24 hours (50 cash per claim)",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage: ".daily · .claim · .payday · .payout",
     tier: "free",
     style: "prefix",

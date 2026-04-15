@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = {
   title: "Credits",
-  description: "The team and contributors behind Knife.",
+  description: "The team and contributors behind Arivix.",
   robots: { index: true, follow: true },
 };
 
@@ -35,7 +35,7 @@ const CREDIT_MEMBERS: CreditMember[] = [
     roleIcon: "mdi:star-outline",
     avatar: "/team/poser.png",
     accent: "#a855f7",
-    bio: "Contributor on Knife projects and community initiatives.",
+    bio: "Contributor on Arivix Projects and community initiatives.",
     badges: ["mdi:guitar-electric", "mdi:star-circle-outline"],
   },
 ];
@@ -43,7 +43,7 @@ const CREDIT_MEMBERS: CreditMember[] = [
 export default function CreditsPage() {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 py-10 sm:gap-12 sm:px-6 sm:py-14 lg:px-8">
-      <header className="border-b border-red-950/30 pb-7 sm:pb-8">
+      <header className="border-b border-blue-950/30 pb-7 sm:pb-8">
         <span
           className="mb-3 block h-1 w-10 rounded-full bg-gradient-to-r from-edge/70 via-edge/30 to-transparent"
           aria-hidden

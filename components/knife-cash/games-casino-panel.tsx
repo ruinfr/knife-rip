@@ -3,7 +3,7 @@
 import { BlackjackGame } from "@/components/knife-cash/blackjack-game";
 import { CoinFlipGame } from "@/components/knife-cash/coin-flip-game";
 import { MinesGame } from "@/components/knife-cash/mines-game";
-import { ComingSoonCasinoGame } from "@/components/knife-cash/coming-soon-casino-game";
+import { RouletteGame } from "@/components/knife-cash/roulette-game";
 import { DiceDuelGame } from "@/components/knife-cash/dice-duel-game";
 import { SlotMachineGame } from "@/components/knife-cash/slot-machine-game";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ const TABS = [
     id: "roulette" as const,
     label: "Roulette",
     icon: "mdi:bullseye",
-    live: false,
+    live: true,
   },
 ];
 
@@ -51,7 +51,7 @@ export function GamesCasinoPanel({
       <div
         className="-mx-1 flex flex-nowrap gap-1 overflow-x-auto overflow-y-visible rounded-xl border border-amber-500/15 bg-black/55 p-1 pb-2 shadow-[inset_0_2px_24px_rgba(0,0,0,0.5)] [scrollbar-width:thin]"
         role="tablist"
-        aria-label="Knife Cash games"
+        aria-label="Arivix Cash games"
       >
         {TABS.map((t) => (
           <Button
@@ -124,7 +124,9 @@ export function GamesCasinoPanel({
             </div>
           ) : null}
           {tab === "roulette" ? (
-            <ComingSoonCasinoGame title="Roulette" />
+            <div className="rounded-2xl border border-rose-500/15 bg-gradient-to-b from-rose-950/15 to-transparent p-1 shadow-[0_0_40px_-18px_rgba(244,63,94,0.14)]">
+              <RouletteGame onBalancesUpdated={onBalancesUpdated} />
+            </div>
           ) : null}
         </motion.div>
       </AnimatePresence>

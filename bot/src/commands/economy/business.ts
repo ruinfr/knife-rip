@@ -29,12 +29,12 @@ export const businessCommand: KnifeCommand = {
   name: "business",
   aliases: ["biz", "franchise"],
   description:
-    "Passive Knife Cash businesses — **`.business`** menu, **`.business buy`**, **`.business collect`**, **`.business list`**",
+    "Passive Arivix Cash businesses — **`.business`** menu, **`.business buy`**, **`.business collect`**, **`.business list`**",
   site: {
     categoryId: "gambling",
     categoryTitle: "Gambling & economy",
     categoryDescription:
-      "Global Knife Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
+      "Global Arivix Cash — .gamble hub, shop, daily, work/crime/beg, bank & businesses, gathering (.mine / .fish), pets, pay, and guild .rob / .duel / .bounty. Virtual currency for fun.",
     usage:
       ".business · .biz · .business list · .business buy <id> · .business collect",
     tier: "free",
@@ -104,7 +104,7 @@ export const businessCommand: KnifeCommand = {
       await message.reply({
         embeds: [
           minimalEmbed({
-            title: `${ecoM.lemonade} ${ecoM.arcade} ${ecoM.diner} Knife Cash — business catalog`,
+            title: `${ecoM.lemonade} ${ecoM.arcade} ${ecoM.diner} Arivix Cash — business catalog`,
             description:
               lines.join("\n") +
               `\n\n_Buy **in order** along the track. Run **\`.business\`** for the interactive menu. Accrues up to **48h** per collect._`,

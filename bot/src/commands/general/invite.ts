@@ -5,7 +5,7 @@ import type { KnifeCommand } from "../types";
 export const inviteCommand: KnifeCommand = {
   name: "invite",
   aliases: ["inv"],
-  description: "Add Knife to your server and open the web dashboard to manage it",
+  description: "Add Arivix to your server and open the web dashboard to manage it",
   site: {
     categoryId: "core",
     categoryTitle: "Core",
@@ -20,7 +20,7 @@ export const inviteCommand: KnifeCommand = {
     const invite = getBotInviteUrl();
 
     const inviteLine = invite
-      ? `**[Add Knife to a server](${invite})**`
+      ? `**[Add Arivix to a server](${invite})**`
       : `_Bot invite URL isn’t set. Ask the host to set **NEXT_PUBLIC_DISCORD_INVITE_URL** or **DISCORD_CLIENT_ID**._`;
 
     await message.reply({

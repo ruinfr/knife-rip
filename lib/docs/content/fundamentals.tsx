@@ -4,7 +4,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
   "getting-started": {
     title: "Getting started",
     description:
-      "Invite Knife, verify intents and permissions, and run your first commands safely.",
+      "Invite Arivix, verify intents and permissions, and run your first commands safely.",
     sections: [
       {
         id: "introduction",
@@ -12,7 +12,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife is a prefix-first Discord bot focused on <strong>moderation</strong>,{" "}
+              Arivix is a prefix-first Discord bot focused on <strong>moderation</strong>,{" "}
               <strong>utilities</strong>, and <strong>community tools</strong>. Most actions
               are triggered with the default prefix <code>.</code> (customizable per server).
             </p>
@@ -30,7 +30,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Add Knife with the <code>bot</code> scope (and{" "}
+              Add Arivix with the <code>bot</code> scope (and{" "}
               <code>applications.commands</code> if you rely on other slash integrations your
               host documents). Vanity scanning uses prefix <strong>.vanities</strong> /{" "}
               <strong>.vanity</strong> only.
@@ -49,7 +49,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife uses privileged intents where features require them — for example{" "}
+              Arivix uses privileged intents where features require them — for example{" "}
               <strong>Message Content</strong> for prefix commands and <strong>Server Members</strong>{" "}
               for moderation and joins. Enable these in the Discord Developer Portal for your
               application, then re-authorize if prompted.
@@ -65,7 +65,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
   },
   customization: {
     title: "Customization",
-    description: "Per-guild prefix, command visibility, and tuning Knife without code changes.",
+    description: "Per-guild prefix, command visibility, and tuning Arivix without code changes.",
     sections: [
       {
         id: "prefix",
@@ -90,7 +90,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
               rules for noisy commands.
             </p>
             <p>
-              Knife Pro features (for example <code>.say</code>, <code>.createembed</code>,{" "}
+              Arivix Pro features (for example <code>.say</code>, <code>.createembed</code>,{" "}
               <code>.remind</code>, <code>.vanity</code>) require entitlement verification when
               the bot is linked to the site API.
             </p>
@@ -122,7 +122,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Grant Knife only the permissions each feature needs. Over-powered bot roles make
+              Grant Arivix only the permissions each feature needs. Over-powered bot roles make
               abuse more damaging if an account is compromised. Audit who can configure jails,
               webhooks, and broadcast-style commands.
             </p>
@@ -133,7 +133,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
   },
   antinuke: {
     title: "Antinuke",
-    description: "What Knife does and does not automate for destructive admin abuse.",
+    description: "What Arivix does and does not automate for destructive admin abuse.",
     sections: [
       {
         id: "scope",
@@ -141,7 +141,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife is not a dedicated antinuke suite. It does provide strong{" "}
+              Arivix is not a dedicated antinuke suite. It does provide strong{" "}
               <strong>moderation</strong>, <strong>jail workflows</strong>,{" "}
               <strong>slowmode</strong>, and <strong>lockdown-style</strong> tooling you can
               combine with disciplined staff roles and external monitoring.
@@ -170,7 +170,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
     sections: [
       {
         id: "tooling",
-        title: "Knife tooling",
+        title: "Arivix tooling",
         content: (
           <>
             <p>
@@ -188,7 +188,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
           <>
             <p>
               Discord&apos;s native verification levels and third-party gate bots complement
-              Knife. Knife focuses on post-join moderation once members are inside your rules
+              Arivix focuses on post-join moderation once members are inside your rules
               channel.
             </p>
           </>
@@ -207,7 +207,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
           <>
             <p>
               For keyword floods, spam heuristics, and mention raids, Discord&apos;s built-in
-              AutoMod remains the first line of defense. Knife augments staff workflows after
+              AutoMod remains the first line of defense. Arivix augments staff workflows after
               a message exists (purges, cases, notes).
             </p>
           </>
@@ -219,7 +219,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Pair AutoMod with Knife&apos;s per-command rules so utility commands cannot be
+              Pair AutoMod with Arivix&apos;s per-command rules so utility commands cannot be
               abused in announcement channels or by fresh accounts if you configure blocks
               accordingly.
             </p>
@@ -238,7 +238,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife ships bans, kicks, timeouts, warns, purges, channel locks, nick enforcement,
+              Arivix ships bans, kicks, timeouts, warns, purges, channel locks, nick enforcement,
               jail routing, and extended ban utilities (soft/temp/hard/queue workflows where
               enabled). Check <a href="/commands">commands</a> for exact triggers — many commands
               include short <strong>aliases</strong>.
@@ -317,7 +317,7 @@ export const fundamentalsPages: Record<string, DocPageDefinition> = {
           <>
             <p>
               Track successful and failed command attempts where logs are exposed, and scrub
-              sensitive data before exporting transcripts. Knife&apos;s denylist/allowlist
+              sensitive data before exporting transcripts. Arivix&apos;s denylist/allowlist
               controls help retire abusive guilds without deleting data unexpectedly.
             </p>
           </>

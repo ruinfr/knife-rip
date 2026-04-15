@@ -62,7 +62,7 @@ const en: SiteMessages = {
   },
   footer: {
     tagline:
-      "Moderation, utilities, and engagement — prefix commands today at knife.rip.",
+      "Moderation, utilities, and engagement — prefix commands today at arivix.org.",
     product: "Product",
     legal: "Legal",
     connect: "Connect",
@@ -102,7 +102,7 @@ const de: SiteMessages = {
   },
   footer: {
     tagline:
-      "Moderation, Hilfen und Engagement — Prefix-Befehle auf knife.rip.",
+      "Moderation, Hilfen und Engagement — Prefix-Befehle auf arivix.org.",
     product: "Produkt",
     legal: "Rechtliches",
     connect: "Kontakt",
@@ -142,7 +142,7 @@ const ja: SiteMessages = {
   },
   footer: {
     tagline:
-      "モデレーション、ユーティリティ、エンゲージメント — knife.rip のプレフィックスコマンド。",
+      "モデレーション、ユーティリティ、エンゲージメント — arivix.org のプレフィックスコマンド。",
     product: "プロダクト",
     legal: "法的情報",
     connect: "リンク",
@@ -182,7 +182,7 @@ const ko: SiteMessages = {
   },
   footer: {
     tagline:
-      "운영, 유틸리티, 참여 — knife.rip의 접두사 명령어.",
+      "운영, 유틸리티, 참여 — arivix.org의 접두사 명령어.",
     product: "제품",
     legal: "법적 고지",
     connect: "연결",

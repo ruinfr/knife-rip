@@ -88,7 +88,7 @@ export default async function DashboardPage({
     : user?.lifetimePremiumAt
       ? "Lifetime Pro"
       : bypassPro
-        ? "Knife Pro"
+        ? "Arivix Pro"
         : "Active";
 
   const knifeGuilds = summary?.knifeGuilds ?? [];
@@ -107,7 +107,7 @@ export default async function DashboardPage({
         <ScrollReveal
           as="div"
           role="alert"
-          className="rounded-xl border border-red-500/30 bg-red-950/25 px-4 py-3 text-sm text-foreground/95"
+          className="rounded-xl border border-blue-500/30 bg-blue-950/25 px-4 py-3 text-sm text-foreground/95"
           amount={0.12}
         >
           <p className="font-medium text-accent-strong">
@@ -116,10 +116,10 @@ export default async function DashboardPage({
           <p className="mt-1 text-muted">
             Stripe could not open just now. Try again in a few minutes or email{" "}
             <a
-              href="mailto:support@knife.rip"
+              href="mailto:support@arivix.org"
               className="font-medium text-edge underline-offset-2 hover:underline"
             >
-              support@knife.rip
+              support@arivix.org
             </a>
             .
           </p>
@@ -134,7 +134,7 @@ export default async function DashboardPage({
           amount={0.12}
         >
           <p className="font-medium text-accent-strong">
-            You already have Knife Pro
+            You already have Arivix Pro
           </p>
           <p className="mt-1 text-muted">
             No need to check out again — Pro is tied to this Discord account.
@@ -150,7 +150,7 @@ export default async function DashboardPage({
           amount={0.12}
         >
           <p className="font-medium text-success-foreground">
-            Thanks — Knife Pro is active
+            Thanks — Arivix Pro is active
           </p>
           <p className="mt-1 text-muted">
             You can use Pro features everywhere you run the bot. Receipts are
@@ -221,7 +221,7 @@ export default async function DashboardPage({
                 rel="noopener noreferrer"
                 className="font-medium text-edge underline decoration-edge/40 underline-offset-2 hover:decoration-edge"
               >
-                Join the knife.rip Discord hub
+                Join the arivix.org Discord hub
               </a>{" "}
               so Pro, owner, and developer roles can sync to your account.
             </p>
@@ -249,24 +249,24 @@ export default async function DashboardPage({
         >
           <div>
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Knife Cash
+              Arivix Cash
             </h2>
             <p className="mt-1 max-w-lg text-sm leading-relaxed text-muted">
               Play on the web with the same wallet and leaderboards as Discord
               (after signing in with Discord).
             </p>
           </div>
-          <ButtonLink href="/knife-cash">Open Knife Cash</ButtonLink>
+          <ButtonLink href="/knife-cash">Open Arivix Cash</ButtonLink>
         </Card>
       </ScrollReveal>
 
       <ScrollReveal as="section" className="space-y-4" delay={0.04} amount={0.08}>
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">
-            Servers with Knife
+            Servers with Arivix
           </h2>
           <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted">
-            Only guilds where you can manage the server and Knife is installed
+            Only guilds where you can manage the server and Arivix is installed
             show here. Open one to work on that server&apos;s dashboard.
           </p>
         </div>
@@ -283,7 +283,7 @@ export default async function DashboardPage({
               Set <code className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-[11px] text-edge/90">DISCORD_BOT_TOKEN</code>{" "}
               in your environment (Bot token from the Discord application — same
               app as the OAuth client). The site uses it to see which servers
-              Knife has joined, and never exposes it to the browser.
+              Arivix has joined, and never exposes it to the browser.
             </p>
           </Card>
         ) : null}
@@ -298,7 +298,7 @@ export default async function DashboardPage({
         ) : botConfigured && knifeGuilds.length === 0 ? (
           <Card padding="md" className="text-sm text-muted">
             <p>
-              Knife isn&apos;t in any servers you manage yet, or Discord
+              Arivix isn&apos;t in any servers you manage yet, or Discord
               hasn&apos;t returned an updated guild list.{" "}
               {discordInvite ? (
                 <>
@@ -307,7 +307,7 @@ export default async function DashboardPage({
                     href={discordInvite}
                     className="font-medium text-edge underline decoration-edge/40 underline-offset-2 hover:decoration-edge"
                   >
-                    Invite Knife
+                    Invite Arivix
                   </Link>{" "}
                   on a server where you have Manage Server.
                 </>
@@ -347,7 +347,7 @@ export default async function DashboardPage({
                           {g.name}
                         </p>
                         <p className="text-[11px] text-muted">
-                          Manage server · Knife active
+                          Manage server · Arivix active
                         </p>
                       </div>
                       <span
@@ -369,10 +369,10 @@ export default async function DashboardPage({
         <ScrollReveal as="section" className="space-y-3" delay={0.05} amount={0.08}>
           <div>
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Add Knife elsewhere
+              Add Arivix elsewhere
             </h2>
             <p className="mt-1 text-sm text-muted">
-              You manage these servers, but Knife isn&apos;t a member yet.
+              You manage these servers, but Arivix isn&apos;t a member yet.
             </p>
           </div>
           <ul className="space-y-2">

@@ -12,13 +12,13 @@ type LatestPayload = {
   catalogVersion?: number;
 };
 
-const FALLBACK_CHANGELOG = "https://knife.rip/changelog";
+const FALLBACK_CHANGELOG = "https://arivix.org/changelog";
 
 export const newsCommand: KnifeCommand = {
   name: "news",
   aliases: ["whatsnew", "updates"],
   description:
-    "Latest release note from knife.rip (one-line summary + changelog link)",
+    "Latest release note from arivix.org (one-line summary + changelog link)",
   site: {
     categoryId: "core",
     categoryTitle: "Core",
@@ -53,7 +53,7 @@ export const newsCommand: KnifeCommand = {
           minimalEmbed({
             title: "What's new",
             description:
-              `Couldn't reach the Knife site from the bot host.\n\n` +
+              `Couldn't reach the Arivix site from the bot host.\n\n` +
               `**Changelog:** ${FALLBACK_CHANGELOG}\n` +
               `**This bot:** command catalog **v${COMMAND_CATALOG_VERSION}**`,
           }),

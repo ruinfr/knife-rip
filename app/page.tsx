@@ -27,8 +27,8 @@ type ShowcaseItem = ShowcaseTileItem;
 
 const SHOWCASE_FALLBACK: ShowcaseItem[] = [
   {
-    key: "fallback-knife-hub",
-    name: "knife.rip",
+    key: "fallback-arivix-hub",
+    name: "arivix.org",
     detail: "Official hub · roles & support",
     href: communityHubInvite,
     image: "/showcase/ak.png",
@@ -74,7 +74,7 @@ const features = [
 const steps = [
   {
     n: "01",
-    title: "Invite Knife",
+    title: "Invite Arivix",
     body: "Add the bot to your server from the homepage or Docs. You need permission to manage the server.",
   },
   {
@@ -85,13 +85,13 @@ const steps = [
   {
     n: "03",
     title: "Go Pro (optional)",
-    body: "One-time $10 on your Discord account — Pro follows you everywhere you use Knife.",
+    body: "One-time $10 on your Discord account — Pro follows you everywhere you use Arivix.",
   },
 ] as const;
 
 const faqs = [
   {
-    q: "Is Knife free?",
+    q: "Is Arivix free?",
     a: "Core features are free. Pro is a $10 lifetime unlock for premium commands and limits — see Pricing.",
     href: "/pricing",
   },
@@ -102,7 +102,7 @@ const faqs = [
   },
   {
     q: "How do I get help?",
-    a: "Email support@knife.rip or read Getting started in Docs for setup and billing.",
+    a: "Email support@arivix.org or read Getting started in Docs for setup and billing.",
     href: "/docs/getting-started",
   },
 ] as const;
@@ -143,7 +143,7 @@ export default async function Home() {
   const yoursItem: ShowcaseItem = {
     key: "yours",
     name: "Your server",
-    detail: discordInvite ? "Invite Knife" : "Add Knife",
+    detail: discordInvite ? "Invite Arivix" : "Add Arivix",
     href: discordInvite ?? "/docs/getting-started",
     showPlus: true,
   };
@@ -173,8 +173,8 @@ export default async function Home() {
             Sharp stack · clean servers
           </p>
           <h1 className="font-display mt-4 max-w-[16ch] text-4xl font-bold leading-[1.04] text-accent-strong sm:text-5xl lg:text-[3.35rem]">
-            <span className="bg-gradient-to-r from-edge via-[#fca5a5] to-edge/80 bg-clip-text text-transparent">
-              Knife
+            <span className="bg-gradient-to-r from-edge via-[#93c5fd] to-edge/80 bg-clip-text text-transparent">
+              Arivix
             </span>{" "}
             — one sharp Discord bot.
           </h1>
@@ -188,14 +188,14 @@ export default async function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="secondary"
-                className="gap-2 px-6 py-3.5 shadow-[0_0_36px_-14px_rgba(220,38,38,0.22)]"
+                className="gap-2 px-6 py-3.5 shadow-[0_0_36px_-14px_rgba(37,99,235,0.22)]"
               >
                 <Icon
                   icon="mdi:discord"
                   aria-hidden
                   className="size-[1.125rem] text-edge"
                 />
-                Add Knife
+                Add Arivix
               </ButtonLink>
             ) : (
               <ButtonLink
@@ -252,7 +252,7 @@ export default async function Home() {
         <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
           <HeroOrnament className="pointer-events-none absolute -right-6 -top-10 h-40 w-auto opacity-[0.42] sm:h-48 lg:right-2 lg:top-2 lg:h-56" />
           <div className="hero-backdrop hero-rim hero-sheen-live relative min-h-[292px] overflow-hidden rounded-[1.35rem] border border-white/[0.07] p-6 sm:min-h-[328px] sm:p-8">
-            <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-red-950/18 via-transparent to-transparent" />
+            <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-blue-950/18 via-transparent to-transparent" />
             <div className="relative flex flex-col gap-3.5 pt-1">
               {floaters.map((f, i) => (
                 <div
@@ -288,7 +288,7 @@ export default async function Home() {
 
       <ScrollReveal
         as="section"
-        className="border-t border-red-950/30 pt-12 sm:pt-14"
+        className="border-t border-blue-950/30 pt-12 sm:pt-14"
         delay={0.05}
         aria-labelledby="proof-heading"
       >
@@ -301,8 +301,8 @@ export default async function Home() {
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm font-normal leading-relaxed text-muted">
             {showcaseFromBot
-              ? "Biggest Knife guilds by member count."
-              : "Communities running Knife across the ecosystem."}
+              ? "Biggest Arivix guilds by member count."
+              : "Communities running Arivix across the ecosystem."}
           </p>
           <div className="mt-8 flex w-full flex-col items-center justify-center gap-8 sm:gap-10">
             {useLiveCarousel ? (
@@ -376,7 +376,7 @@ export default async function Home() {
       <ScrollReveal
         as="section"
         aria-labelledby="how-heading"
-        className="border-t border-red-950/30 pt-14 sm:pt-16"
+        className="border-t border-blue-950/30 pt-14 sm:pt-16"
         delay={0.04}
       >
         <h2
@@ -387,7 +387,7 @@ export default async function Home() {
         </h2>
         <div className="relative mt-9">
           <div
-            className="timeline-glow pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-red-400/35 to-transparent sm:block"
+            className="timeline-glow pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-blue-400/35 to-transparent sm:block"
             aria-hidden
           />
           <StaggerChildren className="grid gap-5 sm:grid-cols-3 sm:gap-6">
@@ -416,7 +416,7 @@ export default async function Home() {
       <ScrollReveal
         as="section"
         aria-labelledby="faq-heading"
-        className="border-t border-red-950/30 pt-14 sm:pt-16"
+        className="border-t border-blue-950/30 pt-14 sm:pt-16"
         delay={0.04}
       >
         <h2

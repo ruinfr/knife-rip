@@ -1,5 +1,5 @@
 /**
- * Official knife.rip Discord hub (Pro/owner/dev role sync, support).
+ * Official arivix.org Discord hub (Pro/owner/dev role sync, support).
  * Override with env if the invite is rotated — only https `discord.gg` / `discord.com/invite` URLs are accepted.
  */
 export const DEFAULT_COMMUNITY_DISCORD_INVITE_URL =

@@ -6,7 +6,7 @@ import {
 import { fetchEntitlementFromSite } from "./site-client";
 
 /**
- * Align knife.rip guild roles with production entitlement (same REST logic as Vercel).
+ * Align arivix.org guild roles with production entitlement (same REST logic as Vercel).
  * Backup for handout + catches members who already hold managed roles (cache-dependent).
  */
 export async function syncKnifeRipRolesForDiscordUser(

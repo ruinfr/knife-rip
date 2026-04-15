@@ -17,5 +17,5 @@ export function siteMetadataBase(): URL {
       /* fall through */
     }
   }
-  return new URL("https://knife.rip");
+  return new URL("https://arivix.org");
 }

@@ -227,7 +227,7 @@ export const DOCS_NAV_GROUPS: DocNavGroup[] = [
         title: "Billing & premium",
         href: "/docs/billing",
         icon: "mdi:credit-card-outline",
-        keywords: ["knife pro", "stripe", "lifetime"],
+        keywords: ["Arivix Pro", "stripe", "lifetime"],
       },
     ],
   },

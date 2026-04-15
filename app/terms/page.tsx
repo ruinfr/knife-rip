@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Terms governing use of Knife and knife.rip.",
+  description: "Terms governing use of Arivix and arivix.org.",
 };
 
 export default function TermsPage() {
@@ -14,8 +14,8 @@ export default function TermsPage() {
     >
       <p>
         These Terms of Service (&quot;Terms&quot;) govern access to and use of
-        Knife (&quot;Knife&quot;, &quot;we&quot;, &quot;us&quot;, or
-        &quot;our&quot;), including the website at knife.rip, related APIs, and
+        Arivix (&quot;Arivix&quot;, &quot;we&quot;, &quot;us&quot;, or
+        &quot;our&quot;), including the website at arivix.org, related APIs, and
         the Discord bot and integrations we offer (collectively, the
         &quot;Service&quot;). By accessing or using the Service, you agree to be
         bound by these Terms. If you do not agree, do not use the Service.
@@ -35,7 +35,7 @@ export default function TermsPage() {
 
       <h2>2. The Service</h2>
       <p>
-        Knife provides software and related services for Discord communities.
+        Arivix provides software and related services for Discord communities.
         Features, limits, availability, and documentation may change during
         development or after launch. We may modify, suspend, or discontinue any
         part of the Service with reasonable notice where practicable, or
@@ -45,7 +45,7 @@ export default function TermsPage() {
 
       <h2>3. Payments</h2>
       <p>
-        Knife Pro, where offered, is a one-time purchase processed by Stripe.
+        Arivix Pro, where offered, is a one-time purchase processed by Stripe.
         Pricing, taxes, and refunds are governed by the terms presented at
         checkout and Stripe&apos;s terms. You can view receipts through the
         billing tools we provide. Chargebacks or payment disputes may result in
@@ -81,7 +81,7 @@ export default function TermsPage() {
       <h2>5. Intellectual property</h2>
       <p>
         The Service, including its software, branding, and content (excluding
-        content you or third parties provide), is owned by Knife or its licensors
+        content you or third parties provide), is owned by Arivix or its licensors
         and is protected by intellectual property laws. Subject to these Terms,
         we grant you a limited, non-exclusive, non-transferable, revocable
         license to use the Service for its intended purpose. You retain rights in
@@ -107,7 +107,7 @@ export default function TermsPage() {
 
       <h2>8. Limitation of liability</h2>
       <p>
-        TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL KNIFE OR ITS
+        TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL ARIVIX OR ITS
         SUPPLIERS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
         CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, DATA, OR
         GOODWILL, ARISING FROM OR RELATED TO THE SERVICE OR THESE TERMS, EVEN IF
@@ -120,7 +120,7 @@ export default function TermsPage() {
 
       <h2>9. Indemnity</h2>
       <p>
-        You will defend, indemnify, and hold harmless Knife and its affiliates,
+        You will defend, indemnify, and hold harmless Arivix and its affiliates,
         officers, and agents from claims, damages, losses, and expenses
         (including reasonable attorneys&apos; fees) arising from your use of the
         Service, your content, or your violation of these Terms, except to the
@@ -161,8 +161,8 @@ export default function TermsPage() {
       <h2>13. Contact</h2>
       <p>
         For questions about these Terms, email{" "}
-        <a href="mailto:support@knife.rip" className="text-foreground underline">
-          support@knife.rip
+        <a href="mailto:support@arivix.org" className="text-foreground underline">
+          support@arivix.org
         </a>
         .
       </p>

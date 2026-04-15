@@ -1,6 +1,6 @@
-# Web casino parity: Knife bot vs Rainbet-style originals
+# Web casino parity: Arivix bot vs Rainbet-style originals
 
-Knife Cash on the site shares the same Postgres wallet as Discord. This note maps **what the bot already implements** to **Rainbet “Originals”**-style products (provably fair, fast rounds, simple UI) so we can add games on the web in a sensible order.
+Arivix Cash on the site shares the same Postgres wallet as Discord. This note maps **what the bot already implements** to **Rainbet “Originals”**-style products (provably fair, fast rounds, simple UI) so we can add games on the web in a sensible order.
 
 ## Rainbet Originals (reference)
 

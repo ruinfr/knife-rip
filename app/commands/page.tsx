@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Commands",
   description:
-    "Knife command reference — prefix commands synced from the live bot.",
+    "Arivix command reference — prefix commands synced from the live bot.",
 };
 
 export default async function CommandsPage() {
@@ -19,7 +19,7 @@ export default async function CommandsPage() {
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 py-10 sm:gap-12 sm:px-6 sm:py-14 lg:px-8">
       <ScrollReveal
         as="header"
-        className="border-b border-red-950/30 pb-7 text-center sm:pb-8"
+        className="border-b border-blue-950/30 pb-7 text-center sm:pb-8"
         amount={0.15}
       >
         <span

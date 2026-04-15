@@ -11,7 +11,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              <strong>Knife Pro</strong> unlocks <code>.remind</code> for personal DM reminders
+              <strong>Arivix Pro</strong> unlocks <code>.remind</code> for personal DM reminders
               with rate limits — verify entitlement via <code>.billing</code> /{" "}
               <a href="/pricing">pricing</a>.
             </p>
@@ -75,7 +75,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
           <>
             <p>
               <code>.say</code> and <code>.createembed</code> accept structured embed scripts
-              for Knife Pro administrators — build scripts visually on{" "}
+              for Arivix Pro administrators — build scripts visually on{" "}
               <a href="/tools/embed">Embed builder</a>.
             </p>
           </>
@@ -97,7 +97,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
   },
   starboard: {
     title: "Starboard",
-    description: "Status of starboard-style highlights in Knife.",
+    description: "Status of starboard-style highlights in Arivix.",
     sections: [
       {
         id: "today",
@@ -105,7 +105,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife does not ship a dedicated starboard channel pipeline yet. Use Discord forum
+              Arivix does not ship a dedicated starboard channel pipeline yet. Use Discord forum
               channels, dedicated highlight threads, or external starboard bots if you need
               automated reposting by emoji threshold.
             </p>
@@ -162,7 +162,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife does not include a first-party Disboard-style bump reminder. Schedule
+              Arivix does not include a first-party Disboard-style bump reminder. Schedule
               manual reminders via staff rosters or consider complementary bots dedicated to
               growth analytics.
             </p>
@@ -255,7 +255,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife is not a music bot. Use a dedicated music bot for queue management,
+              Arivix is not a music bot. Use a dedicated music bot for queue management,
               ffmpeg hosting, and stable voice region performance.
             </p>
           </>
@@ -273,7 +273,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Knife does not ship a full giveaway engine with rolling winners and legal
+              Arivix does not ship a full giveaway engine with rolling winners and legal
               disclaimers. Run giveaways manually with threads or integrate a specialized bot
               for Entrants/DM compliance.
             </p>
@@ -292,7 +292,7 @@ export const featurePages: Record<string, DocPageDefinition> = {
         content: (
           <>
             <p>
-              Dedicated counting channels with reset rules are not a core Knife feature. Use
+              Dedicated counting channels with reset rules are not a core Arivix feature. Use
               slowmode + a simple bot or forum thread to gate resets cleanly.
             </p>
           </>
@@ -306,11 +306,11 @@ export const featurePages: Record<string, DocPageDefinition> = {
     sections: [
       {
         id: "music",
-        title: "What Knife offers",
+        title: "What Arivix offers",
         content: (
           <>
             <p>
-              Knife surfaces integrations like <code>.osu</code> for rhythm-game profiles.
+              Arivix surfaces integrations like <code>.osu</code> for rhythm-game profiles.
               Traditional Last.fm scrobble commands are not bundled — use dedicated stats bots
               for chart generation.
             </p>

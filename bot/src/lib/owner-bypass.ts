@@ -3,7 +3,7 @@ import { getBotInternalSecret } from "../config";
 import { fetchEntitlementFromSite } from "./site-client";
 
 /**
- * **Developers** and **owners**: skip Discord **Administrator** + **Knife Pro** gates (e.g. `.say`),
+ * **Developers** and **owners**: skip Discord **Administrator** + **Arivix Pro** gates (e.g. `.say`),
  * prefix cooldown, and **`.command` disable rules** (dispatch still runs for support).
  *
  * Does **not** bypass **Manage Server** / **Manage Nicknames** for **`.prefix`**, **`.command`**,

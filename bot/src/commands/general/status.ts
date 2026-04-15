@@ -29,11 +29,11 @@ export const statusCommand: KnifeCommand = {
     await message.reply({
       embeds: [
         minimalEmbed({
-          title: "knife.rip status",
+          title: "arivix.org status",
           description:
             `${STATUS_ONELINER}\n\n` +
             `**Details:** [${host}/status](${statusUrl})\n` +
-            `Problems? **support@knife.rip**`,
+            `Problems? **support@arivix.org**`,
         }),
       ],
     });

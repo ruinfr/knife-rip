@@ -538,7 +538,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
     if (!interaction.guild || !ch || ch.isDMBased()) {
       await interaction.reply({
         ephemeral: true,
-        content: "Run **`.gamble`** in a **server text channel** to use Knife Cash.",
+        content: "Run **`.gamble`** in a **server text channel** to use Arivix Cash.",
       });
       return;
     }
@@ -582,14 +582,14 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
           });
           await recordGambleDisclaimerAccepted(uid);
           await interaction.editReply({
-            content: "✅ **Knife Cash** menu posted in this channel.",
+            content: "✅ **Arivix Cash** menu posted in this channel.",
             embeds: [],
             components: [],
           });
         } catch {
           await interaction.editReply({
             content:
-              "Could not post the menu there. Check that Knife can **send messages** in that channel, then run **`.gamble`** again.",
+              "Could not post the menu there. Check that Arivix can **send messages** in that channel, then run **`.gamble`** again.",
             embeds: [],
             components: [],
           });
@@ -643,7 +643,7 @@ async function handleEconomyButton(interaction: ButtonInteraction): Promise<void
               new EmbedBuilder()
                 .setColor(0xed4245)
                 .setDescription(
-                  "Could not post the menu in that channel. Check that Knife can **send messages** there, then run **`.gamble`** again.",
+                  "Could not post the menu in that channel. Check that Arivix can **send messages** there, then run **`.gamble`** again.",
                 ),
             ],
             components: [],
@@ -1138,7 +1138,7 @@ async function handleEconomySelect(
         await interaction.followUp({
           ephemeral: true,
           content:
-            "❌ Could not assign the role — **your Knife Cash was refunded**. Check bot role order / permissions.",
+            "❌ Could not assign the role — **your Arivix Cash was refunded**. Check bot role order / permissions.",
         });
         void sendEconomyLog(
           interaction.client,
@@ -1250,7 +1250,7 @@ async function handleEconomySelect(
       await interaction.followUp({
         ephemeral: true,
         content:
-          "❌ Could not assign the role — **your Knife Cash was refunded**. Check bot role order / permissions.",
+          "❌ Could not assign the role — **your Arivix Cash was refunded**. Check bot role order / permissions.",
       });
       void sendEconomyLog(
         interaction.client,
@@ -1516,7 +1516,7 @@ async function handleEconomyModal(
         .catch(() => {});
       await interaction.editReply({
         content:
-          "❌ Could not post the challenge. Check that Knife can **Send Messages** in this channel.",
+          "❌ Could not post the challenge. Check that Arivix can **Send Messages** in this channel.",
       });
     }
     return;

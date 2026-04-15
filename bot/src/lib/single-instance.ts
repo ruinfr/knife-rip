@@ -25,7 +25,7 @@ export function acquireSingleInstanceLock(): void {
         try {
           process.kill(pid, 0);
           console.error(
-            `Knife bot is already running (PID ${pid}). Stop the other terminal or process, then try again.\n` +
+            `Arivix bot is already running (PID ${pid}). Stop the other terminal or process, then try again.\n` +
               `Lock file: ${lockPath}`,
           );
           process.exit(1);
