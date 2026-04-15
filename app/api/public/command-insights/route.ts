@@ -4,7 +4,8 @@ import {
 } from "@/lib/command-usage-insights";
 import { NextResponse } from "next/server";
 
-export const revalidate = 900;
+/** See changelog-latest route — Vercel packaging expects a lambda for these handlers. */
+export const dynamic = "force-dynamic";
 
 /**
  * Public aggregates only: top commands this month (UTC), counts by command name.

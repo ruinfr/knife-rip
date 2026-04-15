@@ -6,7 +6,8 @@ import {
 import { COMMAND_CATALOG_VERSION } from "@/lib/commands";
 import { NextResponse } from "next/server";
 
-export const revalidate = 300;
+/** Vercel build tracer needs a Node handler; ISR static routes can fail with "Unable to find lambda". */
+export const dynamic = "force-dynamic";
 
 /**
  * Latest changelog entry for .news, widgets, and RSS-style consumers.
