@@ -221,7 +221,7 @@ export async function fetchTopShowcaseCommunities(
 
 export type DashboardGuildSummary = {
   /** Manage Server (or owner/admin) and Arivix is in the guild */
-  knifeGuilds: DiscordGuild[];
+  arivixGuilds: DiscordGuild[];
   /** You can manage these, but the bot is not installed */
   inviteCandidates: DiscordGuild[];
   botConfigured: boolean;
@@ -236,23 +236,23 @@ export async function getDashboardGuildSummary(
 
   if (!trimmed) {
     return {
-      knifeGuilds: [],
+      arivixGuilds: [],
       inviteCandidates: manageable,
       botConfigured: false,
     };
   }
 
   const botIds = await fetchBotGuildIds(trimmed);
-  const knifeGuilds = manageable.filter((g) => botIds.has(g.id));
+  const arivixGuilds = manageable.filter((g) => botIds.has(g.id));
   const inviteCandidates = manageable.filter((g) => !botIds.has(g.id));
 
-  return { knifeGuilds, inviteCandidates, botConfigured: true };
+  return { arivixGuilds, inviteCandidates, botConfigured: true };
 }
 
 /**
  * Resolve a guild the user may open in the dashboard: must manage (or own) and bot must be present.
  */
-export async function getKnifeGuildForUser(
+export async function getArivixGuildForUser(
   userAccessToken: string,
   botToken: string,
   guildId: string,

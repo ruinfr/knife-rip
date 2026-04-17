@@ -1,8 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const membersCommand: KnifeCommand = {
+export const membersCommand: ArivixCommand = {
   name: "members",
   aliases: ["inrole", "rolemembers"],
   description: "List members that have a specific role (from cache)",

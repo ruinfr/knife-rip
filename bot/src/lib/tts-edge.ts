@@ -101,7 +101,7 @@ async function synthesizeSpeechMp3Edge(text: string): Promise<Buffer> {
     Cookie: `muid=${muid};`,
   };
 
-  const name = `knife-tts-${randomBytes(12).toString("hex")}.mp3`;
+  const name = `arivix-tts-${randomBytes(12).toString("hex")}.mp3`;
   const audioPath = join(tmpdir(), name);
 
   await new Promise<void>((resolve, reject) => {

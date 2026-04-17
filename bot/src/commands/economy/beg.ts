@@ -12,9 +12,9 @@ import { formatCash } from "../../lib/economy/money";
 import type { LedgerReason } from "../../lib/economy/wallet";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const begCommand: KnifeCommand = {
+export const begCommand: ArivixCommand = {
   name: "beg",
   aliases: ["panhandle", "sparechange"],
   description: "Beg for a tiny Arivix Cash tip (short cooldown, often nothing)",

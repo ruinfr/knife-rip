@@ -28,4 +28,4 @@ Copy [`.env.example`](.env.example) to `.env` and fill values. Highlights:
 
 2. **Stripe** — **Developers → Webhooks** → endpoint `https://arivix.org/api/webhooks/stripe` (local: [Stripe CLI](https://stripe.com/docs/stripe-cli)) and set `STRIPE_WEBHOOK_SECRET`.
 
-Use `DATABASE_URL="postgresql://postgres:postgres@localhost:5432/knife"` for local Postgres if you keep that database name.
+Use `DATABASE_URL="postgresql://postgres:postgres@localhost:5432/arivix"` for local Postgres if you keep that database name (matches `docker-compose.yml`).

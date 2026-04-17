@@ -9,12 +9,12 @@ const dups = [];
 
 function extractCommandBlocks(fileContent) {
   const blocks = [];
-  const re = /export const (\w+)\s*:\s*KnifeCommand\s*=\s*\{([\s\S]*?)\n\};/g;
+  const re = /export const (\w+)\s*:\s*ArivixCommand\s*=\s*\{([\s\S]*?)\n\};/g;
   let m;
   while ((m = re.exec(fileContent)) !== null) {
     blocks.push({ exportName: m[1], body: m[2] });
   }
-  if (blocks.length === 0 && fileContent.includes("KnifeCommand")) {
+  if (blocks.length === 0 && fileContent.includes("ArivixCommand")) {
     const one = /\{([\s\S]*)\}\s*;?\s*$/m.exec(fileContent);
     if (one) blocks.push({ exportName: "?", body: one[1] });
   }
@@ -46,7 +46,7 @@ function walk(dir) {
     if (ent.isDirectory()) walk(p);
     else if (ent.name.endsWith(".ts")) {
       const s = fs.readFileSync(p, "utf8");
-      if (!s.includes("KnifeCommand")) continue;
+      if (!s.includes("ArivixCommand")) continue;
       const blocks = extractCommandBlocks(s);
       for (const { exportName, body } of blocks) {
         const primary = parseName(body);

@@ -8,9 +8,9 @@ import {
 import { parsePositiveBigInt } from "../../lib/economy/money";
 import { errorEmbed } from "../../lib/embeds";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const luckydropCommand: KnifeCommand = {
+export const luckydropCommand: ArivixCommand = {
   name: "luckydrop",
   aliases: ["cashdrop", "randdrop", "ownerdrop"],
   description:

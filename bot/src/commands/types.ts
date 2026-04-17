@@ -6,7 +6,7 @@ export type CommandContext = {
 };
 
 /** Metadata sent to the site (omit to keep a command off the public list). */
-export type KnifeCommandSite = {
+export type ArivixCommandSite = {
   categoryId: string;
   categoryTitle: string;
   categoryDescription: string;
@@ -18,13 +18,13 @@ export type KnifeCommandSite = {
   developerOnly?: boolean;
 };
 
-export type KnifeCommand = {
+export type ArivixCommand = {
   /** Trigger without prefix, e.g. `ping` for `.ping` */
   name: string;
   /** Extra triggers, e.g. `h` for `.h` → same handler as `help`. */
   aliases?: string[];
   description: string;
   /** If set, included in the catalog POSTed to the site. */
-  site?: KnifeCommandSite;
+  site?: ArivixCommandSite;
   run(ctx: CommandContext): Promise<void>;
 };

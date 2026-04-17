@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { resolveCommunityDiscordInviteUrl } from "../../../../lib/community-discord";
 import { COMMAND_CATALOG_VERSION, getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function readBotPackageVersion(): string {
   try {
@@ -17,7 +17,7 @@ function readBotPackageVersion(): string {
   }
 }
 
-export const botinfoCommand: KnifeCommand = {
+export const botinfoCommand: ArivixCommand = {
   name: "botinfo",
   aliases: ["bi"],
   description:

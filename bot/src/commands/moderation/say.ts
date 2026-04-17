@@ -1,4 +1,4 @@
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import { errorEmbed } from "../../lib/embeds";
 import {
   BROADCAST_MAX_INPUT,
@@ -7,7 +7,7 @@ import {
   parseChannelSnowflake,
 } from "../../lib/pro-channel-broadcast";
 
-export const sayCommand: KnifeCommand = {
+export const sayCommand: ArivixCommand = {
   name: "say",
   aliases: ["botsay", "botpost"],
   description:

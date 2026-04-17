@@ -3,9 +3,9 @@ import { formatCash } from "../../lib/economy/money";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { minimalEmbed } from "../../lib/embeds";
 import { medalForRank } from "../../lib/guild-leaderboards/format";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const baltopCommand: KnifeCommand = {
+export const baltopCommand: ArivixCommand = {
   name: "baltop",
   aliases: ["cashtop", "richest", "leaderboardcash", "topcash", "moneylb"],
   description:

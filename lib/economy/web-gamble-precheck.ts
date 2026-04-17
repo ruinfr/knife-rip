@@ -1,6 +1,6 @@
 import type { EconomyUser } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
-import { WEB_GAMBLE_COOLDOWN_MS } from "./knife-cash-web";
+import { WEB_GAMBLE_COOLDOWN_MS } from "./arivix-cash-web";
 
 type Tx = Prisma.TransactionClient;
 

@@ -2,14 +2,14 @@ import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { invalidateGuildAccessCache } from "../../lib/guild-access";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function parseSnowflake(raw: string | undefined): string | null {
   const t = raw?.trim() ?? "";
   return /^\d{17,20}$/.test(t) ? t : null;
 }
 
-export const accessCommand: KnifeCommand = {
+export const accessCommand: ArivixCommand = {
   name: "access",
   aliases: ["guildaccess", "botaccess"],
   description:

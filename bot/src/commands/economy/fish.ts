@@ -8,9 +8,9 @@ import {
 } from "../../lib/economy/fish-flow";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const fishCommand: KnifeCommand = {
+export const fishCommand: ArivixCommand = {
   name: "fish",
   aliases: ["fishing", "catch"],
   description:

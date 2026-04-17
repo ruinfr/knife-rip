@@ -23,13 +23,13 @@ import {
 } from "../../lib/economy/wallet";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function utcYmd(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-export const robCommand: KnifeCommand = {
+export const robCommand: ArivixCommand = {
   name: "rob",
   aliases: ["steal", "mug"],
   description: "Try to steal Arivix Cash from another member (guild only, high fail rate)",

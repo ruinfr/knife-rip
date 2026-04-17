@@ -21,7 +21,7 @@ import {
   deleteUnbanAllJob,
   isUnbanAllCancelled,
 } from "../../lib/unban-all-jobs";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import type { Message } from "discord.js";
 
 async function requireBan(message: Message) {
@@ -58,7 +58,7 @@ function requireOwner(message: Message): string | null {
   return null;
 }
 
-export const unbanCommand: KnifeCommand = {
+export const unbanCommand: ArivixCommand = {
   name: "unban",
   aliases: ["ub", "pardon"],
   description: "Unban a user by id — **Ban Members**",
@@ -127,7 +127,7 @@ export const unbanCommand: KnifeCommand = {
   },
 };
 
-export const softbanCommand: KnifeCommand = {
+export const softbanCommand: ArivixCommand = {
   name: "softban",
   description:
     "Ban with 24h message delete, then unban (kick + scrub) — **Ban Members**",
@@ -217,7 +217,7 @@ export const softbanCommand: KnifeCommand = {
   },
 };
 
-export const tempbanCommand: KnifeCommand = {
+export const tempbanCommand: ArivixCommand = {
   name: "tempban",
   aliases: ["tban"],
   description:
@@ -350,7 +350,7 @@ export const tempbanCommand: KnifeCommand = {
   },
 };
 
-export const hardbanCommand: KnifeCommand = {
+export const hardbanCommand: ArivixCommand = {
   name: "hardban",
   aliases: ["hban", "fban"],
   description:
@@ -461,7 +461,7 @@ export const hardbanCommand: KnifeCommand = {
   },
 };
 
-export const hardbanlistCommand: KnifeCommand = {
+export const hardbanlistCommand: ArivixCommand = {
   name: "hardbanlist",
   aliases: ["hardbans"],
   description: "List hardbanned user ids — **Administrator**",
@@ -505,7 +505,7 @@ export const hardbanlistCommand: KnifeCommand = {
   },
 };
 
-export const unbanallCommand: KnifeCommand = {
+export const unbanallCommand: ArivixCommand = {
   name: "unbanall",
   aliases: ["massunban", "uball"],
   description: "Unban everyone (slow) — **server owner only**",
@@ -569,7 +569,7 @@ export const unbanallCommand: KnifeCommand = {
   },
 };
 
-export const unbanallcancelCommand: KnifeCommand = {
+export const unbanallcancelCommand: ArivixCommand = {
   name: "unbanallcancel",
   aliases: ["ubacancel", "canceluball"],
   description: "Cancel **unbanall** — **server owner**",
@@ -601,7 +601,7 @@ export const unbanallcancelCommand: KnifeCommand = {
   },
 };
 
-export const banrecentCommand: KnifeCommand = {
+export const banrecentCommand: ArivixCommand = {
   name: "banrecent",
   aliases: ["banrecently"],
   description: "Recent audit-log ban entries — **Ban Members** + **View Audit Log**",
@@ -653,7 +653,7 @@ export const banrecentCommand: KnifeCommand = {
   },
 };
 
-export const banpurgeCommand: KnifeCommand = {
+export const banpurgeCommand: ArivixCommand = {
   name: "banpurge",
   aliases: ["bpurge", "userpurge"],
   description:

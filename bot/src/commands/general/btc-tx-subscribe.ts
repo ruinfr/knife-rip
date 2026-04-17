@@ -1,7 +1,7 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { getSiteApiBase } from "../../config";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const BTC_TX = /^[a-fA-F0-9]{64}$/;
 const MAX_WATCHES_PER_USER = 5;
@@ -18,7 +18,7 @@ async function mempoolConfirmed(txHash: string): Promise<boolean | null> {
   return Boolean(j.confirmed);
 }
 
-export const subscribeCommand: KnifeCommand = {
+export const subscribeCommand: ArivixCommand = {
   name: "subscribe",
   aliases: ["btcwatch", "txwatch", "btctxwatch"],
   description:

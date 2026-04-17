@@ -1,8 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const botsCommand: KnifeCommand = {
+export const botsCommand: ArivixCommand = {
   name: "bots",
   aliases: ["botlist"],
   description: "List bot accounts currently visible in the member cache",

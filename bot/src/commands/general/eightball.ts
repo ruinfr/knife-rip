@@ -1,5 +1,5 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 /** Classic Magic 8-Ball style replies */
 const REPLIES = [
@@ -27,7 +27,7 @@ const REPLIES = [
 
 const MAX_QUESTION = 400;
 
-export const eightBallCommand: KnifeCommand = {
+export const eightBallCommand: ArivixCommand = {
   name: "8ball",
   aliases: ["eightball", "magic8ball"],
   description: "Ask the Magic 8-Ball a question (or get a random answer)",

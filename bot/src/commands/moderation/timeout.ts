@@ -12,7 +12,7 @@ import {
   canPunish,
   resolveModerationMember,
 } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireTimeoutPerm(message: Message) {
   const g = message.guild;
@@ -29,7 +29,7 @@ async function requireTimeoutPerm(message: Message) {
   return null;
 }
 
-export const timeoutCommand: KnifeCommand = {
+export const timeoutCommand: ArivixCommand = {
   name: "timeout",
   aliases: ["mute", "to"],
   description:
@@ -137,7 +137,7 @@ export const timeoutCommand: KnifeCommand = {
   },
 };
 
-export const timeoutlistCommand: KnifeCommand = {
+export const timeoutlistCommand: ArivixCommand = {
   name: "timeoutlist",
   aliases: ["timeouts", "mutelist"],
   description: "Members currently timed out — **Moderate Members**",
@@ -188,7 +188,7 @@ export const timeoutlistCommand: KnifeCommand = {
   },
 };
 
-export const untimeoutCommand: KnifeCommand = {
+export const untimeoutCommand: ArivixCommand = {
   name: "untimeout",
   aliases: ["unmute", "ut"],
   description: "Remove a member’s active timeout",

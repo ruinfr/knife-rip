@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { Client } from "discord.js";
 
-import { userCanUseKnifeProFeatures } from "../pro-entitlement";
+import { userCanUseArivixProFeatures } from "../pro-entitlement";
 import {
   describeDuration,
   parseModerationDuration,
@@ -32,7 +32,7 @@ export async function userCanUseRemind(userId: string): Promise<{
   ok: boolean;
   reason?: string;
 }> {
-  return userCanUseKnifeProFeatures(userId, { commandLabel: ".remind" });
+  return userCanUseArivixProFeatures(userId, { commandLabel: ".remind" });
 }
 
 export function parseRemindDelay(raw: string): number | null {

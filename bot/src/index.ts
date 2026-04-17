@@ -12,7 +12,7 @@ import { handleVoiceMasterInteraction } from "./lib/voicemaster/interaction-hand
 import { tryExpandGluedVoicemaster } from "./lib/voicemaster/parse-invoke";
 import { handleVoiceMasterVoiceState } from "./lib/voicemaster/voice-handler";
 import { reconcileOrphanTemps } from "./lib/voicemaster/service";
-import { getKnifeRipPrivilegeSyncEnv } from "../../lib/discord-guild-role-sync";
+import { getArivixRipPrivilegeSyncEnv } from "../../lib/discord-guild-role-sync";
 import {
   buildCommandMap,
   syncRegistryToSite,
@@ -30,8 +30,8 @@ import { loadEconomyGuildEnvConfig } from "./lib/economy/economy-guild-config";
 import { recordEconomyMessageActivity } from "./lib/economy/milestones";
 import { handlePollInteraction } from "./lib/poll/interaction-handler";
 import {
-  reconcileKnifeRipSuspectRoles,
-  syncKnifeRipRolesForDiscordUser,
+  reconcileArivixRipSuspectRoles,
+  syncArivixRipRolesForDiscordUser,
 } from "./lib/privilege-role-sync";
 import { isGuildAccessBlocked } from "./lib/guild-access";
 import { recordGuildCommandAudit } from "./lib/guild-command-audit";
@@ -88,14 +88,14 @@ client.once(Events.ClientReady, async (c) => {
   } catch (e) {
     console.warn("Economy guild env load failed:", e);
   }
-  const rip = getKnifeRipPrivilegeSyncEnv();
+  const rip = getArivixRipPrivilegeSyncEnv();
   if (rip) {
     console.log(
       `Privilege Discord sync: guild ${rip.guildId} (reconcile every ${PRIVILEGE_RECONCILE_MS / 60000} min)`,
     );
   } else {
     console.log(
-      "Privilege Discord sync: off — set KNIFE_RIP_GUILD_ID (Pro/Owner/Dev role IDs default to arivix.org hub)",
+      "Privilege Discord sync: off — set ARIVIX_RIP_GUILD_ID (legacy KNIFE_RIP_GUILD_ID also works; Pro/Owner/Dev role IDs default to arivix.org hub)",
     );
   }
   try {
@@ -132,11 +132,11 @@ client.once(Events.ClientReady, async (c) => {
   }
 
   setInterval(() => {
-    reconcileKnifeRipSuspectRoles(c).catch((err) =>
+    reconcileArivixRipSuspectRoles(c).catch((err) =>
       console.warn("Privilege role reconcile failed:", err),
     );
   }, PRIVILEGE_RECONCILE_MS);
-  reconcileKnifeRipSuspectRoles(c).catch((err) =>
+  reconcileArivixRipSuspectRoles(c).catch((err) =>
     console.warn("Privilege role reconcile failed:", err),
   );
 
@@ -230,9 +230,9 @@ client.on(Events.GuildMemberUpdate, (oldM, newM) => {
 client.on(Events.GuildMemberAdd, (member) => {
   void (async () => {
     if (await isGuildAccessBlocked(member.guild.id)) return;
-    const env = getKnifeRipPrivilegeSyncEnv();
+    const env = getArivixRipPrivilegeSyncEnv();
     if (env && member.guild.id === env.guildId) {
-      void syncKnifeRipRolesForDiscordUser(member.id);
+      void syncArivixRipRolesForDiscordUser(member.id);
     }
     await applyGuildMemberJoinModeration(member);
   })();

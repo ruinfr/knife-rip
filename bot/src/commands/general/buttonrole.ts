@@ -16,7 +16,7 @@ import {
   botCanAssignRole,
   executorMayConfigureRole,
 } from "../../lib/role-assignment-safety";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function requireManage(message: import("discord.js").Message): boolean {
   return (
@@ -70,7 +70,7 @@ function emojiJsonFromToken(raw: string | undefined): string | null {
   return null;
 }
 
-export const buttonroleCommand: KnifeCommand = {
+export const buttonroleCommand: ArivixCommand = {
   name: "buttonrole",
   aliases: ["br", "brole"],
   description:

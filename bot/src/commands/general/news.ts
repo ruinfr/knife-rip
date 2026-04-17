@@ -1,6 +1,6 @@
 import { COMMAND_CATALOG_VERSION, getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 type LatestPayload = {
   title: string;
@@ -14,7 +14,7 @@ type LatestPayload = {
 
 const FALLBACK_CHANGELOG = "https://arivix.org/changelog";
 
-export const newsCommand: KnifeCommand = {
+export const newsCommand: ArivixCommand = {
   name: "news",
   aliases: ["whatsnew", "updates"],
   description:

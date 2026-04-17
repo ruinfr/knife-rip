@@ -1,7 +1,7 @@
 import { isDeveloperDiscordId } from "@/lib/bot-developers";
 import {
   isBotOwnerDiscordIdResolved,
-  isKnifePremiumResolved,
+  isArivixPremiumResolved,
 } from "@/lib/discord-privilege";
 import { db } from "@/lib/db";
 import { hasPremiumAccess } from "@/lib/premium";
@@ -26,7 +26,7 @@ export async function getEntitlementForDiscordUserId(
   if (owner) {
     return { premium: true, owner: true, developer };
   }
-  if (await isKnifePremiumResolved(discordUserId)) {
+  if (await isArivixPremiumResolved(discordUserId)) {
     return { premium: true, owner: false, developer };
   }
 

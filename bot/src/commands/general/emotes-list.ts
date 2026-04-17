@@ -1,8 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const emotesCommand: KnifeCommand = {
+export const emotesCommand: ArivixCommand = {
   name: "emotes",
   aliases: ["emojis", "serveremotes", "serveremojis"],
   description: "List custom emojis in this server",

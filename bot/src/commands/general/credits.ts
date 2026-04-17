@@ -1,8 +1,8 @@
 import { getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const creditsCommand: KnifeCommand = {
+export const creditsCommand: ArivixCommand = {
   name: "credits",
   aliases: ["team"],
   description:

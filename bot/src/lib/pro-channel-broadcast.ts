@@ -1,8 +1,8 @@
 import { PermissionFlagsBits, type Message } from "discord.js";
-import { isKnifePremium } from "../../../lib/knife-premium";
+import { isArivixPremium } from "../../../lib/arivix-premium";
 import { getBotInternalSecret, getSiteApiBase } from "../config";
 import { errorEmbed, minimalEmbed } from "./embeds";
-import { resolveChannelMessagePayload } from "./knife-message-payload";
+import { resolveChannelMessagePayload } from "./arivix-message-payload";
 import { isCommandOwnerBypass } from "./owner-bypass";
 import { fetchPremiumFromSite } from "./site-client";
 
@@ -50,7 +50,7 @@ export async function gateProAdminBroadcast(
   }
 
   if (!ownerBypass) {
-    const listedPremium = isKnifePremium(message.author.id);
+    const listedPremium = isArivixPremium(message.author.id);
 
     if (!listedPremium && !getBotInternalSecret()) {
       await message.reply({

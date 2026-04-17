@@ -1,8 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const membercountCommand: KnifeCommand = {
+export const membercountCommand: ArivixCommand = {
   name: "membercount",
   aliases: ["memberscount", "mc"],
   description: "Member counts for this server (when cache is complete)",

@@ -8,7 +8,7 @@ import {
   executorMayConfigureRole,
   botCanAssignRole,
 } from "../../lib/role-assignment-safety";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function requireManage(message: import("discord.js").Message): boolean {
   return (
@@ -25,7 +25,7 @@ function extractLink(haystack: string): string | null {
   return m?.[1] ?? null;
 }
 
-export const reactionroleCommand: KnifeCommand = {
+export const reactionroleCommand: ArivixCommand = {
   name: "reactionrole",
   aliases: ["rr", "rrole"],
   description: "Self-assign roles via message reactions (configure with **Manage Roles**)",

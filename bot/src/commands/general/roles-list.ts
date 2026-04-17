@@ -1,8 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const rolesCommand: KnifeCommand = {
+export const rolesCommand: ArivixCommand = {
   name: "roles",
   aliases: ["rolelist"],
   description: "List roles in the server (position order)",

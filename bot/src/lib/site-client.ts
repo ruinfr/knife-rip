@@ -151,7 +151,7 @@ export async function fetchPremiumFromSite(
   return premium;
 }
 
-/** Mirrors site `KnifeRipDiscordRoleSyncReport` — handout response after DB write. */
+/** Mirrors site `ArivixRipDiscordRoleSyncReport` — handout response after DB write. */
 export type HandoutRoleSync = {
   state: "disabled" | "applied" | "no_change" | "not_member" | "error";
   detail?: string;

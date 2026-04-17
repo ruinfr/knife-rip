@@ -1,9 +1,9 @@
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const COMMANDS_PAGE_URL = "https://arivix.org/commands";
 
-export const helpCommand: KnifeCommand = {
+export const helpCommand: ArivixCommand = {
   name: "help",
   aliases: ["h"],
   description: "Link to the full command list on the Arivix site",

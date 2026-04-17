@@ -2,9 +2,9 @@ import { PermissionFlagsBits } from "discord.js";
 import { EmbedBuilder } from "discord.js";
 import { sendModLogEmbed, updateCaseReason } from "../../lib/mod-case/service";
 import { errorEmbed, minimalEmbed, missingPermissionEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const reasonCommand: KnifeCommand = {
+export const reasonCommand: ArivixCommand = {
   name: "reason",
   aliases: ["modreason", "casereason"],
   description: "Update a case reason — **Manage Messages**",

@@ -5,7 +5,7 @@ import {
   minimalEmbed,
   missingPermissionEmbed,
 } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 /** Discord bulk-delete cap per request; also keeps abuse down */
 const MAX_PURGE = 100;
@@ -24,7 +24,7 @@ async function requireManageMessages(message: Message) {
   return null;
 }
 
-export const purgeCommand: KnifeCommand = {
+export const purgeCommand: ArivixCommand = {
   name: "purge",
   aliases: ["prune"],
   description:

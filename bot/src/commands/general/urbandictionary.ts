@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 type UdResult = {
   list?: {
@@ -13,7 +13,7 @@ type UdResult = {
   }[];
 };
 
-export const urbandictionaryCommand: KnifeCommand = {
+export const urbandictionaryCommand: ArivixCommand = {
   name: "urbandictionary",
   aliases: ["urban", "ud"],
   description: "Urban Dictionary definition for slang or phrases",

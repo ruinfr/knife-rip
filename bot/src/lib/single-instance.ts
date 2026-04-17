@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
-const LOCK_NAME = ".knife-bot.lock";
+const LOCK_NAME = ".arivix-bot.lock";
 
 /** `bot/` directory — lock path does not depend on `process.cwd()` (restarts & PM2 cwd-safe). */
 const BOT_PACKAGE_ROOT = resolve(__dirname, "..", "..");
@@ -11,7 +11,10 @@ const BOT_PACKAGE_ROOT = resolve(__dirname, "..", "..");
  * Prevents duplicate replies when two terminals run the bot with the same token.
  */
 export function acquireSingleInstanceLock(): void {
-  if (process.env.KNIFE_BOT_DISABLE_SINGLE_INSTANCE_LOCK === "1") {
+  if (
+    process.env.ARIVIX_BOT_DISABLE_SINGLE_INSTANCE_LOCK === "1" ||
+    process.env.KNIFE_BOT_DISABLE_SINGLE_INSTANCE_LOCK === "1"
+  ) {
     return;
   }
 

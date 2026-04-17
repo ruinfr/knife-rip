@@ -7,7 +7,7 @@ import {
   missingPermissionEmbed,
 } from "../../lib/embeds";
 import { hasGuildPermission } from "../../lib/discord-member-perms";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 /** Discord server nickname limit */
 const MAX_NICK_LEN = 32;
@@ -16,7 +16,7 @@ function invokerCanManageNick(message: Message): Promise<boolean> {
   return hasGuildPermission(message, PermissionFlagsBits.ManageNicknames);
 }
 
-export const nicknameCommand: KnifeCommand = {
+export const nicknameCommand: ArivixCommand = {
   name: "nickname",
   aliases: ["nick"],
   description:

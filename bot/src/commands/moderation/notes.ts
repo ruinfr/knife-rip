@@ -6,7 +6,7 @@ import {
   missingPermissionEmbed,
 } from "../../lib/embeds";
 import { resolveModerationMember } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireManageMessages(message: import("discord.js").Message) {
   const g = message.guild;
@@ -21,7 +21,7 @@ async function requireManageMessages(message: import("discord.js").Message) {
   return null;
 }
 
-export const notesCommand: KnifeCommand = {
+export const notesCommand: ArivixCommand = {
   name: "notes",
   aliases: ["modnotes", "staffnotes"],
   description: "Staff notes on a member — **Manage Messages**",

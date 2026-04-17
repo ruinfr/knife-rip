@@ -39,7 +39,8 @@ const M = {
   customrole: "<:customrole:1491210055457177651>",
   picperms: "<:picperms:1491210054454738974>",
   booster: "<:booster:1491210053724672070>",
-  knifepremium: "<:knifepremium:1491210052814770288>",
+  /** Pro badge — Discord emoji name may still be `knifepremium` on the server; id is authoritative. */
+  arivixpremium: "<:knifepremium:1491210052814770288>",
   toplb: "<:toplb:1491209450508259458>",
   pay: "<:pay:1491209367242936572>",
   stats: "<:stats:1491209262846836756>",
@@ -111,7 +112,7 @@ export const ecoBtn = {
   Reroll: b("1491210481439084584", "Reroll"),
   Cancel: b("1491210483422859365", "Cancel"),
   luckydrop: b("1491210627589476402", "luckydrop"),
-  knifepremium: b("1491210052814770288", "knifepremium"),
+  arivixpremium: b("1491210052814770288", "knifepremium"),
   booster: b("1491210053724672070", "booster"),
   tablerinfosquarefilled: b("1491168085414252696", "tablerinfosquarefilled"),
   emojionev1bomb: b("1491215389214904373", "emojionev1bomb"),

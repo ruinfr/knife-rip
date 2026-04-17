@@ -1,7 +1,7 @@
 import { AttachmentBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
 import { synthesizeSpeechMp3 } from "../../lib/tts-edge";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 /** Discord attachment limit (non–Nitro boost tier) — stay under this. */
 const MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024;
@@ -16,7 +16,7 @@ function safeFileNameSnippet(text: string): string {
   return base.length > 0 ? base : "speech";
 }
 
-export const ttsCommand: KnifeCommand = {
+export const ttsCommand: ArivixCommand = {
   name: "tts",
   aliases: ["texttospeech", "text2speech"],
   description: "Text-to-speech — replies with your line as an MP3",
@@ -85,7 +85,7 @@ export const ttsCommand: KnifeCommand = {
 
     const snippet = safeFileNameSnippet(text);
     const file = new AttachmentBuilder(buffer, {
-      name: `knife-tts-${snippet}.mp3`,
+      name: `arivix-tts-${snippet}.mp3`,
     });
 
     await message.reply({

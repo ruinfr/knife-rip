@@ -14,9 +14,9 @@ import {
 } from "../../lib/economy/rebirth-mult";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const rebirthCommand: KnifeCommand = {
+export const rebirthCommand: ArivixCommand = {
   name: "rebirth",
   aliases: ["rb", "prestige"],
   description:

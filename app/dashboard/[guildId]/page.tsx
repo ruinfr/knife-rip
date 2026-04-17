@@ -3,7 +3,7 @@ import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
-import { getKnifeGuildForUser, guildIconUrl } from "@/lib/discord";
+import { getArivixGuildForUser, guildIconUrl } from "@/lib/discord";
 import { isDeveloperDiscordId } from "@/lib/bot-developers";
 import {
   isPremiumBypassDiscordIdResolved,
@@ -39,9 +39,9 @@ export default async function GuildDashboardPage({ params }: PageProps) {
     redirect("/dashboard");
   }
 
-  let guild: Awaited<ReturnType<typeof getKnifeGuildForUser>> = null;
+  let guild: Awaited<ReturnType<typeof getArivixGuildForUser>> = null;
   try {
-    guild = await getKnifeGuildForUser(
+    guild = await getArivixGuildForUser(
       account.access_token,
       botToken,
       guildId,

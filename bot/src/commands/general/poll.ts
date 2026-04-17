@@ -8,7 +8,7 @@ import {
   registerPollState,
   type PollState,
 } from "../../lib/poll/state";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function handlePollEnd(message: Message, args: string[]): Promise<void> {
   if (!message.guild) {
@@ -100,7 +100,7 @@ async function handlePollEnd(message: Message, args: string[]): Promise<void> {
   });
 }
 
-export const pollCommand: KnifeCommand = {
+export const pollCommand: ArivixCommand = {
   name: "poll",
   aliases: ["vote"],
   description:

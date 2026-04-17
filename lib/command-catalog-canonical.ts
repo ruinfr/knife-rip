@@ -533,10 +533,10 @@ const CANONICAL_UNSORTED: CanonicalCommandSiteRow[] = [
   {
     name: "arivix",
     description: "About Arivix — site links, prefix, and gateway latency",
-    usage: ".arivix · .knife",
+    usage: ".arivix · .about",
     tier: "free",
     style: "prefix",
-    aliases: ["knife", "about", "knifeinfo"],
+    aliases: ["about"],
     categoryId: "core",
     categoryTitle: "Core",
     categoryDescription: "Essential prefix commands.",

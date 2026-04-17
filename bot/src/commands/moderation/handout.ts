@@ -11,7 +11,7 @@ import {
   postHandoutToSite,
   type HandoutRoleSync,
 } from "../../lib/site-client";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function stripParens(s: string): string {
   let t = s.trim();
@@ -55,7 +55,7 @@ function roleSyncFootnote(rs: HandoutRoleSync | undefined): string {
     case "not_member":
       return "\n\n**Discord:** Not in the hub server yet — handout saved; roles apply after they join (see footer).";
     case "disabled":
-      return `\n\n**Discord:** Role sync disabled (${rs.detail ?? "set KNIFE_RIP_GUILD_ID + DISCORD_BOT_TOKEN on the site"}).`;
+      return `\n\n**Discord:** Role sync disabled (${rs.detail ?? "set ARIVIX_RIP_GUILD_ID (or legacy KNIFE_RIP_GUILD_ID) + DISCORD_BOT_TOKEN on the site"}).`;
     case "error": {
       const detail = (rs.detail ?? "unknown").slice(0, 400);
       return `\n\n**Discord:** Role sync failed — ${detail}`;
@@ -99,7 +99,7 @@ async function resolveHandoutTarget(
   return null;
 }
 
-export const handoutCommand: KnifeCommand = {
+export const handoutCommand: ArivixCommand = {
   name: "handout",
   aliases: ["granttier", "tierhandout"],
   description:

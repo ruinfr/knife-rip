@@ -8,9 +8,9 @@ import {
 import { formatCash, parsePositiveBigInt } from "../../lib/economy/money";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const depositCommand: KnifeCommand = {
+export const depositCommand: ArivixCommand = {
   name: "deposit",
   aliases: ["dep", "save"],
   description: "Move Arivix Cash from wallet into the bank (lazy interest, tier cap)",

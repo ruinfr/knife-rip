@@ -3,7 +3,7 @@ import { PermissionFlagsBits } from "discord.js";
 import { errorEmbed, minimalEmbed, missingPermissionEmbed } from "../../lib/embeds";
 import { hasGuildPermission } from "../../lib/discord-member-perms";
 import { fetchRecentGuildCommandAudit } from "../../lib/guild-command-audit";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
@@ -21,7 +21,7 @@ function parseLimit(raw: string | undefined): number | null {
   return n;
 }
 
-export const auditCommand: KnifeCommand = {
+export const auditCommand: ArivixCommand = {
   name: "audit",
   aliases: ["auditlog", "cmdlog"],
   description:

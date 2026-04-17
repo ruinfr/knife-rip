@@ -13,7 +13,7 @@ import {
   minimalEmbed,
   missingPermissionEmbed,
 } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function parseChannelId(message: Message, raw: string | undefined): string | null {
   if (!raw) return null;
@@ -72,7 +72,7 @@ async function textChannelsToLock(
   return out;
 }
 
-export const lockdownCommand: KnifeCommand = {
+export const lockdownCommand: ArivixCommand = {
   name: "lockdown",
   aliases: ["serverlock", "emergencylock"],
   description:
@@ -274,7 +274,7 @@ export const lockdownCommand: KnifeCommand = {
   },
 };
 
-export const unlockallCommand: KnifeCommand = {
+export const unlockallCommand: ArivixCommand = {
   name: "unlockall",
   aliases: ["endlockdown", "unlockdown"],
   description:

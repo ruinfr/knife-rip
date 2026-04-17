@@ -1,9 +1,9 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const boostersCommand: KnifeCommand = {
+export const boostersCommand: ArivixCommand = {
   name: "boosters",
   aliases: ["boostlist", "nitroboosters"],
   description: "List current server boosters or recent lost boosts (tracked while bot is online)",

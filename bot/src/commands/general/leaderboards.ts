@@ -1,7 +1,7 @@
 import { minimalEmbed } from "../../lib/embeds";
 import { formatMessageCount, formatVoiceSeconds, medalForRank } from "../../lib/guild-leaderboards/format";
 import { getBotPrisma } from "../../lib/db-prisma";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const TOP = 15;
 
@@ -14,7 +14,7 @@ async function memberLabel(
   return `User ${userId}`;
 }
 
-export const lbCommand: KnifeCommand = {
+export const lbCommand: ArivixCommand = {
   name: "lb",
   aliases: ["leaderboard", "textleaderboard", "textlb"],
   description:
@@ -74,7 +74,7 @@ export const lbCommand: KnifeCommand = {
   },
 };
 
-export const vlbCommand: KnifeCommand = {
+export const vlbCommand: ArivixCommand = {
   name: "vlb",
   aliases: ["vcleaderboard", "voiceleaderboard", "voicelb"],
   description:

@@ -1,10 +1,10 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { fetchRobloxProfile } from "../../lib/roblox-api";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const ABOUT_MAX = 500;
 
-export const robloxCommand: KnifeCommand = {
+export const robloxCommand: ArivixCommand = {
   name: "roblox",
   aliases: ["rblx"],
   description: "Roblox profile — lookup by username",

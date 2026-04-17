@@ -1,8 +1,8 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const bannerCommand: KnifeCommand = {
+export const bannerCommand: ArivixCommand = {
   name: "banner",
   aliases: ["userbanner", "bn"],
   description:

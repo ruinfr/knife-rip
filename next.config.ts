@@ -3,9 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async redirects() {
     return [
-      { source: "/gamble", destination: "/knife-cash", permanent: true },
-      { source: "/cash", destination: "/knife-cash", permanent: true },
-      { source: "/economy", destination: "/knife-cash", permanent: true },
+      { source: "/gamble", destination: "/arivix-cash", permanent: true },
+      { source: "/cash", destination: "/arivix-cash", permanent: true },
+      { source: "/economy", destination: "/arivix-cash", permanent: true },
+      { source: "/knife-cash", destination: "/arivix-cash", permanent: true },
+      { source: "/knife-cash/:path*", destination: "/arivix-cash/:path*", permanent: true },
     ];
   },
   images: {

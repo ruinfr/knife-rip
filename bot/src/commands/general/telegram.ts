@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { getTelegramBotToken } from "../../config";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 type TgOk<T> = { ok: true; result: T } | { ok: false; description?: string };
 
@@ -13,7 +13,7 @@ type TgChat = {
   description?: string;
 };
 
-export const telegramCommand: KnifeCommand = {
+export const telegramCommand: ArivixCommand = {
   name: "telegram",
   aliases: ["tg"],
   description: "Fetch basic public chat info via Telegram Bot API (optional token)",

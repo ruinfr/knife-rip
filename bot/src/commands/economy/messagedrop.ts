@@ -4,7 +4,7 @@ import { applyCashDelta } from "../../lib/economy/wallet";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 /** Hard cap so one command does not run unbounded transactions. */
 const MAX_RECIPIENTS = 10_000;
@@ -17,7 +17,7 @@ function parsePositiveInt(raw: string): number | null {
   return n;
 }
 
-export const messagedropCommand: KnifeCommand = {
+export const messagedropCommand: ArivixCommand = {
   name: "messagedrop",
   description:
     "Bot owner only — grant Arivix Cash to every user with at least N lifetime tracked messages",

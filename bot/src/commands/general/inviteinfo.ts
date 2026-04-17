@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function parseInviteCode(raw: string): string | null {
   const t = raw.trim();
@@ -12,7 +12,7 @@ function parseInviteCode(raw: string): string | null {
   return null;
 }
 
-export const inviteinfoCommand: KnifeCommand = {
+export const inviteinfoCommand: ArivixCommand = {
   name: "inviteinfo",
   aliases: ["invite-code", "invinfo"],
   description: "Look up basic information for a Discord invite code or link",

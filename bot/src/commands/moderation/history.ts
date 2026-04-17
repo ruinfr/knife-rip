@@ -14,7 +14,7 @@ import {
   missingPermissionEmbed,
 } from "../../lib/embeds";
 import { resolveModerationMember } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireManageMessages(message: import("discord.js").Message) {
   const g = message.guild;
@@ -248,7 +248,7 @@ async function historyRun(ctx: {
   });
 }
 
-export const historyCommand: KnifeCommand = {
+export const historyCommand: ArivixCommand = {
   name: "history",
   aliases: ["modlog", "casehistory"],
   description:
@@ -267,7 +267,7 @@ export const historyCommand: KnifeCommand = {
   },
 };
 
-export const caselogCommand: KnifeCommand = {
+export const caselogCommand: ArivixCommand = {
   name: "caselog",
   aliases: ["case", "cases"],
   description: "Same as **.history** — view and manage case logs",
@@ -284,7 +284,7 @@ export const caselogCommand: KnifeCommand = {
   },
 };
 
-export const historyViewCommand: KnifeCommand = {
+export const historyViewCommand: ArivixCommand = {
   name: "historyview",
   aliases: ["caseview"],
   description: "Shorthand: **.history view** `<#>` — **Manage Messages**",

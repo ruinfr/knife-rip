@@ -1,8 +1,8 @@
 import { getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const donateCommand: KnifeCommand = {
+export const donateCommand: ArivixCommand = {
   name: "donate",
   aliases: ["support", "tip"],
   description: "Support Arivix hosting — link to pricing and status",

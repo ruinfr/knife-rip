@@ -10,7 +10,7 @@ import {
 } from "../../lib/guild-command-rules";
 import { hasGuildPermission } from "../../lib/discord-member-perms";
 import { getGuildCommandPrefix } from "../../lib/guild-prefix";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const SNOWFLAKE = /^\d{17,20}$/;
 
@@ -54,7 +54,7 @@ function scopeLabel(scope: string): string {
   return scope === GUILD_COMMAND_SCOPE_ALL ? "**all channels**" : `<#${scope}>`;
 }
 
-export const commandConfigCommand: KnifeCommand = {
+export const commandConfigCommand: ArivixCommand = {
   name: "command",
   aliases: ["cmd"],
   description:

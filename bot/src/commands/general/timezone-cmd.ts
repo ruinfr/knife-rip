@@ -1,9 +1,9 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const timezoneCommand: KnifeCommand = {
+export const timezoneCommand: ArivixCommand = {
   name: "timezone",
   aliases: ["tz"],
   description: "Per-user IANA timezone (subs: set, list)",

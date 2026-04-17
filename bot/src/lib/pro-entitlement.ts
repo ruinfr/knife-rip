@@ -1,4 +1,4 @@
-import { isKnifePremium } from "../../../lib/knife-premium";
+import { isArivixPremium } from "../../../lib/arivix-premium";
 import { getBotInternalSecret } from "../config";
 import { isCommandOwnerBypass } from "./owner-bypass";
 import { fetchEntitlementFromSite } from "./site-client";
@@ -6,7 +6,7 @@ import { fetchEntitlementFromSite } from "./site-client";
 const PRICING_URL = "https://arivix.org/pricing";
 
 /** Arivix Pro site entitlement check (shared by .remind, .vanity, etc.). */
-export async function userCanUseKnifeProFeatures(
+export async function userCanUseArivixProFeatures(
   userId: string,
   options?: { commandLabel?: string },
 ): Promise<{
@@ -14,7 +14,7 @@ export async function userCanUseKnifeProFeatures(
   reason?: string;
 }> {
   if (await isCommandOwnerBypass(userId)) return { ok: true };
-  if (isKnifePremium(userId)) return { ok: true };
+  if (isArivixPremium(userId)) return { ok: true };
 
   if (!getBotInternalSecret()) {
     return {

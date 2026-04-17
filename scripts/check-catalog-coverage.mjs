@@ -26,7 +26,7 @@ function walkTsFiles(dir, acc = []) {
 function exportToPrimaryNames(fileContent) {
   const map = new Map();
   const re =
-    /export const (\w+)\s*:\s*KnifeCommand\s*=\s*\{([\s\S]*?)\n\};/g;
+    /export const (\w+)\s*:\s*ArivixCommand\s*=\s*\{([\s\S]*?)\n\};/g;
   let m;
   while ((m = re.exec(fileContent)) !== null) {
     const exportName = m[1];
@@ -57,7 +57,7 @@ const noSiteCommands = new Set(handoutNoSite ? ["handout"] : []);
 const nameByExport = new Map();
 for (const fp of walkTsFiles(cmdsDir)) {
   const txt = readFileSync(fp, "utf8");
-  if (!txt.includes("KnifeCommand")) continue;
+  if (!txt.includes("ArivixCommand")) continue;
   for (const [exp, primary] of exportToPrimaryNames(txt)) {
     nameByExport.set(exp, primary);
   }
@@ -72,7 +72,7 @@ const botSiteNames = new Set();
 for (const exp of registryNames) {
   const cmd = nameByExport.get(exp);
   if (!cmd) {
-    console.error("Unknown export in registry (no KnifeCommand match):", exp);
+    console.error("Unknown export in registry (no ArivixCommand match):", exp);
     process.exit(1);
   }
   if (noSiteCommands.has(cmd)) continue;

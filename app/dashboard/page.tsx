@@ -91,7 +91,7 @@ export default async function DashboardPage({
         ? "Arivix Pro"
         : "Active";
 
-  const knifeGuilds = summary?.knifeGuilds ?? [];
+  const arivixGuilds = summary?.arivixGuilds ?? [];
   const inviteCandidates = summary?.inviteCandidates ?? [];
   const botConfigured = summary?.botConfigured ?? false;
 
@@ -256,7 +256,7 @@ export default async function DashboardPage({
               (after signing in with Discord).
             </p>
           </div>
-          <ButtonLink href="/knife-cash">Open Arivix Cash</ButtonLink>
+          <ButtonLink href="/arivix-cash">Open Arivix Cash</ButtonLink>
         </Card>
       </ScrollReveal>
 
@@ -295,7 +295,7 @@ export default async function DashboardPage({
           >
             {guildError}
           </Card>
-        ) : botConfigured && knifeGuilds.length === 0 ? (
+        ) : botConfigured && arivixGuilds.length === 0 ? (
           <Card padding="md" className="text-sm text-muted">
             <p>
               Arivix isn&apos;t in any servers you manage yet, or Discord
@@ -318,7 +318,7 @@ export default async function DashboardPage({
           </Card>
         ) : (
           <StaggerChildren as="ul" className="space-y-2">
-            {knifeGuilds.map((g) => {
+            {arivixGuilds.map((g) => {
               const icon = guildIconUrl(g.id, g.icon);
               return (
                 <StaggerItem as="li" key={g.id}>

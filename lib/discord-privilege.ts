@@ -2,7 +2,7 @@ import { DiscordPrivilegeKind } from "@prisma/client";
 import { isDeveloperDiscordId } from "@/lib/bot-developers";
 import { isBotOwnerDiscordId as isStaticBotOwner } from "@/lib/bot-owners";
 import { db } from "@/lib/db";
-import { isKnifePremium as isStaticKnifePremium } from "@/lib/knife-premium";
+import { isArivixPremium as isStaticArivixPremium } from "@/lib/arivix-premium";
 
 async function hasDbPrivilege(
   discordUserId: string,
@@ -94,11 +94,11 @@ export async function clearBootstrapOwnerRevocation(
   });
 }
 
-/** Complimentary Pro: static `KNIFE_PREMIUM_DISCORD_IDS` and/or DB row (`.handout premium`). */
-export async function isKnifePremiumResolved(
+/** Complimentary Pro: static `ARIVIX_PREMIUM_DISCORD_IDS` and/or DB row (`.handout premium`). */
+export async function isArivixPremiumResolved(
   discordUserId: string,
 ): Promise<boolean> {
-  if (isStaticKnifePremium(discordUserId)) return true;
+  if (isStaticArivixPremium(discordUserId)) return true;
   return hasDbPrivilege(discordUserId, DiscordPrivilegeKind.PREMIUM);
 }
 
@@ -107,7 +107,7 @@ export async function isPremiumBypassDiscordIdResolved(
   discordUserId: string,
 ): Promise<boolean> {
   if (await isBotOwnerDiscordIdResolved(discordUserId)) return true;
-  if (await isKnifePremiumResolved(discordUserId)) return true;
+  if (await isArivixPremiumResolved(discordUserId)) return true;
   return false;
 }
 

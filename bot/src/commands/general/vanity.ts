@@ -1,8 +1,8 @@
 import { getGuildCommandPrefix } from "../../lib/guild-prefix";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import { userCanUseKnifeProFeatures } from "../../lib/pro-entitlement";
+import { userCanUseArivixProFeatures } from "../../lib/pro-entitlement";
 import { runVanityDropForUser, runVanitySearchForUser } from "../../lib/vanity/user-actions";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function firstTokenAfterPrefix(message: {
   content: string;
@@ -15,7 +15,7 @@ async function firstTokenAfterPrefix(message: {
   return after.split(/\s+/)[0]?.toLowerCase() ?? "";
 }
 
-export const vanityCommand: KnifeCommand = {
+export const vanityCommand: ArivixCommand = {
   name: "vanity",
   aliases: ["vanities"],
   description:
@@ -29,7 +29,7 @@ export const vanityCommand: KnifeCommand = {
     style: "prefix",
   },
   async run({ message, args }) {
-    const access = await userCanUseKnifeProFeatures(message.author.id, {
+    const access = await userCanUseArivixProFeatures(message.author.id, {
       commandLabel: ".vanity",
     });
     if (!access.ok) {

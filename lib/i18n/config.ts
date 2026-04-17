@@ -1,4 +1,4 @@
-export const LOCALE_COOKIE = "KNIFE_LOCALE";
+export const LOCALE_COOKIE = "ARIVIX_LOCALE";
 
 export const locales = ["en", "de", "ja", "ko"] as const;
 export type Locale = (typeof locales)[number];

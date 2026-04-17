@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import { minimalEmbed, errorEmbed, missingPermissionEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireAdministrator(message: Message) {
   const g = message.guild;
@@ -20,7 +20,7 @@ async function requireAdministrator(message: Message) {
   return null;
 }
 
-export const jailsetupCommand: KnifeCommand = {
+export const jailsetupCommand: ArivixCommand = {
   name: "jailsetup",
   aliases: ["setupjail", "jset"],
   description:

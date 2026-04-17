@@ -1,14 +1,14 @@
 import { isDeveloperDiscordId } from "../../../../lib/bot-developers";
-import { isKnifePremium } from "../../../../lib/knife-premium";
+import { isArivixPremium } from "../../../../lib/arivix-premium";
 import { getBotInternalSecret } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
 import { fetchPremiumFromSite } from "../../lib/site-client";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const PRICING_URL = "https://arivix.org/pricing";
 
-export const premiumCommand: KnifeCommand = {
+export const premiumCommand: ArivixCommand = {
   name: "premium",
   aliases: ["pro", "prem"],
   description: "Arivix Pro — one-time lifetime unlock and your status",
@@ -26,7 +26,7 @@ export const premiumCommand: KnifeCommand = {
       status = isDeveloperDiscordId(message.author.id)
         ? "\n\n**Your status:** You are a **Developer** (full Arivix Pro + owner handouts + command bypass)."
         : "\n\n**Your status:** You are a **bot owner** (full Arivix Pro + command bypass).";
-    } else if (isKnifePremium(message.author.id)) {
+    } else if (isArivixPremium(message.author.id)) {
       status =
         "\n\n**Your status:** You have **Arivix Pro** on this Discord account (complimentary).";
     } else if (getBotInternalSecret()) {

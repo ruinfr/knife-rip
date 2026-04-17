@@ -6,7 +6,7 @@ import {
   minimalEmbed,
   missingPermissionEmbed,
 } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireManageChannels(message: Message) {
   const g = message.guild;
@@ -38,7 +38,7 @@ function channelSupportsOverwrites(
   );
 }
 
-export const lockCommand: KnifeCommand = {
+export const lockCommand: ArivixCommand = {
   name: "lock",
   aliases: ["chanlock", "lockchan"],
   description:
@@ -127,7 +127,7 @@ export const lockCommand: KnifeCommand = {
   },
 };
 
-export const unlockCommand: KnifeCommand = {
+export const unlockCommand: ArivixCommand = {
   name: "unlock",
   aliases: ["unlockchan", "unlockc"],
   description: "Clear the @everyone send lock for this channel (inherit again)",

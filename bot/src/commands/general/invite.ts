@@ -1,8 +1,8 @@
 import { getBotInviteUrl, getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const inviteCommand: KnifeCommand = {
+export const inviteCommand: ArivixCommand = {
   name: "invite",
   aliases: ["inv"],
   description: "Add Arivix to your server and open the web dashboard to manage it",

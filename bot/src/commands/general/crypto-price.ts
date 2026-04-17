@@ -5,9 +5,9 @@ import {
   fetchSimplePrice,
   resolveCoingeckoId,
 } from "../../lib/crypto/coingecko";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const cryptoCommand: KnifeCommand = {
+export const cryptoCommand: ArivixCommand = {
   name: "crypto",
   aliases: ["coin", "coingecko", "price"],
   description: "Spot price for a cryptocurrency (CoinGecko — fiat or major crypto pair)",

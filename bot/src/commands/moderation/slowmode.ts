@@ -6,7 +6,7 @@ import {
   minimalEmbed,
   missingPermissionEmbed,
 } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const MAX_SLOWMODE_SECONDS = 21_600; // 6 hours (Discord cap)
 
@@ -37,7 +37,7 @@ function channelSupportsSlowmode(
   );
 }
 
-export const slowmodeCommand: KnifeCommand = {
+export const slowmodeCommand: ArivixCommand = {
   name: "slowmode",
   aliases: ["slow", "ratelimit"],
   description: "Set this channel’s slowmode (0–21600 seconds; 0 turns it off)",

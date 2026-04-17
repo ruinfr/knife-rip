@@ -3,9 +3,9 @@ import { guildMemberHas } from "../../lib/command-perms";
 import { errorEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const seenCommand: KnifeCommand = {
+export const seenCommand: ArivixCommand = {
   name: "seen",
   aliases: ["lastseen"],
   description: "Last time we saw a member send messages here (best-effort, requires DB)",

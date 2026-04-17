@@ -4,7 +4,7 @@ import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { fetchImageBuffer } from "../../lib/fetch-image-buffer";
 import { parseDiscordMessageUrl } from "../../lib/parse-discord-message-url";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const SUBS = new Set([
   "add",
@@ -108,7 +108,7 @@ async function enlargeEmoji(
   });
 }
 
-export const emojiCommand: KnifeCommand = {
+export const emojiCommand: ArivixCommand = {
   name: "emoji",
   aliases: ["e"],
   description:

@@ -12,7 +12,7 @@ import {
   canPunish,
   resolveModerationMember,
 } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import type { Message } from "discord.js";
 
 async function requireManageRoles(message: Message) {
@@ -35,7 +35,7 @@ function parseRoleId(raw: string | undefined): string | null {
   return null;
 }
 
-export const temproleCommand: KnifeCommand = {
+export const temproleCommand: ArivixCommand = {
   name: "temprole",
   aliases: ["trole"],
   description: "Grant a role until it expires — **Manage Roles**",
@@ -121,7 +121,7 @@ export const temproleCommand: KnifeCommand = {
   },
 };
 
-export const temprolelistCommand: KnifeCommand = {
+export const temprolelistCommand: ArivixCommand = {
   name: "temprolelist",
   aliases: ["trolelist"],
   description: "Pending timed roles — **Manage Roles**",
@@ -165,7 +165,7 @@ export const temprolelistCommand: KnifeCommand = {
   },
 };
 
-export const roleCommand: KnifeCommand = {
+export const roleCommand: ArivixCommand = {
   name: "role",
   aliases: ["roletools", "modrole"],
   description: "Role tools — **Manage Roles** (`add`, `remove`, `create`, …)",

@@ -6,7 +6,7 @@ import {
   missingPermissionEmbed,
 } from "../../lib/embeds";
 import { resolveModerationMember } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import type { Message, ThreadChannel } from "discord.js";
 
 async function requireThread(
@@ -24,7 +24,7 @@ async function requireThread(
   return ch;
 }
 
-export const threadCommand: KnifeCommand = {
+export const threadCommand: ArivixCommand = {
   name: "thread",
   aliases: ["threadtool", "threading"],
   description:

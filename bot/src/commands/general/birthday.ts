@@ -3,7 +3,7 @@ import { guildMemberHas } from "../../lib/command-perms";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function parseMonthDay(raw: string): { month: number; day: number } | null {
   const s = raw.trim();
@@ -23,7 +23,7 @@ function parseMonthDay(raw: string): { month: number; day: number } | null {
   return null;
 }
 
-export const birthdayCommand: KnifeCommand = {
+export const birthdayCommand: ArivixCommand = {
   name: "birthday",
   aliases: ["bday"],
   description: "Birthdays for this server (stored in DB — subs: set, list, config, …)",

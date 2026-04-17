@@ -1,7 +1,7 @@
 import { dispatchVoicemaster } from "../../lib/voicemaster/dispatch";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const voicemasterCommand: KnifeCommand = {
+export const voicemasterCommand: ArivixCommand = {
   name: "voicemaster",
   aliases: ["vm"],
   description:

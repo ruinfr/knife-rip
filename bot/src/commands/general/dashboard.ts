@@ -1,8 +1,8 @@
 import { getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const dashboardCommand: KnifeCommand = {
+export const dashboardCommand: ArivixCommand = {
   name: "dashboard",
   aliases: ["dash"],
   description: "Open the web dashboard to manage Arivix (sign in with Discord)",

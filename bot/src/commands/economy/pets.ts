@@ -6,9 +6,9 @@ import {
 } from "../../lib/economy/pet-menu";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const petsCommand: KnifeCommand = {
+export const petsCommand: ArivixCommand = {
   name: "pets",
   aliases: ["petmenu", "mypets"],
   description: "Arivix Cash pets — button menu (equip / feed)",

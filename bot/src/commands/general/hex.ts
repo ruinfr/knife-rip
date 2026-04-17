@@ -7,14 +7,14 @@ import {
   resolveMediaUrlFromCommand,
 } from "../../lib/resolve-media-url";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function rgbToHex(r: number, g: number, b: number): string {
   const h = (n: number) => n.toString(16).padStart(2, "0");
   return `#${h(r)}${h(g)}${h(b)}`.toUpperCase();
 }
 
-export const hexCommand: KnifeCommand = {
+export const hexCommand: ArivixCommand = {
   name: "hex",
   aliases: ["color", "dominant"],
   description: "Dominant color from an image URL, attachment, or user avatar",

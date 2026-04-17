@@ -5,9 +5,9 @@
  * In values, `$v` inserts a newline; `\` escapes the next character (e.g. `\}`).
  */
 
-export const KNIFE_EMBED_MARKER = "{embed}$v";
+export const ARIVIX_EMBED_MARKER = "{embed}$v";
 
-export type KnifeEmbedPlaceholderContext = {
+export type ArivixEmbedPlaceholderContext = {
   message?: {
     id: string;
     content: string;
@@ -54,7 +54,7 @@ export type KnifeEmbedPlaceholderContext = {
 };
 
 /** Discord API embed shape (discord.js `EmbedBuilder` accepts this). */
-export type KnifeParsedEmbed = {
+export type ArivixParsedEmbed = {
   title?: string;
   description?: string;
   url?: string;
@@ -82,9 +82,9 @@ function ageFrom(ms: number): string {
  * Replace `{user…}`, `{guild…}`, etc. using runtime context (best-effort).
  * Unknown placeholders are left unchanged.
  */
-export function applyKnifeEmbedPlaceholders(
+export function applyArivixEmbedPlaceholders(
   raw: string,
-  ctx: KnifeEmbedPlaceholderContext,
+  ctx: ArivixEmbedPlaceholderContext,
 ): string {
   const map = new Map<string, string>();
   const u = ctx.user;
@@ -174,7 +174,7 @@ export function applyKnifeEmbedPlaceholders(
 }
 
 /** Sample context for the site embed builder (live preview placeholder expansion). */
-export const KNIFE_EMBED_DEMO_CONTEXT: KnifeEmbedPlaceholderContext = {
+export const ARIVIX_EMBED_DEMO_CONTEXT: ArivixEmbedPlaceholderContext = {
   user: {
     id: "309630495930818560",
     username: "nightblade",
@@ -222,13 +222,13 @@ export const KNIFE_EMBED_DEMO_CONTEXT: KnifeEmbedPlaceholderContext = {
 };
 
 export function applyPlaceholdersToParsedEmbed(
-  embed: KnifeParsedEmbed,
-  ctx: KnifeEmbedPlaceholderContext,
-): KnifeParsedEmbed {
+  embed: ArivixParsedEmbed,
+  ctx: ArivixEmbedPlaceholderContext,
+): ArivixParsedEmbed {
   const ap = (s?: string) =>
-    s === undefined || s === "" ? s : applyKnifeEmbedPlaceholders(s, ctx);
+    s === undefined || s === "" ? s : applyArivixEmbedPlaceholders(s, ctx);
 
-  const out: KnifeParsedEmbed = {
+  const out: ArivixParsedEmbed = {
     ...embed,
     title: ap(embed.title),
     description: ap(embed.description),
@@ -280,7 +280,7 @@ export function applyPlaceholdersToParsedEmbed(
   return out;
 }
 
-export function splitKnifeEmbedScript(raw: string): {
+export function splitArivixEmbedScript(raw: string): {
   content: string;
   embedSegment: string | null;
 } {
@@ -341,11 +341,11 @@ function truthy(raw: string): boolean {
   return t === "1" || t === "true" || t === "yes";
 }
 
-export function pairsToKnifeEmbed(
+export function pairsToArivixEmbed(
   pairList: { key: string; value: string }[],
-): { embed: KnifeParsedEmbed; warnings: string[] } {
+): { embed: ArivixParsedEmbed; warnings: string[] } {
   const warnings: string[] = [];
-  const embed: KnifeParsedEmbed = {};
+  const embed: ArivixParsedEmbed = {};
   const scalar = new Map<string, string>();
 
   for (const { key, value } of pairList) {
@@ -407,8 +407,8 @@ export function pairsToKnifeEmbed(
   return { embed, warnings };
 }
 
-export function parseKnifeEmbedScript(embedSegment: string): {
-  embed: KnifeParsedEmbed;
+export function parseArivixEmbedScript(embedSegment: string): {
+  embed: ArivixParsedEmbed;
   warnings: string[];
   error?: string;
 } {
@@ -417,7 +417,7 @@ export function parseKnifeEmbedScript(embedSegment: string): {
   }
   const body = embedSegment.replace(/^\{embed\}\s*\$v/im, "").trim();
   const pairList = parseBracePairs(body);
-  const { embed, warnings } = pairsToKnifeEmbed(pairList);
+  const { embed, warnings } = pairsToArivixEmbed(pairList);
   const hasBody =
     Boolean(embed.title) ||
     Boolean(embed.description) ||
@@ -438,9 +438,9 @@ export function parseKnifeEmbedScript(embedSegment: string): {
   return { embed, warnings };
 }
 
-export type KnifeSerializeField = { name: string; value: string; inline?: boolean };
+export type ArivixSerializeField = { name: string; value: string; inline?: boolean };
 
-export function serializeKnifeEmbedScript(
+export function serializeArivixEmbedScript(
   messageContent: string,
   data: {
     title?: string;
@@ -455,7 +455,7 @@ export function serializeKnifeEmbedScript(
     authorIconUrl?: string;
     footerText?: string;
     footerIconUrl?: string;
-    fields?: KnifeSerializeField[];
+    fields?: ArivixSerializeField[];
   },
 ) {
   const segments: string[] = [];

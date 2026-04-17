@@ -10,9 +10,9 @@ import {
 } from "../../lib/guild-prefix";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { hasGuildPermission } from "../../lib/discord-member-perms";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const prefixCommand: KnifeCommand = {
+export const prefixCommand: ArivixCommand = {
   name: "prefix",
   aliases: ["setprefix"],
   description:

@@ -18,7 +18,7 @@ import {
   canPunish,
   resolveModerationMember,
 } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import type { Message } from "discord.js";
 
 async function requireModRoles(message: Message) {
@@ -44,7 +44,7 @@ async function getMutedRoleId(guildId: string): Promise<string | null> {
   return row?.mutedRoleId ?? null;
 }
 
-export const setupmuteCommand: KnifeCommand = {
+export const setupmuteCommand: ArivixCommand = {
   name: "setupmute",
   aliases: ["mutedrole", "createsmute"],
   description:
@@ -234,7 +234,7 @@ async function roleMuteRun(
   });
 }
 
-export const rmuteCommand: KnifeCommand = {
+export const rmuteCommand: ArivixCommand = {
   name: "rmute",
   aliases: ["imute"],
   description: "Apply **Muted** role — **Manage Roles** + **Moderate Members**",
@@ -251,7 +251,7 @@ export const rmuteCommand: KnifeCommand = {
   },
 };
 
-export const runmuteCommand: KnifeCommand = {
+export const runmuteCommand: ArivixCommand = {
   name: "runmute",
   aliases: ["iunmute"],
   description: "Remove **Muted** role — **Manage Roles** + **Moderate Members**",

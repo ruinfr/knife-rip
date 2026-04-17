@@ -11,7 +11,7 @@ import {
   getReactionHistory,
   getReactionSnipe,
 } from "../../lib/snipe/store";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const DESC_MAX = 3800;
 
@@ -30,7 +30,7 @@ function footer(): string {
   return `Snipes expire after ${SNIPE_TTL_MS / 60000} minutes · Bots ignored · Not stored on disk`;
 }
 
-export const snipeCommand: KnifeCommand = {
+export const snipeCommand: ArivixCommand = {
   name: "snipe",
   aliases: ["s"],
   description: "Show the last deleted message in this channel (if the bot saw it)",
@@ -85,7 +85,7 @@ export const snipeCommand: KnifeCommand = {
   },
 };
 
-export const esnipeCommand: KnifeCommand = {
+export const esnipeCommand: ArivixCommand = {
   name: "esnipe",
   aliases: ["es", "editsnipe"],
   description: "Show the last edited message (before → after) in this channel",
@@ -138,7 +138,7 @@ export const esnipeCommand: KnifeCommand = {
   },
 };
 
-export const rsnipeCommand: KnifeCommand = {
+export const rsnipeCommand: ArivixCommand = {
   name: "rsnipe",
   aliases: ["rs", "reactionsnipe"],
   description: "Show the last reaction removed in this channel (emoji + who removed it)",
@@ -188,7 +188,7 @@ export const rsnipeCommand: KnifeCommand = {
   },
 };
 
-export const clearsnipeCommand: KnifeCommand = {
+export const clearsnipeCommand: ArivixCommand = {
   name: "clearsnipe",
   aliases: ["clearsnipes", "snipeclear", "csnipe", "cs"],
   description:
@@ -232,7 +232,7 @@ export const clearsnipeCommand: KnifeCommand = {
   },
 };
 
-export const reactionhistoryCommand: KnifeCommand = {
+export const reactionhistoryCommand: ArivixCommand = {
   name: "reactionhistory",
   aliases: ["rh", "reacthistory", "reactionlog"],
   description:

@@ -155,13 +155,13 @@ import {
 } from "./moderation/timeout";
 import { warnCommand, warningsCommand } from "./moderation/warn";
 import type { CommandCategoryShape } from "./site-payload";
-import type { KnifeCommand } from "./types";
+import type { ArivixCommand } from "./types";
 
 /**
  * All commands — keep this list alphabetical by `name` for quick scanning.
  * Add new modules under ./general, ./moderation, etc., then import here.
  */
-export const commandDefinitions: KnifeCommand[] = [
+export const commandDefinitions: ArivixCommand[] = [
   accessCommand,
   auditCommand,
   afkCommand,
@@ -316,9 +316,9 @@ export const commandDefinitions: KnifeCommand[] = [
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export function buildCommandMap(
-  list: KnifeCommand[] = commandDefinitions,
-): Map<string, KnifeCommand> {
-  const map = new Map<string, KnifeCommand>();
+  list: ArivixCommand[] = commandDefinitions,
+): Map<string, ArivixCommand> {
+  const map = new Map<string, ArivixCommand>();
   for (const cmd of list) {
     const keys = [
       cmd.name.toLowerCase(),
@@ -331,10 +331,10 @@ export function buildCommandMap(
   return map;
 }
 
-/** Primary `KnifeCommand.name` for an invocation token (name or alias), lowercase. */
+/** Primary `ArivixCommand.name` for an invocation token (name or alias), lowercase. */
 export function resolveCanonicalCommandName(
   invoked: string,
-  map: Map<string, KnifeCommand>,
+  map: Map<string, ArivixCommand>,
 ): string | null {
   const cmd = map.get(invoked.toLowerCase());
   return cmd ? cmd.name.toLowerCase() : null;
@@ -344,7 +344,7 @@ export function resolveCanonicalCommandName(
  * Warn if two commands share the same trigger (name or alias); later defs win in `buildCommandMap`.
  */
 export function warnOnDuplicateCommandTriggers(
-  list: KnifeCommand[] = commandDefinitions,
+  list: ArivixCommand[] = commandDefinitions,
 ): void {
   const claimedBy = new Map<string, string>();
   const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
@@ -367,7 +367,7 @@ export function warnOnDuplicateCommandTriggers(
 }
 
 function buildSiteCategories(
-  list: KnifeCommand[],
+  list: ArivixCommand[],
 ): CommandCategoryShape[] {
   const byCat = new Map<string, CommandCategoryShape>();
 
@@ -407,7 +407,7 @@ function buildSiteCategories(
   return categories;
 }
 
-export function buildCommandCatalogPayload(list: KnifeCommand[]) {
+export function buildCommandCatalogPayload(list: ArivixCommand[]) {
   return {
     version: COMMAND_CATALOG_VERSION,
     categories: buildSiteCategories(list),
@@ -415,7 +415,7 @@ export function buildCommandCatalogPayload(list: KnifeCommand[]) {
 }
 
 export async function syncRegistryToSite(
-  list: KnifeCommand[] = commandDefinitions,
+  list: ArivixCommand[] = commandDefinitions,
 ): Promise<void> {
   const payload = buildCommandCatalogPayload(list);
   await postCommandRegistry(payload);

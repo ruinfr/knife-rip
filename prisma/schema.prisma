@@ -45,7 +45,7 @@ model User {
   emailVerified       DateTime?
   image               String?
   stripeCustomerId    String?   @unique
-  /// Set when user completes one-time Knife Pro (lifetime) checkout.
+  /// Set when user completes one-time Arivix Pro (lifetime) checkout.
   lifetimePremiumAt   DateTime?
 
   accounts     Account[]
@@ -173,7 +173,7 @@ model BotGuildCommandAudit {
   @@index([createdAt])
 }
 
-/// Runtime handouts (`.handout`) — merged with static IDs in `lib/bot-owners.ts` / `lib/knife-premium.ts`.
+/// Runtime handouts (`.handout`) — merged with static IDs in `lib/bot-owners.ts` / `lib/arivix-premium.ts`.
 enum DiscordPrivilegeKind {
   OWNER
   PREMIUM
@@ -255,7 +255,7 @@ model EconomyUser {
   lastPayAt          DateTime?
   /// Last `.daily` claim (24h cooldown).
   lastDailyAt        DateTime?
-  /// Knife Cash disclaimer completed at least once (global; skips repeat prompts).
+  /// Arivix Cash disclaimer completed at least once (global; skips repeat prompts).
   gambleDisclaimerAcceptedAt DateTime?
   lastWorkAt         DateTime?
   lastCrimeAt        DateTime?
@@ -289,9 +289,9 @@ model EconomyUser {
   lastRebirthAt      DateTime?
   /// JSON: { coin?: number, daily?: number, rob?: number, petXp?: number } — shop levels 0–5.
   rebirthShop        Json?
-  /// In-progress Knife Cash web blackjack hand (server-side). Cleared when the hand ends or expires.
+  /// In-progress Arivix Cash web blackjack hand (server-side). Cleared when the hand ends or expires.
   webBlackjackState  Json?
-  /// In-progress Knife Cash web mines round (server-side). Mine positions stay server-only until the round ends.
+  /// In-progress Arivix Cash web mines round (server-side). Mine positions stay server-only until the round ends.
   webMinesState      Json?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
@@ -479,7 +479,7 @@ model BotGuildJailMember {
   @@index([guildId, releaseAt])
 }
 
-/// `.webhook lock` — only `lockedByUserId` may use Knife webhook send/edit/delete for that webhook.
+/// `.webhook lock` — only `lockedByUserId` may use Arivix webhook send/edit/delete for that webhook.
 model BotGuildWebhookLock {
   id             String   @id @default(cuid())
   guildId        String

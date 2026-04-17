@@ -21,7 +21,7 @@ import {
   canPunish,
   resolveModerationMember,
 } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function fmtSince(d: Date): string {
   const s = Math.floor((Date.now() - d.getTime()) / 1000);
@@ -72,7 +72,7 @@ async function ensureJailRoleAssignable(
   return null;
 }
 
-export const jailCommand: KnifeCommand = {
+export const jailCommand: ArivixCommand = {
   name: "jail",
   aliases: ["jailuser", "incarcerate"],
   description:
@@ -244,7 +244,7 @@ export const jailCommand: KnifeCommand = {
   },
 };
 
-export const unjailCommand: KnifeCommand = {
+export const unjailCommand: ArivixCommand = {
   name: "unjail",
   aliases: ["release", "unjailuser"],
   description:
@@ -381,7 +381,7 @@ export const unjailCommand: KnifeCommand = {
   },
 };
 
-export const jaillistCommand: KnifeCommand = {
+export const jaillistCommand: ArivixCommand = {
   name: "jaillist",
   aliases: ["jails", "whoisjailed"],
   description: "List members jailed in this server — **Manage Messages**",

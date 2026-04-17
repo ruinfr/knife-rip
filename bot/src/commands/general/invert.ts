@@ -4,9 +4,9 @@ import { guildMemberHas } from "../../lib/command-perms";
 import { errorEmbed } from "../../lib/embeds";
 import { fetchImageBuffer } from "../../lib/fetch-image-buffer";
 import { resolveMediaUrlFromCommand } from "../../lib/resolve-media-url";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const invertCommand: KnifeCommand = {
+export const invertCommand: ArivixCommand = {
   name: "invert",
   aliases: ["negative"],
   description: "Invert image colors (needs Attach Files)",

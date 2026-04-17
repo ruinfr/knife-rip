@@ -1,7 +1,7 @@
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const pingCommand: KnifeCommand = {
+export const pingCommand: ArivixCommand = {
   name: "ping",
   aliases: ["latency", "ms"],
   description: "Check bot and Discord gateway latency",

@@ -4,9 +4,9 @@ import { formatCash } from "../../lib/economy/money";
 import { getCash } from "../../lib/economy/wallet";
 import { minimalEmbed } from "../../lib/embeds";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const cashCommand: KnifeCommand = {
+export const cashCommand: ArivixCommand = {
   name: "cash",
   aliases: ["bal", "balance", "wallet"],
   description: "Show Arivix Cash balance for you or another user (global wallet)",

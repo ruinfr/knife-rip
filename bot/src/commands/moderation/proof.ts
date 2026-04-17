@@ -6,7 +6,7 @@ import {
   setProofExplanation,
 } from "../../lib/mod-case/service";
 import { errorEmbed, minimalEmbed, missingPermissionEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireManageMessages(message: import("discord.js").Message) {
   const g = message.guild;
@@ -21,7 +21,7 @@ async function requireManageMessages(message: import("discord.js").Message) {
   return null;
 }
 
-export const proofCommand: KnifeCommand = {
+export const proofCommand: ArivixCommand = {
   name: "proof",
   aliases: ["evidence", "caseproof"],
   description: "Attach proof to a mod case — **Manage Messages**",

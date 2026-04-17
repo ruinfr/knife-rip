@@ -11,7 +11,7 @@ import {
   canPunish,
   resolveModerationMember,
 } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requirePerm(message: Message) {
   const g = message.guild;
@@ -25,7 +25,7 @@ async function requirePerm(message: Message) {
   return null;
 }
 
-export const kickCommand: KnifeCommand = {
+export const kickCommand: ArivixCommand = {
   name: "kick",
   aliases: ["k"],
   description: "Remove a member from the server (needs Kick Members)",

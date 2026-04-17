@@ -7,7 +7,7 @@ import {
   missingPermissionEmbed,
 } from "../../lib/embeds";
 import { getGuildCommandPrefix } from "../../lib/guild-prefix";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const SNOWFLAKE = /^\d{17,20}$/;
 
@@ -32,7 +32,7 @@ async function requireManageGuild(message: import("discord.js").Message) {
   return null;
 }
 
-export const restrictcommandCommand: KnifeCommand = {
+export const restrictcommandCommand: ArivixCommand = {
   name: "restrictcommand",
   aliases: ["restrictcmd", "cmdrestrict"],
   description:

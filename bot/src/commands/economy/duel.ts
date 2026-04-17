@@ -7,9 +7,9 @@ import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-conte
 import { formatCash, parsePositiveBigInt } from "../../lib/economy/money";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const duelCommand: KnifeCommand = {
+export const duelCommand: ArivixCommand = {
   name: "duel",
   aliases: ["pvp", "challenge"],
   description:

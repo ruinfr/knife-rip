@@ -5,9 +5,9 @@ import {
   buildGambleHubPayload,
   gambleHubPingContent,
 } from "../../lib/economy/hub-ui";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const gambleCommand: KnifeCommand = {
+export const gambleCommand: ArivixCommand = {
   name: "gamble",
   aliases: ["economy", "eco", "bet", "casino"],
   description:

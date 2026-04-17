@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { getOsuLegacyApiKey } from "../../config";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 type OsuUserRow = {
   username: string;
@@ -24,7 +24,7 @@ const MODE_MAP: Record<string, string> = {
   mania: "3",
 };
 
-export const osuCommand: KnifeCommand = {
+export const osuCommand: ArivixCommand = {
   name: "osu",
   aliases: ["osuuser"],
   description: "Basic osu! profile (legacy osu!api v1 — requires server key)",

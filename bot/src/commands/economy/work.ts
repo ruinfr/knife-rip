@@ -8,9 +8,9 @@ import {
 } from "../../lib/economy/work-flow";
 import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-context";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const workCommand: KnifeCommand = {
+export const workCommand: ArivixCommand = {
   name: "work",
   aliases: ["job", "shift", "grind"],
   description:

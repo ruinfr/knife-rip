@@ -1,10 +1,10 @@
 import { isDeveloperDiscordId } from "../../../../lib/bot-developers";
-import { isKnifePremium } from "../../../../lib/knife-premium";
+import { isArivixPremium } from "../../../../lib/arivix-premium";
 import { getBotInternalSecret, getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
 import { fetchEntitlementFromSite } from "../../lib/site-client";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function resolveBillingLabel(discordUserId: string): Promise<string> {
   if (await isCommandOwnerBypass(discordUserId)) {
@@ -12,7 +12,7 @@ async function resolveBillingLabel(discordUserId: string): Promise<string> {
       ? "**Developer** — full Pro + owner tools."
       : "**Bot owner** — full Pro + bypass.";
   }
-  if (isKnifePremium(discordUserId)) {
+  if (isArivixPremium(discordUserId)) {
     return "**Arivix Pro** on this Discord account (complimentary).";
   }
   if (getBotInternalSecret()) {
@@ -35,7 +35,7 @@ async function resolveBillingLabel(discordUserId: string): Promise<string> {
   return "**Free** (site link not configured on this bot instance).";
 }
 
-export const billingCommand: KnifeCommand = {
+export const billingCommand: ArivixCommand = {
   name: "billing",
   aliases: ["mysub", "subscription"],
   description:

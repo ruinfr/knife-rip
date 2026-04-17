@@ -1,8 +1,8 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const serveravatarCommand: KnifeCommand = {
+export const serveravatarCommand: ArivixCommand = {
   name: "serveravatar",
   aliases: ["savatar", "guildavatar", "gavatar"],
   description:

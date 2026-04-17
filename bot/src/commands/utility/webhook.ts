@@ -8,14 +8,14 @@ import {
 } from "discord.js";
 import type { APIEmbed } from "discord-api-types/v10";
 import {
-  applyKnifeEmbedPlaceholders,
-  parseKnifeEmbedScript,
-  splitKnifeEmbedScript,
+  applyArivixEmbedPlaceholders,
+  parseArivixEmbedScript,
+  splitArivixEmbedScript,
 } from "../../../../lib/embed-script";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { guildMemberOrFetch } from "../../lib/discord-member-perms";
 import { getBotPrisma } from "../../lib/db-prisma";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const MAX_CONTENT = 2000;
 
@@ -72,10 +72,10 @@ function parseMessageOrEmbedPayload(
     /* plain text or Arivix embed script */
   }
   if (/\{embed\}\s*\$v/i.test(t)) {
-    const expanded = applyKnifeEmbedPlaceholders(t, {});
-    const { content, embedSegment } = splitKnifeEmbedScript(expanded);
+    const expanded = applyArivixEmbedPlaceholders(t, {});
+    const { content, embedSegment } = splitArivixEmbedScript(expanded);
     if (embedSegment) {
-      const parsed = parseKnifeEmbedScript(embedSegment);
+      const parsed = parseArivixEmbedScript(embedSegment);
       if (!parsed.error) {
         try {
           return {
@@ -167,7 +167,7 @@ function helpEmbed(): EmbedBuilder {
   });
 }
 
-export const webhookCommand: KnifeCommand = {
+export const webhookCommand: ArivixCommand = {
   name: "webhook",
   aliases: ["hook", "hooks", "wh"],
   description:

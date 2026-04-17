@@ -12,9 +12,9 @@ import {
 } from "../../lib/economy/wallet";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const bountyCommand: KnifeCommand = {
+export const bountyCommand: ArivixCommand = {
   name: "bounty",
   aliases: ["hit", "contract"],
   description:

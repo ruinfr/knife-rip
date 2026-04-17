@@ -6,9 +6,9 @@ import {
 import { BOT_OWNER_DISCORD_IDS, isBotOwnerDiscordId } from "@/lib/bot-owners";
 import { isPremiumBypassDiscordIdResolved } from "@/lib/discord-privilege";
 import {
-  KNIFE_PREMIUM_DISCORD_IDS,
-  isKnifePremium,
-} from "@/lib/knife-premium";
+  ARIVIX_PREMIUM_DISCORD_IDS,
+  isArivixPremium,
+} from "@/lib/arivix-premium";
 
 export type UserWithSubscription = User & {
   subscription?: Subscription | null;
@@ -20,7 +20,7 @@ export type UserWithSubscription = User & {
 export const PREMIUM_BYPASS_DISCORD_IDS = new Set<string>([
   ...DEVELOPER_DISCORD_IDS,
   ...BOT_OWNER_DISCORD_IDS,
-  ...KNIFE_PREMIUM_DISCORD_IDS,
+  ...ARIVIX_PREMIUM_DISCORD_IDS,
 ]);
 
 /**
@@ -31,7 +31,7 @@ export function isPremiumBypassDiscordId(discordUserId: string): boolean {
   return (
     isDeveloperDiscordId(discordUserId) ||
     isBotOwnerDiscordId(discordUserId) ||
-    isKnifePremium(discordUserId)
+    isArivixPremium(discordUserId)
   );
 }
 

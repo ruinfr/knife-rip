@@ -1,4 +1,4 @@
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import { getSiteApiBase } from "../../config";
 import { errorEmbed } from "../../lib/embeds";
 import {
@@ -8,7 +8,7 @@ import {
   parseChannelSnowflake,
 } from "../../lib/pro-channel-broadcast";
 
-export const createembedCommand: KnifeCommand = {
+export const createembedCommand: ArivixCommand = {
   name: "createembed",
   aliases: ["ce", "embedcreate", "sendembed", "postembed", "embedsend"],
   description:

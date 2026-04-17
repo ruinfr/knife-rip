@@ -14,7 +14,7 @@ import {
 } from "../../lib/moderation-target";
 import { BotModCaseKind } from "@prisma/client";
 import { createModCase } from "../../lib/mod-case/service";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireBanPerm(message: Message) {
   const g = message.guild;
@@ -28,7 +28,7 @@ async function requireBanPerm(message: Message) {
   return null;
 }
 
-export const banCommand: KnifeCommand = {
+export const banCommand: ArivixCommand = {
   name: "ban",
   aliases: ["b"],
   description:

@@ -9,11 +9,11 @@ import {
 } from "../../lib/discord-info-format";
 import { errorEmbed } from "../../lib/embeds";
 import { resolveGuildByInput } from "../../lib/resolve-guild-by-input";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const EMBED_COLOR = 0x2b2d31;
 
-export const serverinfoCommand: KnifeCommand = {
+export const serverinfoCommand: ArivixCommand = {
   name: "serverinfo",
   aliases: ["si"],
   description: "Detailed server stats (sectioned layout)",

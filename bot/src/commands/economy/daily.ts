@@ -10,9 +10,9 @@ import {
 import { formatCash } from "../../lib/economy/money";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const dailyCommand: KnifeCommand = {
+export const dailyCommand: ArivixCommand = {
   name: "daily",
   aliases: ["claim", "payday", "payout", "stipend"],
   description:

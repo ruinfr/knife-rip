@@ -2,7 +2,7 @@ import { resolveCommunityDiscordInviteUrl } from "../../../../lib/community-disc
 import { PREFIX } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
 import { getGuildCommandPrefix } from "../../lib/guild-prefix";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const SITE = "https://arivix.org";
 const COMMANDS = `${SITE}/commands`;
@@ -11,9 +11,9 @@ const PRICING = `${SITE}/pricing`;
 
 const hubInvite = resolveCommunityDiscordInviteUrl();
 
-export const arivixCommand: KnifeCommand = {
+export const arivixCommand: ArivixCommand = {
   name: "arivix",
-  aliases: ["knife", "about", "knifeinfo"],
+  aliases: ["about"],
   description: "About Arivix — site links, prefix, and gateway latency",
   site: {
     categoryId: "core",

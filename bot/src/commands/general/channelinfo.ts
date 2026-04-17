@@ -1,6 +1,6 @@
 import { ChannelType, EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function channelTypeLabel(type: ChannelType): string {
   switch (type) {
@@ -27,7 +27,7 @@ function channelTypeLabel(type: ChannelType): string {
   }
 }
 
-export const channelinfoCommand: KnifeCommand = {
+export const channelinfoCommand: ArivixCommand = {
   name: "channelinfo",
   aliases: ["ci", "channel"],
   description: "Technical details about a channel",

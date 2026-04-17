@@ -1,6 +1,6 @@
 import { getSiteApiBase } from "../../config";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 /**
  * Short copy aligned with `app/status/page.tsx` (static operational message).
@@ -9,7 +9,7 @@ import type { KnifeCommand } from "../types";
 const STATUS_ONELINER =
   "**All systems operational** — website, sign-in, and billing endpoints are reported up on the status page.";
 
-export const statusCommand: KnifeCommand = {
+export const statusCommand: ArivixCommand = {
   name: "status",
   aliases: ["botstatus", "statuspage"],
   description: "Site status one-liner and link to the full status page",

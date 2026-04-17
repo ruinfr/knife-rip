@@ -1,4 +1,4 @@
-export type { CommandContext, KnifeCommand, KnifeCommandSite } from "./types";
+export type { CommandContext, ArivixCommand, ArivixCommandSite } from "./types";
 export {
   buildCommandCatalogPayload,
   buildCommandMap,

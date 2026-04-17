@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { ts, userBadgeEmojis } from "../../lib/discord-info-format";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const EMBED_COLOR = 0x2b2d31;
 const ROLE_FIELD_MAX = 1024;
@@ -25,7 +25,7 @@ function truncateRoleMentions(
   return { text: out, total };
 }
 
-export const userinfoCommand: KnifeCommand = {
+export const userinfoCommand: ArivixCommand = {
   name: "userinfo",
   aliases: ["ui"],
   description: "Detailed user profile (sectioned layout)",

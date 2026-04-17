@@ -1,10 +1,10 @@
 import { clearAfkEntry, setAfkEntry } from "../../lib/afk/store";
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const DEFAULT_REASON = "AFK";
 
-export const afkCommand: KnifeCommand = {
+export const afkCommand: ArivixCommand = {
   name: "afk",
   aliases: ["away", "brb"],
   description:

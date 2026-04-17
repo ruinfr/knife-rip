@@ -2,7 +2,7 @@
 
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/cn";
-import type { KnifeParsedEmbed } from "@/lib/embed-script";
+import type { ArivixParsedEmbed } from "@/lib/embed-script";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -38,7 +38,7 @@ function PreviewImg({
   );
 }
 
-function DiscordEmbedInner({ embed }: { embed: KnifeParsedEmbed }) {
+function DiscordEmbedInner({ embed }: { embed: ArivixParsedEmbed }) {
   const bar =
     embed.color != null
       ? `#${embed.color.toString(16).padStart(6, "0")}`
@@ -171,7 +171,7 @@ function DiscordEmbedInner({ embed }: { embed: KnifeParsedEmbed }) {
 
 type EmbedBuilderLivePreviewProps = {
   messageContent: string;
-  embed: KnifeParsedEmbed;
+  embed: ArivixParsedEmbed;
   className?: string;
 };
 

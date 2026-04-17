@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { getOpenWeatherApiKey } from "../../config";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 type OwCurrent = {
   name: string;
@@ -11,7 +11,7 @@ type OwCurrent = {
   wind?: { speed: number };
 };
 
-export const weatherCommand: KnifeCommand = {
+export const weatherCommand: ArivixCommand = {
   name: "weather",
   aliases: ["wttr"],
   description: "Current weather from OpenWeatherMap (requires API key on bot host)",

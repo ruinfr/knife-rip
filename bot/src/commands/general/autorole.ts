@@ -4,7 +4,7 @@ import { guildMemberHas } from "../../lib/command-perms";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { executorMayConfigureRole, botCanAssignRole } from "../../lib/role-assignment-safety";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function requireManage(message: import("discord.js").Message): boolean {
   return (
@@ -13,7 +13,7 @@ function requireManage(message: import("discord.js").Message): boolean {
   );
 }
 
-export const autoroleCommand: KnifeCommand = {
+export const autoroleCommand: ArivixCommand = {
   name: "autorole",
   aliases: ["joinrole", "joinroles"],
   description:

@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { resolveGuildByInput } from "../../lib/resolve-guild-by-input";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function assetReply(
   message: Message,
@@ -66,7 +66,7 @@ async function assetReply(
   });
 }
 
-export const guildiconCommand: KnifeCommand = {
+export const guildiconCommand: ArivixCommand = {
   name: "guildicon",
   aliases: ["gicon", "servericonid"],
   description: "Guild icon for this server or a guild ID the bot is in",
@@ -83,7 +83,7 @@ export const guildiconCommand: KnifeCommand = {
   },
 };
 
-export const guildbannerCommand: KnifeCommand = {
+export const guildbannerCommand: ArivixCommand = {
   name: "guildbanner",
   aliases: ["gbanner"],
   description: "Guild banner (Boost L2+) for this server or a guild ID",
@@ -100,7 +100,7 @@ export const guildbannerCommand: KnifeCommand = {
   },
 };
 
-export const splashCommand: KnifeCommand = {
+export const splashCommand: ArivixCommand = {
   name: "splash",
   aliases: ["invitesplash", "guildsplash"],
   description: "Guild invite splash background",

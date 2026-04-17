@@ -6,7 +6,7 @@ import {
   tryRevokeStaticBootstrapOwner,
   upsertDiscordPrivilege,
 } from "@/lib/discord-privilege";
-import { syncKnifeRipDiscordRolesForDiscordUser } from "@/lib/sync-knife-privilege-roles";
+import { syncArivixRipDiscordRolesForDiscordUser } from "@/lib/sync-arivix-privilege-roles";
 import { API } from "@/lib/safe-api-message";
 import { DiscordPrivilegeKind } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
     if (kindRaw === "OWNER") {
       await clearBootstrapOwnerRevocation(target);
     }
-    const roleSync = await syncKnifeRipDiscordRolesForDiscordUser(target);
+    const roleSync = await syncArivixRipDiscordRolesForDiscordUser(target);
     return NextResponse.json({
       ok: true,
       targetDiscordId: target,
@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
     kindRaw === "OWNER" && bootstrapRevoke === "revoked";
   const removed = removedFromDatabase || revokedBootstrapOwner;
 
-  const roleSync = await syncKnifeRipDiscordRolesForDiscordUser(target);
+  const roleSync = await syncArivixRipDiscordRolesForDiscordUser(target);
 
   return NextResponse.json({
     ok: true,

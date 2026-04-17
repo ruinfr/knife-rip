@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import type { BotGuildButtonRole } from "@prisma/client";
 
-export const BUTTON_CUSTOM_PREFIX = "knife:br:" as const;
+export const BUTTON_CUSTOM_PREFIX = "arivix:br:" as const;
 
 export function buildButtonCustomId(rowId: string): string {
   return `${BUTTON_CUSTOM_PREFIX}${rowId}`;

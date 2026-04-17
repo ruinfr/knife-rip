@@ -4,11 +4,11 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: knife
+      POSTGRES_DB: arivix
     ports:
       - "5432:5432"
     volumes:
-      - knife_pg:/var/lib/postgresql/data
+      - arivix_pg:/var/lib/postgresql/data
 
 volumes:
-  knife_pg:
+  arivix_pg:

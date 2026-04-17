@@ -31,7 +31,7 @@ import {
 import { formatPetCallName } from "../../lib/economy/pet-menu";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const BUYABLE_HINT = PET_BUYABLE_SPECIES.join("|");
 const PET_NICKNAME_MAX_LEN = 32;
@@ -53,7 +53,7 @@ function petShopCatalogLines(): string {
   }).join("\n");
 }
 
-export const petCommand: KnifeCommand = {
+export const petCommand: ArivixCommand = {
   name: "pet",
   aliases: ["adopt", "mypet"],
   description:

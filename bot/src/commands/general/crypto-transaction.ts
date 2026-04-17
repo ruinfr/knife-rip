@@ -2,9 +2,9 @@ import { EmbedBuilder } from "discord.js";
 import { getEtherscanApiKey, getSiteApiBase } from "../../config";
 import { errorEmbed } from "../../lib/embeds";
 import { lookupTransaction } from "../../lib/crypto/transactions";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const transactionCommand: KnifeCommand = {
+export const transactionCommand: ArivixCommand = {
   name: "transaction",
   aliases: ["tx", "txinfo", "cryptotx"],
   description: "Look up a **BTC**, **LTC**, or **ETH** transaction by hash (public explorers)",

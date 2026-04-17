@@ -16,7 +16,7 @@ import {
   canPunish,
   resolveModerationMember,
 } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import type { Message } from "discord.js";
 
 function parseChannelId(message: Message, raw: string | undefined): string | null {
@@ -27,7 +27,7 @@ function parseChannelId(message: Message, raw: string | undefined): string | nul
   return null;
 }
 
-export const stripstaffCommand: KnifeCommand = {
+export const stripstaffCommand: ArivixCommand = {
   name: "stripstaff",
   aliases: ["striproles", "removestaffroles"],
   description: "Remove all manageable non-integration roles — **Administrator**",
@@ -97,7 +97,7 @@ export const stripstaffCommand: KnifeCommand = {
   },
 };
 
-export const topicCommand: KnifeCommand = {
+export const topicCommand: ArivixCommand = {
   name: "topic",
   aliases: ["chantopic", "settopic"],
   description: "Set this text channel topic — **Manage Channels**",
@@ -212,7 +212,7 @@ async function hideUnhide(message: Message, args: string[], hide: boolean) {
   });
 }
 
-export const hideCommand: KnifeCommand = {
+export const hideCommand: ArivixCommand = {
   name: "hide",
   aliases: ["hidechannel", "hidchan"],
   description: "Deny **View Channel** for a role (default @everyone) — **Manage Channels**",
@@ -229,7 +229,7 @@ export const hideCommand: KnifeCommand = {
   },
 };
 
-export const unhideCommand: KnifeCommand = {
+export const unhideCommand: ArivixCommand = {
   name: "unhide",
   aliases: ["showchannel", "revealchan"],
   description: "Reset **View Channel** override (inherit) — **Manage Channels**",
@@ -246,7 +246,7 @@ export const unhideCommand: KnifeCommand = {
   },
 };
 
-export const clearinvitesCommand: KnifeCommand = {
+export const clearinvitesCommand: ArivixCommand = {
   name: "clearinvites",
   aliases: ["inviteclear"],
   description: "Delete all guild invites — **Manage Guild**",
@@ -287,7 +287,7 @@ export const clearinvitesCommand: KnifeCommand = {
   },
 };
 
-export const newmembersCommand: KnifeCommand = {
+export const newmembersCommand: ArivixCommand = {
   name: "newmembers",
   aliases: ["recentjoins"],
   description: "Recent joins — **Manage Guild**",
@@ -331,7 +331,7 @@ export const newmembersCommand: KnifeCommand = {
   },
 };
 
-export const recentbanCommand: KnifeCommand = {
+export const recentbanCommand: ArivixCommand = {
   name: "recentban",
   aliases: ["joinban", "banfresh"],
   description: "Ban members who joined within N minutes — **Ban Members**",
@@ -390,7 +390,7 @@ export const recentbanCommand: KnifeCommand = {
   },
 };
 
-export const dragCommand: KnifeCommand = {
+export const dragCommand: ArivixCommand = {
   name: "drag",
   aliases: ["pull", "vcdrag"],
   description: "Move a member to your current voice channel — **Move Members**",
@@ -447,7 +447,7 @@ export const dragCommand: KnifeCommand = {
   },
 };
 
-export const moveallCommand: KnifeCommand = {
+export const moveallCommand: ArivixCommand = {
   name: "moveall",
   aliases: ["massmove", "movevc"],
   description:
@@ -507,7 +507,7 @@ export const moveallCommand: KnifeCommand = {
   },
 };
 
-export const permissionsCommand: KnifeCommand = {
+export const permissionsCommand: ArivixCommand = {
   name: "permissions",
   aliases: ["perms"],
   description: "Show whether you have **Manage Roles/Channels** here",
@@ -539,7 +539,7 @@ export const permissionsCommand: KnifeCommand = {
   },
 };
 
-export const setupCommand: KnifeCommand = {
+export const setupCommand: ArivixCommand = {
   name: "setup",
   aliases: ["modsetup", "modtools"],
   description:
@@ -567,7 +567,7 @@ export const setupCommand: KnifeCommand = {
   },
 };
 
-export const stickyroleCommand: KnifeCommand = {
+export const stickyroleCommand: ArivixCommand = {
   name: "stickyrole",
   aliases: ["persistrole", "reapplyrole"],
   description: "Re-apply role on join — **Server Owner**",
@@ -668,7 +668,7 @@ export const stickyroleCommand: KnifeCommand = {
   },
 };
 
-export const forcenicknameCommand: KnifeCommand = {
+export const forcenicknameCommand: ArivixCommand = {
   name: "forcenickname",
   aliases: ["forcenick"],
   description: "Save a nickname to re-apply on join — **Manage Nicknames**",

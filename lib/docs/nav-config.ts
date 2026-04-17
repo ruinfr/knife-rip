@@ -1,7 +1,7 @@
 import type { DocNavGroup, DocNavLink } from "./types";
 
 export const DOCS_QUICK_LINKS: DocNavLink[] = [
-  { title: "Home", href: "/", icon: "mdi:home-outline", keywords: ["knife", "landing"] },
+  { title: "Home", href: "/", icon: "mdi:home-outline", keywords: ["arivix", "landing"] },
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -32,7 +32,7 @@ export const DOCS_NAV_GROUPS: DocNavGroup[] = [
         title: "Introduction",
         href: "/docs",
         icon: "mdi:book-open-page-variant-outline",
-        keywords: ["start", "welcome", "knife"],
+        keywords: ["start", "welcome", "arivix"],
       },
       {
         title: "Getting started",

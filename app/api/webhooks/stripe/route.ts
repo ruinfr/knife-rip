@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { API } from "@/lib/safe-api-message";
 import { getStripe } from "@/lib/stripe";
-import { syncKnifeRipDiscordRolesForUserId } from "@/lib/sync-knife-privilege-roles";
+import { syncArivixRipDiscordRolesForUserId } from "@/lib/sync-arivix-privilege-roles";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
                 : {}),
             },
           });
-          await syncKnifeRipDiscordRolesForUserId(userId);
+          await syncArivixRipDiscordRolesForUserId(userId);
         }
         break;
       }
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
           },
         });
         if (existing?.userId) {
-          await syncKnifeRipDiscordRolesForUserId(existing.userId);
+          await syncArivixRipDiscordRolesForUserId(existing.userId);
         }
         break;
       }
@@ -146,5 +146,5 @@ async function syncSubscription(sub: Stripe.Subscription) {
     },
   });
 
-  await syncKnifeRipDiscordRolesForUserId(userId);
+  await syncArivixRipDiscordRolesForUserId(userId);
 }

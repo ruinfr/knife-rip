@@ -1,5 +1,5 @@
 import { minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function formatUptime(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));
@@ -15,7 +15,7 @@ function formatUptime(seconds: number): string {
   return parts.join(" ");
 }
 
-export const uptimeCommand: KnifeCommand = {
+export const uptimeCommand: ArivixCommand = {
   name: "uptime",
   aliases: ["up"],
   description: "How long the bot process has been running",

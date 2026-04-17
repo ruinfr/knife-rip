@@ -1,11 +1,11 @@
 const DISCORD_API = "https://discord.com/api/v10";
 
-/** arivix.org hub — override with `KNIFE_RIP_*_ROLE_ID` if roles are recreated. */
-export const KNIFE_RIP_DEFAULT_PREMIUM_ROLE_ID = "1490510690429964379";
-export const KNIFE_RIP_DEFAULT_OWNER_ROLE_ID = "1490510979380023446";
-export const KNIFE_RIP_DEFAULT_DEVELOPER_ROLE_ID = "1490510979157594243";
+/** arivix.org hub — override with `ARIVIX_RIP_*_ROLE_ID` if roles are recreated. */
+export const ARIVIX_RIP_DEFAULT_PREMIUM_ROLE_ID = "1490510690429964379";
+export const ARIVIX_RIP_DEFAULT_OWNER_ROLE_ID = "1490510979380023446";
+export const ARIVIX_RIP_DEFAULT_DEVELOPER_ROLE_ID = "1490510979157594243";
 
-export type KnifeRipPrivilegeSyncEnv = {
+export type ArivixRipPrivilegeSyncEnv = {
   guildId: string;
   premiumRoleId: string;
   ownerRoleId: string;
@@ -22,24 +22,29 @@ function snowflakeOrDefault(
 
 /**
  * arivix.org community: sync Discord roles with site entitlement.
- * Set **KNIFE_RIP_GUILD_ID** (server id). Role IDs default to the live arivix.org roles unless overridden.
+ * Set **ARIVIX_RIP_GUILD_ID** (server id). Role IDs default to the live arivix.org roles unless overridden.
  * Bot role must sit above these roles in the hierarchy.
  */
-export function getKnifeRipPrivilegeSyncEnv(): KnifeRipPrivilegeSyncEnv | null {
-  const guildId = process.env.KNIFE_RIP_GUILD_ID?.trim();
+export function getArivixRipPrivilegeSyncEnv(): ArivixRipPrivilegeSyncEnv | null {
+  const guildId =
+    process.env.ARIVIX_RIP_GUILD_ID?.trim() ||
+    process.env.KNIFE_RIP_GUILD_ID?.trim();
   if (!guildId || !/^\d{17,20}$/.test(guildId)) return null;
 
   const premiumRoleId = snowflakeOrDefault(
-    process.env.KNIFE_RIP_PREMIUM_ROLE_ID,
-    KNIFE_RIP_DEFAULT_PREMIUM_ROLE_ID,
+    process.env.ARIVIX_RIP_PREMIUM_ROLE_ID ||
+      process.env.KNIFE_RIP_PREMIUM_ROLE_ID,
+    ARIVIX_RIP_DEFAULT_PREMIUM_ROLE_ID,
   );
   const ownerRoleId = snowflakeOrDefault(
-    process.env.KNIFE_RIP_OWNER_ROLE_ID,
-    KNIFE_RIP_DEFAULT_OWNER_ROLE_ID,
+    process.env.ARIVIX_RIP_OWNER_ROLE_ID ||
+      process.env.KNIFE_RIP_OWNER_ROLE_ID,
+    ARIVIX_RIP_DEFAULT_OWNER_ROLE_ID,
   );
   const developerRoleId = snowflakeOrDefault(
-    process.env.KNIFE_RIP_DEVELOPER_ROLE_ID,
-    KNIFE_RIP_DEFAULT_DEVELOPER_ROLE_ID,
+    process.env.ARIVIX_RIP_DEVELOPER_ROLE_ID ||
+      process.env.KNIFE_RIP_DEVELOPER_ROLE_ID,
+    ARIVIX_RIP_DEFAULT_DEVELOPER_ROLE_ID,
   );
   if (!premiumRoleId || !ownerRoleId || !developerRoleId) return null;
 
@@ -63,7 +68,7 @@ export type EntitlementForDiscordRoles = {
  */
 export function computePrivilegeRoleDelta(
   ent: EntitlementForDiscordRoles,
-  env: KnifeRipPrivilegeSyncEnv,
+  env: ArivixRipPrivilegeSyncEnv,
   currentRoleIds: readonly string[],
 ): { add: string[]; remove: string[] } {
   const { developerRoleId, ownerRoleId, premiumRoleId } = env;
@@ -168,9 +173,9 @@ export async function applyPrivilegeRoleDelta(
   return { ok: true };
 }
 
-export async function syncKnifeRipPrivilegeRolesFromEntitlement(
+export async function syncArivixRipPrivilegeRolesFromEntitlement(
   botToken: string,
-  env: KnifeRipPrivilegeSyncEnv,
+  env: ArivixRipPrivilegeSyncEnv,
   discordUserId: string,
   ent: EntitlementForDiscordRoles,
 ): Promise<

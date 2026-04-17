@@ -3,7 +3,7 @@ import { economyLogEmbed, sendEconomyLog } from "../../lib/economy/log";
 import { applyCashDelta, setCashAbsolute } from "../../lib/economy/wallet";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { isCommandOwnerBypass } from "../../lib/owner-bypass";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function parseNonNegativeBigInt(raw: string): bigint | null {
   const t = raw.replace(/[,_\s]/g, "").trim();
@@ -11,7 +11,7 @@ function parseNonNegativeBigInt(raw: string): bigint | null {
   return BigInt(t);
 }
 
-export const gcashCommand: KnifeCommand = {
+export const gcashCommand: ArivixCommand = {
   name: "gcash",
   aliases: ["ecoadmin", "cashadmin", "givecash", "setcash"],
   description:

@@ -4,9 +4,9 @@ import { guildMemberHas } from "../../lib/command-perms";
 import { errorEmbed } from "../../lib/embeds";
 import { fetchImageBuffer } from "../../lib/fetch-image-buffer";
 import { resolveMediaUrlFromCommand } from "../../lib/resolve-media-url";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const compressCommand: KnifeCommand = {
+export const compressCommand: ArivixCommand = {
   name: "compress",
   aliases: ["jpeg", "squish"],
   description: "Compress image to JPEG (quality / ratio 1–100 or 0–1)",

@@ -1,4 +1,4 @@
-import { KnifeEmbedBuilder } from "@/components/embed-builder/knife-embed-builder";
+import { ArivixEmbedBuilder } from "@/components/embed-builder/arivix-embed-builder";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { Icon } from "@/components/ui/icon";
 import { siteMetadataBase } from "@/lib/site-url";
@@ -40,7 +40,7 @@ export default function EmbedBuilderPage() {
         </h1>
       </ScrollReveal>
 
-      <KnifeEmbedBuilder />
+      <ArivixEmbedBuilder />
     </main>
   );
 }

@@ -14,14 +14,14 @@ import {
   userCanUseRemind,
 } from "../../lib/remind/service";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const MAX_TEXT = 350;
 
 /** Skip noisy probe DM after we’ve confirmed once this process */
 const dmReachable = new Set<string>();
 
-export const remindCommand: KnifeCommand = {
+export const remindCommand: ArivixCommand = {
   name: "remind",
   aliases: ["reminder", "remindme"],
   description:
@@ -194,7 +194,7 @@ export const remindCommand: KnifeCommand = {
   },
 };
 
-export const remindersCommand: KnifeCommand = {
+export const remindersCommand: ArivixCommand = {
   ...remindCommand,
   name: "reminders",
   aliases: undefined,

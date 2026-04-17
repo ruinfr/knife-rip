@@ -4,9 +4,9 @@ import { guildMemberHas } from "../../lib/command-perms";
 import { errorEmbed } from "../../lib/embeds";
 import { fetchImageBuffer } from "../../lib/fetch-image-buffer";
 import { resolveMediaUrlFromCommand } from "../../lib/resolve-media-url";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const rotateCommand: KnifeCommand = {
+export const rotateCommand: ArivixCommand = {
   name: "rotate",
   aliases: ["imgrotate"],
   description: "Rotate an image by degrees (needs Attach Files)",

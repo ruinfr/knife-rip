@@ -5,7 +5,7 @@ import {
   isPlausibleTikTokUsername,
   normalizeTikTokUsername,
 } from "../../lib/tiktok-api";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const BIO_MAX = 400;
 
@@ -13,7 +13,7 @@ function fmt(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-export const tiktokCommand: KnifeCommand = {
+export const tiktokCommand: ArivixCommand = {
   name: "tiktok",
   aliases: ["tt"],
   description: "TikTok profile — stats and bio for a @username",

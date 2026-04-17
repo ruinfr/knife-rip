@@ -1,7 +1,7 @@
 import type { Client } from "discord.js";
 import {
-  getKnifeRipPrivilegeSyncEnv,
-  syncKnifeRipPrivilegeRolesFromEntitlement,
+  getArivixRipPrivilegeSyncEnv,
+  syncArivixRipPrivilegeRolesFromEntitlement,
 } from "../../../lib/discord-guild-role-sync";
 import { fetchEntitlementFromSite } from "./site-client";
 
@@ -9,10 +9,10 @@ import { fetchEntitlementFromSite } from "./site-client";
  * Align arivix.org guild roles with production entitlement (same REST logic as Vercel).
  * Backup for handout + catches members who already hold managed roles (cache-dependent).
  */
-export async function syncKnifeRipRolesForDiscordUser(
+export async function syncArivixRipRolesForDiscordUser(
   discordUserId: string,
 ): Promise<void> {
-  const env = getKnifeRipPrivilegeSyncEnv();
+  const env = getArivixRipPrivilegeSyncEnv();
   const token = process.env.DISCORD_BOT_TOKEN?.trim();
   if (!env || !token) return;
 
@@ -20,7 +20,7 @@ export async function syncKnifeRipRolesForDiscordUser(
     const ent = await fetchEntitlementFromSite(discordUserId, {
       bypassCache: true,
     });
-    const result = await syncKnifeRipPrivilegeRolesFromEntitlement(
+    const result = await syncArivixRipPrivilegeRolesFromEntitlement(
       token,
       env,
       discordUserId,
@@ -34,8 +34,8 @@ export async function syncKnifeRipRolesForDiscordUser(
   }
 }
 
-export async function reconcileKnifeRipSuspectRoles(client: Client): Promise<void> {
-  const env = getKnifeRipPrivilegeSyncEnv();
+export async function reconcileArivixRipSuspectRoles(client: Client): Promise<void> {
+  const env = getArivixRipPrivilegeSyncEnv();
   if (!env) return;
 
   const guild = client.guilds.cache.get(env.guildId);
@@ -53,7 +53,7 @@ export async function reconcileKnifeRipSuspectRoles(client: Client): Promise<voi
   });
 
   for (const id of suspects) {
-    await syncKnifeRipRolesForDiscordUser(id);
+    await syncArivixRipRolesForDiscordUser(id);
     await new Promise((r) => setTimeout(r, 400));
   }
 }

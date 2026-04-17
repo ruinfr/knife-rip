@@ -19,13 +19,13 @@ import { isGuildTextEconomyChannel } from "../../lib/economy/guild-economy-conte
 import { formatCash } from "../../lib/economy/money";
 import { getBotPrisma } from "../../lib/db-prisma";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function taxOnPurchaseBase(base: bigint): bigint {
   return (base * BigInt(BUSINESS_PURCHASE_TAX_PCT) + 99n) / 100n;
 }
 
-export const businessCommand: KnifeCommand = {
+export const businessCommand: ArivixCommand = {
   name: "business",
   aliases: ["biz", "franchise"],
   description:

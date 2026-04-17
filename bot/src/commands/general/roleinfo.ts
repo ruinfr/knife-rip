@@ -1,5 +1,5 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function discordTimestamp(ms: number): string {
   return `<t:${Math.floor(ms / 1000)}:F>`;
@@ -9,7 +9,7 @@ function hexColor(color: number): string {
   return `#${color.toString(16).padStart(6, "0").toUpperCase()}`;
 }
 
-export const roleinfoCommand: KnifeCommand = {
+export const roleinfoCommand: ArivixCommand = {
   name: "roleinfo",
   aliases: ["ri"],
   description: "Show details for a role (mention, ID, or name)",

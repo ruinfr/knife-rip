@@ -1,8 +1,8 @@
 import { minimalEmbed } from "../../lib/embeds";
 import { resolveTargetUser } from "../../lib/resolve-target-user";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const avatarCommand: KnifeCommand = {
+export const avatarCommand: ArivixCommand = {
   name: "avatar",
   aliases: ["av"],
   description: "Show a user’s avatar (mention, ID, or yourself)",

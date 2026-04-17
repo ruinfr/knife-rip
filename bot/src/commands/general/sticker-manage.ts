@@ -2,7 +2,7 @@ import { PermissionFlagsBits } from "discord.js";
 import { guildMemberHas } from "../../lib/command-perms";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { fetchImageBuffer } from "../../lib/fetch-image-buffer";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 function modSticker(message: import("discord.js").Message): boolean {
   return (
@@ -20,7 +20,7 @@ function slugStickerName(name: string): string {
     .slice(0, 30) || "sticker";
 }
 
-export const stickerCommand: KnifeCommand = {
+export const stickerCommand: ArivixCommand = {
   name: "sticker",
   aliases: ["stickers"],
   description: "Manage server stickers (tag, add, remove, rename, cleanup)",

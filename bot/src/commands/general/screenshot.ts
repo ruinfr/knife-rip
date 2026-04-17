@@ -1,13 +1,13 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 type Microlink = {
   data?: { screenshot?: { url?: string }; title?: string };
   status?: string;
 };
 
-export const screenshotCommand: KnifeCommand = {
+export const screenshotCommand: ArivixCommand = {
   name: "screenshot",
   aliases: ["webshot", "ss"],
   description: "Screenshot a public web page (Microlink API — no key required for light use)",

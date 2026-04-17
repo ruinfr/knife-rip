@@ -11,7 +11,7 @@ import {
   missingPermissionEmbed,
 } from "../../lib/embeds";
 import { resolveModerationMember } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 async function requireManageMessages(message: import("discord.js").Message) {
   const g = message.guild;
@@ -26,7 +26,7 @@ async function requireManageMessages(message: import("discord.js").Message) {
   return null;
 }
 
-export const moderationhistoryCommand: KnifeCommand = {
+export const moderationhistoryCommand: ArivixCommand = {
   name: "moderationhistory",
   aliases: ["modhistory", "staffhistory"],
   description: "Cases filed by a staff member — **Manage Messages**",
@@ -78,7 +78,7 @@ export const moderationhistoryCommand: KnifeCommand = {
   },
 };
 
-export const modstatsCommand: KnifeCommand = {
+export const modstatsCommand: ArivixCommand = {
   name: "modstats",
   aliases: ["staffstats", "casestats"],
   description: "Case counts by type in this server — **Manage Messages**",
@@ -132,7 +132,7 @@ export const modstatsCommand: KnifeCommand = {
   },
 };
 
-export const punishmenthistoryCommand: KnifeCommand = {
+export const punishmenthistoryCommand: ArivixCommand = {
   name: "punishmenthistory",
   aliases: ["punishments"],
   description: "Alias for recent **.history** list — **Manage Messages**",

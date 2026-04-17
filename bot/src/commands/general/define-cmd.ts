@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { errorEmbed } from "../../lib/embeds";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 type DictSense = {
   definitions?: { definition: string }[];
@@ -12,7 +12,7 @@ type DictEntry = {
   meanings?: DictSense[];
 };
 
-export const defineCommand: KnifeCommand = {
+export const defineCommand: ArivixCommand = {
   name: "define",
   aliases: ["dictionary", "dict"],
   description: "English dictionary definition (Free Dictionary API)",

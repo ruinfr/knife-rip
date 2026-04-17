@@ -2,9 +2,9 @@ import { EmbedBuilder } from "discord.js";
 import { getSiteApiBase } from "../../config";
 import { errorEmbed } from "../../lib/embeds";
 import { fetchGasOracle } from "../../lib/crypto/gas-prices";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
-export const gasCommand: KnifeCommand = {
+export const gasCommand: ArivixCommand = {
   name: "gas",
   aliases: ["ethgas", "gwei", "gasprice"],
   description: "Ethereum mainnet gas suggestions (Etherscan oracle or public RPC fallback)",

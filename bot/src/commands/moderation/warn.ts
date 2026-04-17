@@ -11,7 +11,7 @@ import {
   canPunish,
   resolveModerationMember,
 } from "../../lib/moderation-target";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 import { EmbedBuilder } from "discord.js";
 
 async function requireManageMessages(message: import("discord.js").Message) {
@@ -27,7 +27,7 @@ async function requireManageMessages(message: import("discord.js").Message) {
   return null;
 }
 
-export const warnCommand: KnifeCommand = {
+export const warnCommand: ArivixCommand = {
   name: "warn",
   aliases: ["strike", "wrn"],
   description:
@@ -122,7 +122,7 @@ export const warnCommand: KnifeCommand = {
   },
 };
 
-export const warningsCommand: KnifeCommand = {
+export const warningsCommand: ArivixCommand = {
   name: "warnings",
   aliases: ["warnlist", "strikes"],
   description: "List warning cases for a member — **Manage Messages**",

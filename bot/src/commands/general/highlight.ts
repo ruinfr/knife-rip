@@ -1,11 +1,11 @@
 import { ChannelType } from "discord.js";
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { getBotPrisma } from "../../lib/db-prisma";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 const KEYWORD_MAX = 64;
 
-export const highlightCommand: KnifeCommand = {
+export const highlightCommand: ArivixCommand = {
   name: "highlight",
   aliases: ["hl"],
   description:

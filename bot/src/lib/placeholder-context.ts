@@ -1,9 +1,9 @@
 import type { Message } from "discord.js";
-import type { KnifeEmbedPlaceholderContext } from "../../../lib/embed-script";
+import type { ArivixEmbedPlaceholderContext } from "../../../lib/embed-script";
 
 export function buildPlaceholderContextFromMessage(
   message: Message,
-): KnifeEmbedPlaceholderContext {
+): ArivixEmbedPlaceholderContext {
   const a = message.author;
   const g = message.guild;
   const mem = message.member;
@@ -14,7 +14,7 @@ export function buildPlaceholderContextFromMessage(
       ? `${a.username}#${a.discriminator}`
       : a.username;
 
-  const ctx: KnifeEmbedPlaceholderContext = {
+  const ctx: ArivixEmbedPlaceholderContext = {
     message: {
       id: message.id,
       content: message.content,

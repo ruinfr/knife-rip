@@ -1,9 +1,9 @@
 import { errorEmbed, minimalEmbed } from "../../lib/embeds";
 import { resolveGuildByInput } from "../../lib/resolve-guild-by-input";
-import type { KnifeCommand } from "../types";
+import type { ArivixCommand } from "../types";
 
 /** Guild boost banner (not user profile banner). Optional guild ID. */
-export const serverbannerCommand: KnifeCommand = {
+export const serverbannerCommand: ArivixCommand = {
   name: "serverbanner",
   aliases: ["sbanner"],
   description:
